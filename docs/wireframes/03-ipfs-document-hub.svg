@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+<title id="title">IPFS Document &amp; Credit Hub — L01</title>
+<desc id="desc">Bản vẽ giao diện của Lâm. Dữ liệu minh họa; không phải ứng dụng hoặc kết quả giao dịch thật.</desc>
+<g font-family="Arial, Segoe UI, sans-serif">
+<rect x="0" y="0" width="1600" height="1120" rx="0" fill="#f4f7f5" stroke="#f4f7f5"/>
+<rect x="0" y="0" width="244" height="1120" rx="0" fill="#ffffff" stroke="#d6e0dc"/>
+<rect x="24" y="30" width="42" height="42" rx="10" fill="#147d6c" stroke="#147d6c"/>
+<text x="33" y="58" font-size="20" fill="#ffffff" font-weight="700">DL</text>
+<text x="80" y="52" font-size="17" fill="#183735" font-weight="700">LENDING</text>
+<text x="80" y="71" font-size="12" fill="#61736f" font-weight="400">IS355.R11</text>
+<text x="24" y="125" font-size="11" fill="#61736f" font-weight="700">KHÔNG GIAN LÀM VIỆC</text>
+<text x="29" y="179" font-size="12" fill="#61736f" font-weight="700">01</text>
+<text x="59" y="179" font-size="14" fill="#183735" font-weight="400">Lending Dashboard</text>
+<text x="29" y="237" font-size="12" fill="#61736f" font-weight="700">02</text>
+<text x="59" y="237" font-size="14" fill="#183735" font-weight="400">Borrowing Console</text>
+<rect x="16" y="266" width="212" height="46" rx="8" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="29" y="295" font-size="12" fill="#147d6c" font-weight="700">03</text>
+<text x="59" y="295" font-size="14" fill="#147d6c" font-weight="700">IPFS Document Hub</text>
+<text x="29" y="353" font-size="12" fill="#61736f" font-weight="700">04</text>
+<text x="59" y="353" font-size="14" fill="#183735" font-weight="400">Analytics &amp; Demo</text>
+<line x1="24" y1="428" x2="220" y2="428" stroke="#d6e0dc" stroke-width="1" stroke-linecap="round"/>
+<text x="24" y="460" font-size="12" fill="#61736f" font-weight="400">L01 · Thiết kế của Lâm</text>
+<text x="24" y="483" font-size="12" fill="#61736f" font-weight="400">Giai đoạn 1</text>
+<text x="24" y="506" font-size="12" fill="#61736f" font-weight="400">Khung desktop 1600 px</text>
+<rect x="24" y="990" width="190" height="30" rx="15" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="36" y="1010" font-size="12" fill="#147d6c" font-weight="700">DỮ LIỆU MINH HỌA</text>
+<text x="24" y="1044" font-size="12" fill="#61736f" font-weight="400">Các nút là bản vẽ.</text>
+<text x="24" y="1067" font-size="12" fill="#61736f" font-weight="400">Chưa kết nối giao dịch.</text>
+<text x="280" y="35" font-size="12" fill="#147d6c" font-weight="700">DEFI LENDING / L01</text>
+<text x="280" y="78" font-size="30" fill="#183735" font-weight="700">IPFS Document &amp; Credit Hub</text>
+<text x="280" y="104" font-size="14" fill="#61736f" font-weight="400">Tra cứu hồ sơ, kiểm tra quyền và tải tài liệu theo CID.</text>
+<rect x="1190" y="40" width="150" height="30" rx="15" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="1202" y="60" font-size="12" fill="#147d6c" font-weight="700">Local · 31337</text>
+<rect x="1350" y="40" width="216" height="30" rx="15" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="1362" y="60" font-size="12" fill="#147d6c" font-weight="700">Borrower · 0x3C44…93BC</text>
+<rect x="280" y="130" width="1286" height="42" rx="8" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="296" y="157" font-size="13" fill="#147d6c" font-weight="400">WIREFRAME · Snapshot minh họa theo HI01 · APR on-chain / APY quy đổi tham khảo</text>
+<line x1="280" y1="1075" x2="1566" y2="1075" stroke="#d6e0dc" stroke-width="1" stroke-linecap="round"/>
+<text x="280" y="1100" font-size="12" fill="#61736f" font-weight="400">L01 / H01 + HI01 đã có · API bổ sung chờ xác nhận Q05 · Xem docs/ui_wireframes.md</text>
+<rect x="280" y="196" width="850" height="380" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="302" y="230" font-size="19" fill="#183735" font-weight="700">Hồ sơ của tôi &amp; dữ liệu công khai</text>
+<text x="302" y="254" font-size="12" fill="#61736f" font-weight="400">Bộ lọc: Tất cả / Loan Agreement / Credit Report / Audit Logs</text>
+<text x="302" y="292" font-size="12" fill="#61736f" font-weight="700">HỒ SƠ</text>
+<text x="602" y="292" font-size="12" fill="#61736f" font-weight="700">ĐỊNH DẠNG</text>
+<text x="735" y="292" font-size="12" fill="#61736f" font-weight="700">QUYỀN</text>
+<text x="957" y="292" font-size="12" fill="#61736f" font-weight="700">THAO TÁC</text>
+<line x1="302" y1="312" x2="1107" y2="312" stroke="#d6e0dc" stroke-width="1" stroke-linecap="round"/>
+<text x="302" y="335" font-size="14" fill="#183735" font-weight="400">Loan Agreement #1</text>
+<text x="602" y="335" font-size="14" fill="#183735" font-weight="400">PDF</text>
+<text x="735" y="335" font-size="14" fill="#183735" font-weight="400">Riêng tư · Của tôi</text>
+<text x="957" y="335" font-size="14" fill="#183735" font-weight="400">Xem / Tải</text>
+<line x1="302" y1="378" x2="1107" y2="378" stroke="#d6e0dc" stroke-width="1" stroke-linecap="round"/>
+<text x="302" y="401" font-size="14" fill="#183735" font-weight="400">Credit Report</text>
+<text x="602" y="401" font-size="14" fill="#183735" font-weight="400">JSON</text>
+<text x="735" y="401" font-size="14" fill="#183735" font-weight="400">Riêng tư · Của tôi</text>
+<text x="957" y="401" font-size="14" fill="#183735" font-weight="400">Xem / Tải</text>
+<line x1="302" y1="444" x2="1107" y2="444" stroke="#d6e0dc" stroke-width="1" stroke-linecap="round"/>
+<text x="302" y="467" font-size="14" fill="#183735" font-weight="400">Audit Logs tháng mẫu</text>
+<text x="602" y="467" font-size="14" fill="#183735" font-weight="400">JSON</text>
+<text x="735" y="467" font-size="14" fill="#183735" font-weight="400">Công khai</text>
+<text x="957" y="467" font-size="14" fill="#183735" font-weight="400">Xem / Tải</text>
+<text x="302" y="531" font-size="13" fill="#61736f" font-weight="400">CID: lấy từ backend / on-chain khi có dữ liệu thật.</text>
+<text x="302" y="554" font-size="13" fill="#61736f" font-weight="400">Không hiển thị hồ sơ riêng tư của ví khác trong danh sách.</text>
+<rect x="1154" y="196" width="412" height="380" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="1176" y="230" font-size="19" fill="#183735" font-weight="700">Tra cứu / Retrieve theo CID</text>
+<rect x="1176" y="274" width="368" height="45" rx="7" fill="#f4f7f5" stroke="#d6e0dc"/>
+<text x="1190" y="303" font-size="15" fill="#183735" font-weight="400">Nhập CID hợp lệ</text>
+<text x="1176" y="352" font-size="13" fill="#183735" font-weight="400">Loại hồ sơ: tự nhận diện từ metadata</text>
+<rect x="1176" y="377" width="368" height="42" rx="8" fill="#147d6c" stroke="#147d6c"/>
+<text x="1191" y="404" font-size="14" fill="#ffffff" font-weight="700">Kiểm tra quyền &amp; tải tài liệu</text>
+<text x="1176" y="459" font-size="13" fill="#61736f" font-weight="400">1. Kiểm tra CID và phiên đăng nhập</text>
+<text x="1176" y="487" font-size="13" fill="#61736f" font-weight="400">2. Backend xác minh chủ hồ sơ / Admin</text>
+<text x="1176" y="515" font-size="13" fill="#61736f" font-weight="400">3. Nhận nội dung được phép truy cập</text>
+<text x="1176" y="543" font-size="13" fill="#61736f" font-weight="400">4. Kiểm tra hash và mở / tải file</text>
+<rect x="280" y="600" width="850" height="260" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="302" y="634" font-size="19" fill="#183735" font-weight="700">Chi tiết Loan Agreement #1</text>
+<text x="302" y="658" font-size="12" fill="#61736f" font-weight="400">Chỉ hiện sau khi truy cập được phép</text>
+<text x="302" y="698" font-size="13" fill="#61736f" font-weight="400">Ví chủ hồ sơ: 0x3C44…93BC · Khoản vay: #1 · Số tiền: 500.00 MyUSDT</text>
+<text x="302" y="726" font-size="13" fill="#61736f" font-weight="400">CID / SHA-256: lấy từ tài liệu Q03 khi được tạo.</text>
+<text x="302" y="754" font-size="13" fill="#61736f" font-weight="400">Trước vay: trạng thái Chờ giao dịch; trường txHash chưa có.</text>
+<text x="302" y="782" font-size="13" fill="#61736f" font-weight="400">Sau receipt thành công: hiển thị txHash và liên kết explorer nếu là Sepolia.</text>
+<text x="302" y="810" font-size="13" fill="#61736f" font-weight="400">Các ví không được cấp quyền không nhận nội dung giải mã hoặc khóa.</text>
+<rect x="1154" y="600" width="412" height="260" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="1176" y="634" font-size="19" fill="#183735" font-weight="700">Trạng thái truy cập</text>
+<text x="1176" y="681" font-size="13" fill="#61736f" font-weight="400">401 · Cần kết nối ví và ký đăng nhập</text>
+<text x="1176" y="711" font-size="13" fill="#61736f" font-weight="400">403 · Bạn không có quyền xem hồ sơ</text>
+<text x="1176" y="741" font-size="13" fill="#61736f" font-weight="400">Đang tải · Lỗi gateway · Thử lại</text>
+<text x="1176" y="771" font-size="13" fill="#61736f" font-weight="400">Sai hash · Dừng mở tài liệu</text>
+<text x="1176" y="801" font-size="13" fill="#61736f" font-weight="400">Không có hồ sơ · Hiển thị trạng thái rỗng</text>
+<rect x="280" y="884" width="1286" height="168" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="302" y="918" font-size="19" fill="#183735" font-weight="700">Phân quyền trên giao diện</text>
+<text x="302" y="953" font-size="13" fill="#61736f" font-weight="400">Khách / Lender: xem Audit Logs công khai. Borrower: thêm hồ sơ của chính mình. Admin: theo quyền backend cấp.</text>
+<text x="302" y="981" font-size="13" fill="#61736f" font-weight="400">Ký đăng nhập là ký thông điệp, không tốn gas. Thay đổi ví hoặc mạng sẽ xóa phiên và làm mới danh sách.</text>
+<text x="302" y="1009" font-size="13" fill="#61736f" font-weight="400">Biết CID không đồng nghĩa được đọc bản giải mã. Nút Retrieve vẫn kiểm tra quyền ở backend.</text>
+</g>
+</svg>

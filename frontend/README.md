@@ -6,3 +6,7 @@ Các thư mục con:
 
 - [public/](public/README.md)
 - [src/](src/README.md)
+
+## Thiết kế giai đoạn 1 (L01)
+
+Xem [wireframe và user flow](../docs/ui_wireframes.md) và [đề xuất API](../docs/l01_api_contract.md) trước khi triển khai L02-L05.

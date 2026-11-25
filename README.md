@@ -133,3 +133,7 @@ Dự án không phải nền tảng cung cấp dịch vụ tài chính hay sản
 ## 8. H01 - MyUSDT (Hùng)
 
 [Thông số Token, Faucet, unit test và hướng dẫn deploy/bàn giao](docs/h01_myusdt_handoff.md).
+
+## Thiết kế giao diện (L01 - Lâm)
+
+[Wireframe 4 màn hình, user flow, quyền truy cập và dữ liệu bàn giao](docs/ui_wireframes.md).
