@@ -1,0 +1,8 @@
+{
+  "network": "sepolia",
+  "chainId": 11155111,
+  "explorerUrl": "https://sepolia.etherscan.io",
+  "deployedAt": null,
+  "contracts": {},
+  "smokeTestTransactions": []
+}
