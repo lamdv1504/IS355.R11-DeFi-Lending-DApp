@@ -2,26 +2,76 @@
   "local": {
     "chainId": 31337,
     "contracts": {
-      "MyUSDT": { "address": "", "abiPath": "artifacts/contracts/tokens/MyUSDT.sol/MyUSDT.json" },
-      "CollateralNFT": { "address": "", "abiPath": "artifacts/contracts/tokens/CollateralNFT.sol/CollateralNFT.json" },
-      "CollateralReceiptNFT": { "address": "", "abiPath": "artifacts/contracts/tokens/CollateralReceiptNFT.sol/CollateralReceiptNFT.json" },
-      "DebtToken": { "address": "", "abiPath": "artifacts/contracts/tokens/DebtToken.sol/DebtToken.json" },
-      "LendingPositionNFT": { "address": "", "abiPath": "artifacts/contracts/tokens/LendingPositionNFT.sol/LendingPositionNFT.json" },
-      "PriceOracle": { "address": "", "abiPath": "artifacts/contracts/PriceOracle.sol/PriceOracle.json" },
-      "LendingPool": { "address": "", "abiPath": "artifacts/contracts/LendingPool.sol/LendingPool.json" }
+      "MyUSDT": {
+        "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+        "abiPath": "deployments/abi/MyUSDT.json",
+        "txHash": "0x8fae72182df4715f1157b67f5e927a5426dd7abfac1486433e36091062d2ef9e"
+      },
+      "CollateralNFT": {
+        "address": "",
+        "abiPath": "artifacts/contracts/tokens/CollateralNFT.sol/CollateralNFT.json"
+      },
+      "CollateralReceiptNFT": {
+        "address": "",
+        "abiPath": "artifacts/contracts/tokens/CollateralReceiptNFT.sol/CollateralReceiptNFT.json"
+      },
+      "DebtToken": {
+        "address": "",
+        "abiPath": "artifacts/contracts/tokens/DebtToken.sol/DebtToken.json"
+      },
+      "LendingPositionNFT": {
+        "address": "",
+        "abiPath": "artifacts/contracts/tokens/LendingPositionNFT.sol/LendingPositionNFT.json"
+      },
+      "PriceOracle": {
+        "address": "",
+        "abiPath": "artifacts/contracts/PriceOracle.sol/PriceOracle.json"
+      },
+      "LendingPool": {
+        "address": "",
+        "abiPath": "artifacts/contracts/LendingPool.sol/LendingPool.json"
+      }
     }
   },
   "sepolia": {
     "chainId": 11155111,
     "explorerUrl": "https://sepolia.etherscan.io",
     "contracts": {
-      "MyUSDT": { "address": "", "txHash": "", "abiPath": "artifacts/contracts/tokens/MyUSDT.sol/MyUSDT.json" },
-      "CollateralNFT": { "address": "", "txHash": "", "abiPath": "artifacts/contracts/tokens/CollateralNFT.sol/CollateralNFT.json" },
-      "CollateralReceiptNFT": { "address": "", "txHash": "", "abiPath": "artifacts/contracts/tokens/CollateralReceiptNFT.sol/CollateralReceiptNFT.json" },
-      "DebtToken": { "address": "", "txHash": "", "abiPath": "artifacts/contracts/tokens/DebtToken.sol/DebtToken.json" },
-      "LendingPositionNFT": { "address": "", "txHash": "", "abiPath": "artifacts/contracts/tokens/LendingPositionNFT.sol/LendingPositionNFT.json" },
-      "PriceOracle": { "address": "", "txHash": "", "abiPath": "artifacts/contracts/PriceOracle.sol/PriceOracle.json" },
-      "LendingPool": { "address": "", "txHash": "", "abiPath": "artifacts/contracts/LendingPool.sol/LendingPool.json" }
+      "MyUSDT": {
+        "address": "",
+        "txHash": "",
+        "abiPath": "artifacts/contracts/tokens/MyUSDT.sol/MyUSDT.json"
+      },
+      "CollateralNFT": {
+        "address": "",
+        "txHash": "",
+        "abiPath": "artifacts/contracts/tokens/CollateralNFT.sol/CollateralNFT.json"
+      },
+      "CollateralReceiptNFT": {
+        "address": "",
+        "txHash": "",
+        "abiPath": "artifacts/contracts/tokens/CollateralReceiptNFT.sol/CollateralReceiptNFT.json"
+      },
+      "DebtToken": {
+        "address": "",
+        "txHash": "",
+        "abiPath": "artifacts/contracts/tokens/DebtToken.sol/DebtToken.json"
+      },
+      "LendingPositionNFT": {
+        "address": "",
+        "txHash": "",
+        "abiPath": "artifacts/contracts/tokens/LendingPositionNFT.sol/LendingPositionNFT.json"
+      },
+      "PriceOracle": {
+        "address": "",
+        "txHash": "",
+        "abiPath": "artifacts/contracts/PriceOracle.sol/PriceOracle.json"
+      },
+      "LendingPool": {
+        "address": "",
+        "txHash": "",
+        "abiPath": "artifacts/contracts/LendingPool.sol/LendingPool.json"
+      }
     }
   }
 }

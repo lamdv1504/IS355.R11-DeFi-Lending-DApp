@@ -8,7 +8,10 @@
     "compile": "hardhat compile",
     "test": "hardhat test",
     "accounts": "hardhat run scripts/print_accounts.js",
-    "clean": "hardhat clean"
+    "clean": "hardhat clean",
+    "test:myusdt": "hardhat test tests/MyUSDT.test.js",
+    "export:myusdt": "hardhat run scripts/export_myusdt.js",
+    "deploy:myusdt": "hardhat run scripts/deploy_myusdt.js --network localhost"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^5.0.2",
