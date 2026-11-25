@@ -15,7 +15,7 @@
     "deploy:myusdt": "hardhat run scripts/deploy_myusdt.js --network localhost"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.2",
+    "@openzeppelin/contracts": "5.0.2",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {
