@@ -8,9 +8,9 @@ L04 (IPFS Hub / biểu đồ), L05 (tích hợp ví) và Quân Q05 (API).
 
 | Đầu vào | File đã có | Cách sử dụng |
 |---|---|---|
-| H01 – Hùng | [MyUSDT](../contracts/tokens/MyUSDT.sol), [ABI](../deployments/abi/MyUSDT.json), [bàn giao](h01_myusdt_handoff.md) | 18 decimals, faucet tối đa 1,000 MyUSDT/lần, approve/allowance |
-| HI01 – Hiếu | [Đặc tả](smart_contract_spec.md), [ILendingPool](../contracts/interfaces/ILendingPool.sol), [constants](../backend/config/constants.py) | Chữ ký hàm/event, lãi suất, HF, LTV, NFT và quyền |
-| Q01 – Quân | [Hướng dẫn](q01_environment_and_metamask_guide.md), [registry](../backend/config/contracts.json) | Local 31337, Sepolia 11155111, ví và cấu hình mạng |
+| H01 – Hùng | [MyUSDT](../../contracts/tokens/MyUSDT.sol), [ABI](../../deployments/abi/MyUSDT.json), [bàn giao](../Hung/h01_myusdt_handoff.md) | 18 decimals, faucet tối đa 1,000 MyUSDT/lần, approve/allowance |
+| HI01 – Hiếu | [Đặc tả](../Hieu/smart_contract_spec.md), [ILendingPool](../../contracts/interfaces/ILendingPool.sol), [constants](../../backend/config/constants.py) | Chữ ký hàm/event, lãi suất, HF, LTV, NFT và quyền |
+| Q01 – Quân | [Hướng dẫn](../Quan/q01_environment_and_metamask_guide.md), [registry](../../backend/config/contracts.json) | Local 31337, Sepolia 11155111, ví và cấu hình mạng |
 
 H01 và HI01 là hai phụ thuộc của L01 trong sheet `23 cong viec goc`, dòng L01.
 Các đầu vào này đã có trên nhánh `feature/lam-l01-ui-wireframe`.

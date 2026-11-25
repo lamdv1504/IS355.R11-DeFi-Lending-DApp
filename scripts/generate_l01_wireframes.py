@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from backend.config import constants as C
 
-OUT = ROOT / "docs" / "wireframes"
+OUT = ROOT / "docs" / "Lam" / "wireframes"
 WIDTH, HEIGHT = 1600, 1120
 INK, MUTED, BORDER = "#183735", "#61736f", "#d6e0dc"
 TEAL, TINT, BG, WHITE = "#147d6c", "#e7f3ee", "#f4f7f5", "#ffffff"
@@ -95,7 +95,7 @@ class Scene:
         self.box(280, 130, 1286, 42, TINT, TINT, 8)
         self.text(296, 157, "WIREFRAME · Snapshot minh họa theo HI01 · APR on-chain / APY quy đổi tham khảo", 13, TEAL)
         self.line(280, 1075, 1566, 1075)
-        self.text(280, 1100, "L01 / H01 + HI01 đã có · API bổ sung chờ xác nhận Q05 · Xem docs/ui_wireframes.md", 12, MUTED)
+        self.text(280, 1100, "L01 / H01 + HI01 đã có · API bổ sung chờ xác nhận Q05 · Xem docs/Lam/ui_wireframes.md", 12, MUTED)
 
     def svg(self):
         parts = [
@@ -415,7 +415,7 @@ def examples():
 
 
 def main():
-    required = ["docs/smart_contract_spec.md", "docs/h01_myusdt_handoff.md", "contracts/tokens/MyUSDT.sol", "contracts/interfaces/ILendingPool.sol", "contracts/interfaces/IPriceOracle.sol", "contracts/interfaces/ILendingPositionNFT.sol", "deployments/abi/MyUSDT.json", "deployments/localhost.json"]
+    required = ["docs/Hieu/smart_contract_spec.md", "docs/Hung/h01_myusdt_handoff.md", "contracts/tokens/MyUSDT.sol", "contracts/interfaces/ILendingPool.sol", "contracts/interfaces/IPriceOracle.sol", "contracts/interfaces/ILendingPositionNFT.sol", "deployments/abi/MyUSDT.json", "deployments/localhost.json"]
     missing = [name for name in required if not (ROOT/name).is_file()]
     if missing:
         raise SystemExit("Missing H01/HI01 handoff files; stop L01: " + ", ".join(missing))

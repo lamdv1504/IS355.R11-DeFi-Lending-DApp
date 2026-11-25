@@ -121,7 +121,15 @@ DeFi-Lending-DApp/
 ├── ipfs_storage/              # Dữ liệu mẫu và metadata
 ├── tests/                     # Kiểm thử hệ thống
 ├── docs/                      # Tài liệu thiết kế
+│   ├── Hieu/
+│   ├── Hung/
+│   ├── Lam/
+│   └── Quan/
 └── reports/                   # Báo cáo và minh chứng
+    ├── Hieu/
+    ├── Hung/
+    ├── Lam/
+    └── Quan/
 ```
 
 ## 7. Phạm vi thực hiện
@@ -129,15 +137,3 @@ DeFi-Lending-DApp/
 Đây là dự án học thuật nhằm nghiên cứu và minh họa mô hình DeFi Lending. MyUSDT là token giả lập phục vụ thử nghiệm; các giao dịch được thực hiện trên mạng local hoặc testnet. Tài sản, dữ liệu và khoản vay trong demo không đại diện cho tiền hoặc tài sản có giá trị thực tế.
 
 Dự án không phải nền tảng cung cấp dịch vụ tài chính hay sản phẩm đầu tư. Các chức năng được hoàn thiện và đánh giá thông qua quá trình phát triển, kiểm thử và trình diễn theo yêu cầu đồ án.
-
-## 8. H01 - MyUSDT (Hùng)
-
-[Thông số Token, Faucet, unit test và hướng dẫn deploy/bàn giao](docs/h01_myusdt_handoff.md).
-
-## Thiết kế giao diện (L01 - Lâm)
-
-[Wireframe 4 màn hình, user flow, quyền truy cập và dữ liệu bàn giao](docs/ui_wireframes.md).
-
-## H02 - Token & NFT (Hùng, giai đoạn 2)
-
-[Contract, ABI, kiểm thử và hướng dẫn tích hợp LendingPool](docs/h02_token_nft_handoff.md).

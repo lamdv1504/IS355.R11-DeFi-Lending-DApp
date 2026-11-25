@@ -4,7 +4,7 @@
 
 H01 sử dụng phần Q01 của Quân đã có: `hardhat.config.js`, `package-lock.json`,
 `.env.example`, mạng localhost và danh sách 10 ví test.
-Xem [hướng dẫn môi trường Q01](q01_environment_and_metamask_guide.md) để cài đặt và import ví.
+Xem [hướng dẫn môi trường Q01](../Quan/q01_environment_and_metamask_guide.md) để cài đặt và import ví.
 
 Đầu ra: MyUSDT.sol, unit test, script deploy/seed, ABI + bytecode, địa chỉ contract
 và danh sách tài khoản có số dư token. H01 không cần LendingPool của Hiếu

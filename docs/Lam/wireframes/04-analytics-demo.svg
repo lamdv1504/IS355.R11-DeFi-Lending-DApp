@@ -37,7 +37,7 @@
 <rect x="280" y="130" width="1286" height="42" rx="8" fill="#e7f3ee" stroke="#e7f3ee"/>
 <text x="296" y="157" font-size="13" fill="#147d6c" font-weight="400">WIREFRAME · Snapshot minh họa theo HI01 · APR on-chain / APY quy đổi tham khảo</text>
 <line x1="280" y1="1075" x2="1566" y2="1075" stroke="#d6e0dc" stroke-width="1" stroke-linecap="round"/>
-<text x="280" y="1100" font-size="12" fill="#61736f" font-weight="400">L01 / H01 + HI01 đã có · API bổ sung chờ xác nhận Q05 · Xem docs/ui_wireframes.md</text>
+<text x="280" y="1100" font-size="12" fill="#61736f" font-weight="400">L01 / H01 + HI01 đã có · API bổ sung chờ xác nhận Q05 · Xem docs/Lam/ui_wireframes.md</text>
 <rect x="280" y="196" width="770" height="380" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
 <text x="302" y="230" font-size="19" fill="#183735" font-weight="700">Biến động lãi suất theo tháng</text>
 <text x="302" y="254" font-size="12" fill="#61736f" font-weight="400">SIMULATED · 6 tháng minh họa · Đơn vị % / năm (APR)</text>

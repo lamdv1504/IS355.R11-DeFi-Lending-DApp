@@ -1,8 +1,10 @@
 # Báo cáo và minh chứng
 
-Dành cho báo cáo đồ án, kết quả kiểm thử, ảnh chụp giao diện và minh chứng giao dịch phục vụ trình bày hoặc đánh giá dự án.
+Lưu báo cáo, kết quả kiểm thử và minh chứng trong thư mục của thành viên phụ trách.
 
-## H02
-
-- [Log kiểm thử Token/NFT](h02_token_validation.md).
-- [Xác minh deployment local](h02_local_verification.json).
+| Thành viên | Thư mục |
+|---|---|
+| Hiếu | [Hieu](Hieu/README.md) |
+| Hùng | [Hung](Hung/README.md) |
+| Lâm | [Lam](Lam/README.md) |
+| Quân | [Quan](Quan/README.md) |

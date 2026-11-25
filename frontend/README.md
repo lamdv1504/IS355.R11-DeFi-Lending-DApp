@@ -9,4 +9,4 @@ Các thư mục con:
 
 ## Thiết kế giai đoạn 1 (L01)
 
-Xem [wireframe và user flow](../docs/ui_wireframes.md) và [đề xuất API](../docs/l01_api_contract.md) trước khi triển khai L02-L05.
+Xem [wireframe và user flow](../docs/Lam/ui_wireframes.md) và [đề xuất API](../docs/Lam/l01_api_contract.md) trước khi triển khai L02-L05.
