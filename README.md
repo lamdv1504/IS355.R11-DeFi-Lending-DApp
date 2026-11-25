@@ -129,3 +129,7 @@ DeFi-Lending-DApp/
 Đây là dự án học thuật nhằm nghiên cứu và minh họa mô hình DeFi Lending. MyUSDT là token giả lập phục vụ thử nghiệm; các giao dịch được thực hiện trên mạng local hoặc testnet. Tài sản, dữ liệu và khoản vay trong demo không đại diện cho tiền hoặc tài sản có giá trị thực tế.
 
 Dự án không phải nền tảng cung cấp dịch vụ tài chính hay sản phẩm đầu tư. Các chức năng được hoàn thiện và đánh giá thông qua quá trình phát triển, kiểm thử và trình diễn theo yêu cầu đồ án.
+
+## 8. H01 - MyUSDT (Hùng)
+
+[Thông số Token, Faucet, unit test và hướng dẫn deploy/bàn giao](docs/h01_myusdt_handoff.md).
