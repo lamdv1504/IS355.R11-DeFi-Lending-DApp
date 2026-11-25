@@ -10,3 +10,5 @@ Dành cho tài liệu kiến trúc hệ thống, thiết kế hợp đồng, lu�
 
 - [Wireframe 4 màn hình, user flow và ma trận quyền (L01)](ui_wireframes.md)
 - [Dữ liệu UI và đề xuất API bàn giao Q05 (L01)](l01_api_contract.md)
+
+- [Bàn giao Collateral NFT, Receipt, Debt Token và Lending Position (H02)](h02_token_nft_handoff.md)
