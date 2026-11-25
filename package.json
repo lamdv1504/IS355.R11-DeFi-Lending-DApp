@@ -10,6 +10,7 @@
     "accounts": "hardhat run scripts/print_accounts.js",
     "clean": "hardhat clean",
     "test:myusdt": "hardhat test tests/MyUSDT.test.js",
+    "test:hi01": "hardhat test tests/HI01_ProtocolMath.test.js",
     "export:myusdt": "hardhat run scripts/export_myusdt.js",
     "deploy:myusdt": "hardhat run scripts/deploy_myusdt.js --network localhost"
   },
