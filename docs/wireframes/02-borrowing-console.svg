@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+<title id="title">Borrowing Console — L01</title>
+<desc id="desc">Bản vẽ giao diện của Lâm. Dữ liệu minh họa; không phải ứng dụng hoặc kết quả giao dịch thật.</desc>
+<g font-family="Arial, Segoe UI, sans-serif">
+<rect x="0" y="0" width="1600" height="1120" rx="0" fill="#f4f7f5" stroke="#f4f7f5"/>
+<rect x="0" y="0" width="244" height="1120" rx="0" fill="#ffffff" stroke="#d6e0dc"/>
+<rect x="24" y="30" width="42" height="42" rx="10" fill="#147d6c" stroke="#147d6c"/>
+<text x="33" y="58" font-size="20" fill="#ffffff" font-weight="700">DL</text>
+<text x="80" y="52" font-size="17" fill="#183735" font-weight="700">LENDING</text>
+<text x="80" y="71" font-size="12" fill="#61736f" font-weight="400">IS355.R11</text>
+<text x="24" y="125" font-size="11" fill="#61736f" font-weight="700">KHÔNG GIAN LÀM VIỆC</text>
+<text x="29" y="179" font-size="12" fill="#61736f" font-weight="700">01</text>
+<text x="59" y="179" font-size="14" fill="#183735" font-weight="400">Lending Dashboard</text>
+<rect x="16" y="208" width="212" height="46" rx="8" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="29" y="237" font-size="12" fill="#147d6c" font-weight="700">02</text>
+<text x="59" y="237" font-size="14" fill="#147d6c" font-weight="700">Borrowing Console</text>
+<text x="29" y="295" font-size="12" fill="#61736f" font-weight="700">03</text>
+<text x="59" y="295" font-size="14" fill="#183735" font-weight="400">IPFS Document Hub</text>
+<text x="29" y="353" font-size="12" fill="#61736f" font-weight="700">04</text>
+<text x="59" y="353" font-size="14" fill="#183735" font-weight="400">Analytics &amp; Demo</text>
+<line x1="24" y1="428" x2="220" y2="428" stroke="#d6e0dc" stroke-width="1" stroke-linecap="round"/>
+<text x="24" y="460" font-size="12" fill="#61736f" font-weight="400">L01 · Thiết kế của Lâm</text>
+<text x="24" y="483" font-size="12" fill="#61736f" font-weight="400">Giai đoạn 1</text>
+<text x="24" y="506" font-size="12" fill="#61736f" font-weight="400">Khung desktop 1600 px</text>
+<rect x="24" y="990" width="190" height="30" rx="15" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="36" y="1010" font-size="12" fill="#147d6c" font-weight="700">DỮ LIỆU MINH HỌA</text>
+<text x="24" y="1044" font-size="12" fill="#61736f" font-weight="400">Các nút là bản vẽ.</text>
+<text x="24" y="1067" font-size="12" fill="#61736f" font-weight="400">Chưa kết nối giao dịch.</text>
+<text x="280" y="35" font-size="12" fill="#147d6c" font-weight="700">DEFI LENDING / L01</text>
+<text x="280" y="78" font-size="30" fill="#183735" font-weight="700">Borrowing Console</text>
+<text x="280" y="104" font-size="14" fill="#61736f" font-weight="400">Quản lý tài sản thế chấp, khoản vay và mức an toàn.</text>
+<rect x="1190" y="40" width="150" height="30" rx="15" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="1202" y="60" font-size="12" fill="#147d6c" font-weight="700">Local · 31337</text>
+<rect x="1350" y="40" width="216" height="30" rx="15" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="1362" y="60" font-size="12" fill="#147d6c" font-weight="700">Borrower · 0x3C44…93BC</text>
+<rect x="280" y="130" width="1286" height="42" rx="8" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="296" y="157" font-size="13" fill="#147d6c" font-weight="400">WIREFRAME · Snapshot minh họa theo HI01 · APR on-chain / APY quy đổi tham khảo</text>
+<line x1="280" y1="1075" x2="1566" y2="1075" stroke="#d6e0dc" stroke-width="1" stroke-linecap="round"/>
+<text x="280" y="1100" font-size="12" fill="#61736f" font-weight="400">L01 / H01 + HI01 đã có · API bổ sung chờ xác nhận Q05 · Xem docs/ui_wireframes.md</text>
+<rect x="280" y="196" width="304" height="110" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="300" y="224" font-size="13" fill="#61736f" font-weight="400">TÀI SẢN THẾ CHẤP</text>
+<text x="300" y="262" font-size="29" fill="#183735" font-weight="700">1,000.00</text>
+<text x="300" y="286" font-size="12" fill="#61736f" font-weight="400">MyUSDT · CollateralNFT #7</text>
+<rect x="608" y="196" width="304" height="110" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="628" y="224" font-size="13" fill="#61736f" font-weight="400">TỔNG DƯ NỢ</text>
+<text x="628" y="262" font-size="29" fill="#183735" font-weight="700">500.00</text>
+<text x="628" y="286" font-size="12" fill="#61736f" font-weight="400">MyUSDT · Gốc 500 / Lãi 0</text>
+<rect x="936" y="196" width="304" height="110" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="956" y="224" font-size="13" fill="#61736f" font-weight="400">CÓ THỂ VAY THÊM</text>
+<text x="956" y="262" font-size="29" fill="#183735" font-weight="700">200.00</text>
+<text x="956" y="286" font-size="12" fill="#61736f" font-weight="400">Trần tổng nợ: 700.00 · LTV ≤ 70%</text>
+<rect x="1264" y="196" width="304" height="110" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="1284" y="224" font-size="13" fill="#61736f" font-weight="400">BORROW APR · ON-CHAIN</text>
+<text x="1284" y="262" font-size="29" fill="#183735" font-weight="700">10.00%</text>
+<text x="1284" y="286" font-size="12" fill="#61736f" font-weight="400">APY quy đổi tham khảo: 10.5156%</text>
+<rect x="280" y="330" width="402" height="376" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="302" y="364" font-size="19" fill="#183735" font-weight="700">Tài sản &amp; biên nhận</text>
+<text x="302" y="388" font-size="12" fill="#61736f" font-weight="400">Token / CollateralNFT</text>
+<text x="302" y="425" font-size="13" fill="#61736f" font-weight="400">NFT #7 · Định giá: 1,000.00 MyUSDT</text>
+<text x="302" y="453" font-size="13" fill="#61736f" font-weight="400">Biên nhận #1 · Đang khóa · Không chuyển</text>
+<text x="302" y="481" font-size="13" fill="#61736f" font-weight="400">DebtToken: 500.00 · Không chuyển</text>
+<rect x="302" y="500" width="126" height="30" rx="15" fill="#f4f7f5" stroke="#f4f7f5"/>
+<text x="314" y="520" font-size="12" fill="#61736f" font-weight="700">Token</text>
+<rect x="440" y="500" width="218" height="30" rx="15" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="452" y="520" font-size="12" fill="#147d6c" font-weight="700">CollateralNFT</text>
+<rect x="302" y="545" width="210" height="45" rx="7" fill="#f4f7f5" stroke="#d6e0dc"/>
+<text x="316" y="574" font-size="15" fill="#183735" font-weight="400">Token ID #7</text>
+<rect x="526" y="546" width="132" height="42" rx="8" fill="#edf0ee" stroke="#edf0ee"/>
+<text x="541" y="573" font-size="14" fill="#61736f" font-weight="700">Thế chấp</text>
+<text x="302" y="605" font-size="12" fill="#61736f" font-weight="400">Có vị thế đang khóa: chặn thế chấp mới.</text>
+<rect x="302" y="622" width="356" height="42" rx="8" fill="#edf0ee" stroke="#edf0ee"/>
+<text x="317" y="649" font-size="14" fill="#61736f" font-weight="700">Rút thế chấp · Còn dư nợ</text>
+<text x="302" y="689" font-size="12" fill="#61736f" font-weight="400">Trả hết nợ: mở khóa và tất toán biên nhận.</text>
+<rect x="706" y="330" width="432" height="376" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="728" y="364" font-size="19" fill="#183735" font-weight="700">Vay thêm / Trả nợ</text>
+<text x="728" y="405" font-size="13" fill="#147d6c" font-weight="700">VAY THÊM · TỐI ĐA 200.00</text>
+<rect x="728" y="422" width="388" height="45" rx="7" fill="#f4f7f5" stroke="#d6e0dc"/>
+<text x="742" y="451" font-size="15" fill="#183735" font-weight="400">100.00 MyUSDT</text>
+<line x1="738" y1="493" x2="1105" y2="493" stroke="#d6e0dc" stroke-width="6" stroke-linecap="round"/>
+<line x1="738" y1="493" x2="922" y2="493" stroke="#147d6c" stroke-width="6" stroke-linecap="round"/>
+<circle cx="922" cy="493" r="8" fill="#147d6c" stroke="none"/>
+<text x="728" y="522" font-size="13" fill="#a36514" font-weight="400">LTV sau vay: 60% · HF sau vay: 1.33</text>
+<rect x="728" y="540" width="388" height="42" rx="8" fill="#147d6c" stroke="#147d6c"/>
+<text x="743" y="567" font-size="14" fill="#ffffff" font-weight="700">Tạo hồ sơ &amp; xem trước khoản vay</text>
+<text x="728" y="619" font-size="13" fill="#183735" font-weight="700">TỔNG CẦN TRẢ HIỆN TẠI: 500.00</text>
+<rect x="728" y="639" width="388" height="42" rx="8" fill="#147d6c" stroke="#147d6c"/>
+<text x="743" y="666" font-size="14" fill="#ffffff" font-weight="700">Xem trước giao dịch trả nợ</text>
+<rect x="1162" y="330" width="404" height="376" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="1184" y="364" font-size="19" fill="#183735" font-weight="700">Health Factor</text>
+<text x="1184" y="388" font-size="12" fill="#61736f" font-weight="400">Hiện tại: SAFE · Sau vay thêm cần kiểm tra lại</text>
+<line x1="1246.0" y1="555.0" x2="1246.232846045464" y2="547.590718695541" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1246.232846045464" y1="547.590718695541" x2="1246.9304652448916" y2="540.210678439412" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1246.9304652448916" y1="540.210678439412" x2="1248.0901044140148" y2="532.8890048788844" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1248.0901044140148" y1="532.8890048788844" x2="1249.7071869868216" y2="525.6545933145471" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1249.7071869868216" y1="525.6545933145471" x2="1251.7753310771718" y2="518.5359946637562" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1251.7753310771718" y1="518.5359946637562" x2="1254.2863746651863" y2="511.56130278320796" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1254.2863746651863" y1="511.56130278320796" x2="1257.2304078090096" y2="504.7580435953214" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1257.2304078090096" y1="504.7580435953214" x2="1260.5958117548241" y2="498.15306645599753" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1260.5958117548241" y1="498.15306645599753" x2="1264.3693047907623" y2="491.7724381924784" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1264.3693047907623" y1="491.7724381924784" x2="1268.5359946637561" y2="485.64134022948815" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1268.5359946637561" y1="485.64134022948815" x2="1273.0794373524568" y2="479.78396920965463" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1273.0794373524568" y1="479.78396920965463" x2="1277.9817019642735" y2="474.2234415004147" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1277.9817019642735" y1="474.2234415004147" x2="1283.2234415004148" y2="468.98170196427344" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1283.2234415004148" y1="468.98170196427344" x2="1288.7839692096545" y2="464.07943735245686" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1288.7839692096545" y1="464.07943735245686" x2="1294.6413402294882" y2="459.5359946637562" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1294.6413402294882" y1="459.5359946637562" x2="1300.7724381924784" y2="455.3693047907622" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1300.7724381924784" y1="455.3693047907622" x2="1307.1530664559975" y2="451.59581175482407" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1307.1530664559975" y1="451.59581175482407" x2="1313.7580435953214" y2="448.2304078090097" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1313.7580435953214" y1="448.2304078090097" x2="1320.561302783208" y2="445.2863746651863" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1320.561302783208" y1="445.2863746651863" x2="1327.5359946637561" y2="442.77533107717187" stroke="#b54741" stroke-width="9" stroke-linecap="round"/>
+<line x1="1327.5359946637561" y1="442.77533107717187" x2="1331.0790494873709" y2="441.68534509012073" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1331.0790494873709" y1="441.68534509012073" x2="1334.6545933145471" y2="440.7071869868215" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1334.6545933145471" y1="440.7071869868215" x2="1338.259097515208" y2="439.8418220912278" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1338.259097515208" y1="439.8418220912278" x2="1341.8890048788844" y2="439.0901044140147" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1341.8890048788844" y1="439.0901044140147" x2="1345.5407331252527" y2="438.45277580977375" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1345.5407331252527" y1="438.45277580977375" x2="1349.210678439412" y2="437.9304652448916" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1349.210678439412" y1="437.9304652448916" x2="1352.8952190284153" y2="437.5236881768366" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1352.8952190284153" y1="437.5236881768366" x2="1356.590718695541" y2="437.23284604546393" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1356.590718695541" y1="437.23284604546393" x2="1360.293530428781" y2="437.05822587684366" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1360.293530428781" y1="437.05822587684366" x2="1364.0" y2="437.0" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1364.0" y1="437.0" x2="1367.7064695712193" y2="437.05822587684366" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1367.7064695712193" y1="437.05822587684366" x2="1371.409281304459" y2="437.23284604546393" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1371.409281304459" y1="437.23284604546393" x2="1375.1047809715847" y2="437.5236881768366" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1375.1047809715847" y1="437.5236881768366" x2="1378.789321560588" y2="437.9304652448916" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1378.789321560588" y1="437.9304652448916" x2="1382.4592668747473" y2="438.45277580977375" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1382.4592668747473" y1="438.45277580977375" x2="1386.1109951211156" y2="439.0901044140147" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1386.1109951211156" y1="439.0901044140147" x2="1389.740902484792" y2="439.8418220912278" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1389.740902484792" y1="439.8418220912278" x2="1393.3454066854529" y2="440.7071869868215" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1393.3454066854529" y1="440.7071869868215" x2="1396.9209505126291" y2="441.68534509012073" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1396.9209505126291" y1="441.68534509012073" x2="1400.4640053362439" y2="442.77533107717187" stroke="#a36514" stroke-width="9" stroke-linecap="round"/>
+<line x1="1400.4640053362439" y1="442.77533107717187" x2="1407.438697216792" y2="445.2863746651864" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1407.438697216792" y1="445.2863746651864" x2="1414.2419564046786" y2="448.2304078090097" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1414.2419564046786" y1="448.2304078090097" x2="1420.8469335440025" y2="451.5958117548241" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1420.8469335440025" y1="451.5958117548241" x2="1427.2275618075216" y2="455.3693047907622" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1427.2275618075216" y1="455.3693047907622" x2="1433.3586597705118" y2="459.5359946637562" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1433.3586597705118" y1="459.5359946637562" x2="1439.2160307903455" y2="464.07943735245686" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1439.2160307903455" y1="464.07943735245686" x2="1444.7765584995852" y2="468.98170196427344" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1444.7765584995852" y1="468.98170196427344" x2="1450.0182980357265" y2="474.22344150041476" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1450.0182980357265" y1="474.22344150041476" x2="1454.9205626475432" y2="479.78396920965463" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1454.9205626475432" y1="479.78396920965463" x2="1459.4640053362439" y2="485.64134022948815" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1459.4640053362439" y1="485.64134022948815" x2="1463.6306952092377" y2="491.77243819247843" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1463.6306952092377" y1="491.77243819247843" x2="1467.4041882451759" y2="498.15306645599765" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1467.4041882451759" y1="498.15306645599765" x2="1470.7695921909904" y2="504.7580435953214" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1470.7695921909904" y1="504.7580435953214" x2="1473.7136253348137" y2="511.561302783208" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1473.7136253348137" y1="511.561302783208" x2="1476.2246689228282" y2="518.5359946637561" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1476.2246689228282" y1="518.5359946637561" x2="1478.2928130131784" y2="525.6545933145471" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1478.2928130131784" y1="525.6545933145471" x2="1479.9098955859852" y2="532.8890048788845" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1479.9098955859852" y1="532.8890048788845" x2="1481.0695347551084" y2="540.210678439412" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1481.0695347551084" y1="540.210678439412" x2="1481.767153954536" y2="547.590718695541" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1481.767153954536" y1="547.590718695541" x2="1482.0" y2="555.0" stroke="#147d6c" stroke-width="9" stroke-linecap="round"/>
+<line x1="1364" y1="555" x2="1398.913901908336" y2="480.80418169778636" stroke="#183735" stroke-width="3" stroke-linecap="round"/>
+<circle cx="1364" cy="555" r="6" fill="#183735" stroke="none"/>
+<text x="1322" y="608" font-size="32" fill="#147d6c" font-weight="700">1.60</text>
+<text x="1184" y="652" font-size="13" fill="#183735" font-weight="400">Đỏ &lt; 1 · Vàng [1, 1.5) · Xanh ≥ 1.5</text>
+<text x="1184" y="680" font-size="13" fill="#61736f" font-weight="400">Không có dư nợ: ∞ · Không thanh lý</text>
+<rect x="280" y="730" width="858" height="170" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="302" y="764" font-size="19" fill="#183735" font-weight="700">Xem trước giao dịch vay</text>
+<text x="302" y="796" font-size="13" fill="#61736f" font-weight="400">Vay thêm 100.00 → nợ dự kiến 600.00 → mint thêm 100.00 DebtToken.</text>
+<text x="302" y="822" font-size="13" fill="#61736f" font-weight="400">APR hiện tại 10.00%; sau vay dự kiến 11.00% (Pool U = 60%).</text>
+<text x="302" y="848" font-size="13" fill="#61736f" font-weight="400">Pool: từ registry HI02 · Gas: ước lượng trước khi ký · Lãi dự tính: ghi rõ kỳ hạn.</text>
+<text x="302" y="874" font-size="13" fill="#61736f" font-weight="400">PDF + CID có trước giao dịch vay; txHash chỉ gắn sau receipt thành công.</text>
+<rect x="1162" y="730" width="404" height="170" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="1184" y="764" font-size="19" fill="#183735" font-weight="700">Thanh lý khoản vay</text>
+<text x="1184" y="796" font-size="13" fill="#183735" font-weight="400">Ví thực hiện cần đủ token và allowance.</text>
+<rect x="1184" y="817" width="358" height="42" rx="8" fill="#edf0ee" stroke="#edf0ee"/>
+<text x="1199" y="844" font-size="14" fill="#61736f" font-weight="700">Thanh lý · HF hiện tại ≥ 1</text>
+<text x="1184" y="883" font-size="12" fill="#b54741" font-weight="400">HF = 1.00 vẫn chặn; HF &lt; 1 mới cho ký.</text>
+<rect x="280" y="924" width="1286" height="128" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="302" y="958" font-size="19" fill="#183735" font-weight="700">Các trạng thái phải có</text>
+<text x="302" y="990" font-size="13" fill="#61736f" font-weight="400">Không có thế chấp → chặn vay · Vượt LTV 70% / thiếu thanh khoản → chặn · CID chưa sẵn sàng → chặn.</text>
+<text x="302" y="1018" font-size="13" fill="#61736f" font-weight="400">HF &lt; 1: banner đỏ, cho ví đủ điều kiện ký liquidate(); không có cơ chế tự thanh lý khi chỉ mở trang.</text>
+</g>
+</svg>

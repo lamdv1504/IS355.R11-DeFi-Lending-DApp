@@ -1,0 +1,256 @@
+{
+  "status": "DESIGN_EXAMPLE_NOT_IMPLEMENTED_API",
+  "task": "L01",
+  "data_kind": "SIMULATED",
+  "network": {
+    "name": "local",
+    "chain_id": 31337,
+    "myusdt_address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    "lending_pool_address": null
+  },
+  "pool": {
+    "total_supplied": {
+      "amount_wad": "1000000000000000000000",
+      "amount_display": "1000.000000"
+    },
+    "total_borrowed": {
+      "amount_wad": "500000000000000000000",
+      "amount_display": "500.000000"
+    },
+    "available_liquidity": {
+      "amount_wad": "500000000000000000000",
+      "amount_display": "500.000000"
+    },
+    "utilization_bps": 5000,
+    "borrow_apr_bps": 1000,
+    "borrow_apr_percent": 10.0,
+    "borrow_apy_percent": 10.5156,
+    "supply_apr_bps": 500,
+    "supply_apr_percent": 5.0,
+    "supply_apy_percent": 5.1267
+  },
+  "lender_positions": [
+    {
+      "position_id": "1",
+      "owner": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+      "principal": {
+        "amount_wad": "1000000000000000000000",
+        "amount_display": "1000.000000"
+      },
+      "earned_interest": {
+        "amount_wad": "0",
+        "amount_display": "0.000000"
+      },
+      "claimable": {
+        "amount_wad": "1000000000000000000000",
+        "amount_display": "1000.000000"
+      },
+      "active": true
+    }
+  ],
+  "loan": {
+    "borrower": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+    "is_nft_collateral": true,
+    "collateral_token_id": "7",
+    "receipt_id": "1",
+    "receipt_active": true,
+    "debt_token_balance": {
+      "amount_wad": "500000000000000000000",
+      "amount_display": "500.000000"
+    },
+    "collateral_value": {
+      "amount_wad": "1000000000000000000000",
+      "amount_display": "1000.000000"
+    },
+    "principal": {
+      "amount_wad": "500000000000000000000",
+      "amount_display": "500.000000"
+    },
+    "accrued_interest": {
+      "amount_wad": "0",
+      "amount_display": "0.000000"
+    },
+    "total_debt": {
+      "amount_wad": "500000000000000000000",
+      "amount_display": "500.000000"
+    },
+    "max_total_debt": {
+      "amount_wad": "700000000000000000000",
+      "amount_display": "700.000000"
+    },
+    "remaining_ltv_capacity": {
+      "amount_wad": "200000000000000000000",
+      "amount_display": "200.000000"
+    },
+    "available_to_borrow": {
+      "amount_wad": "200000000000000000000",
+      "amount_display": "200.000000"
+    },
+    "health": {
+      "health_factor_wad": "1600000000000000000",
+      "health_factor": 1.6,
+      "is_infinite": false,
+      "status": "SAFE",
+      "liquidatable": false
+    },
+    "agreement_cid": null,
+    "transaction_hash": null
+  },
+  "borrow_preview": {
+    "amount": {
+      "amount_wad": "100000000000000000000",
+      "amount_display": "100.000000"
+    },
+    "resulting_debt": {
+      "amount_wad": "600000000000000000000",
+      "amount_display": "600.000000"
+    },
+    "resulting_health": {
+      "health_factor_wad": "1333333333333333333",
+      "health_factor": 1.333333,
+      "is_infinite": false,
+      "status": "WARNING",
+      "liquidatable": false
+    },
+    "resulting_borrow_apr_bps": 1100,
+    "estimated_gas": null,
+    "gas_price_wei": null,
+    "unsigned_tx": null,
+    "submit_enabled": false,
+    "blocked_reason": "CONTRACT_NOT_DEPLOYED"
+  },
+  "health_scenarios": [
+    {
+      "label": "SAFE",
+      "collateral_value": {
+        "amount_wad": "1000000000000000000000",
+        "amount_display": "1000.000000"
+      },
+      "total_debt": {
+        "amount_wad": "500000000000000000000",
+        "amount_display": "500.000000"
+      },
+      "health_factor_wad": "1600000000000000000",
+      "health_factor": 1.6,
+      "is_infinite": false,
+      "status": "SAFE",
+      "liquidatable": false
+    },
+    {
+      "label": "WARNING",
+      "collateral_value": {
+        "amount_wad": "1000000000000000000000",
+        "amount_display": "1000.000000"
+      },
+      "total_debt": {
+        "amount_wad": "700000000000000000000",
+        "amount_display": "700.000000"
+      },
+      "health_factor_wad": "1142857142857142857",
+      "health_factor": 1.142857,
+      "is_infinite": false,
+      "status": "WARNING",
+      "liquidatable": false
+    },
+    {
+      "label": "EXACT_HF_1",
+      "collateral_value": {
+        "amount_wad": "1000000000000000000000",
+        "amount_display": "1000.000000"
+      },
+      "total_debt": {
+        "amount_wad": "800000000000000000000",
+        "amount_display": "800.000000"
+      },
+      "health_factor_wad": "1000000000000000000",
+      "health_factor": 1.0,
+      "is_infinite": false,
+      "status": "WARNING",
+      "liquidatable": false
+    },
+    {
+      "label": "LIQUIDATABLE",
+      "collateral_value": {
+        "amount_wad": "600000000000000000000",
+        "amount_display": "600.000000"
+      },
+      "total_debt": {
+        "amount_wad": "500000000000000000000",
+        "amount_display": "500.000000"
+      },
+      "health_factor_wad": "960000000000000000",
+      "health_factor": 0.96,
+      "is_infinite": false,
+      "status": "LIQUIDATABLE",
+      "liquidatable": true
+    },
+    {
+      "label": "NO_DEBT",
+      "collateral_value": {
+        "amount_wad": "1000000000000000000000",
+        "amount_display": "1000.000000"
+      },
+      "total_debt": {
+        "amount_wad": "0",
+        "amount_display": "0.000000"
+      },
+      "health_factor_wad": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+      "health_factor": null,
+      "is_infinite": true,
+      "status": "SAFE",
+      "liquidatable": false
+    }
+  ],
+  "demo_60_days": {
+    "elapsed_seconds": 5184000,
+    "interest": {
+      "amount_wad": "8219178082191780821",
+      "amount_display": "8.219178"
+    },
+    "repayment": {
+      "amount_wad": "508219178082191780821",
+      "amount_display": "508.219178"
+    }
+  },
+  "document_examples": [
+    {
+      "kind": "LOAN_AGREEMENT",
+      "format": "PDF",
+      "visibility": "PRIVATE",
+      "cid": null,
+      "owner": "CURRENT_BORROWER",
+      "can_retrieve_plaintext": "AFTER_SERVER_AUTHORIZATION"
+    },
+    {
+      "kind": "CREDIT_REPORT",
+      "format": "JSON",
+      "visibility": "PRIVATE",
+      "encrypted": true,
+      "cid": null,
+      "owner": "CURRENT_BORROWER",
+      "can_retrieve_plaintext": "AFTER_SERVER_AUTHORIZATION"
+    },
+    {
+      "kind": "AUDIT_LOGS",
+      "format": "JSON",
+      "visibility": "PUBLIC",
+      "cid": null,
+      "data_kind": "SIMULATED"
+    }
+  ],
+  "wallet_events": [
+    "accountsChanged",
+    "chainChanged",
+    "disconnect"
+  ],
+  "transaction_states": [
+    "IDLE",
+    "VALIDATING",
+    "AWAITING_SIGNATURE",
+    "PENDING",
+    "CONFIRMED",
+    "REJECTED",
+    "REVERTED",
+    "UNKNOWN"
+  ]
+}

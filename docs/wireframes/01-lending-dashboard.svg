@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title desc">
+<title id="title">Lending Dashboard — L01</title>
+<desc id="desc">Bản vẽ giao diện của Lâm. Dữ liệu minh họa; không phải ứng dụng hoặc kết quả giao dịch thật.</desc>
+<g font-family="Arial, Segoe UI, sans-serif">
+<rect x="0" y="0" width="1600" height="1120" rx="0" fill="#f4f7f5" stroke="#f4f7f5"/>
+<rect x="0" y="0" width="244" height="1120" rx="0" fill="#ffffff" stroke="#d6e0dc"/>
+<rect x="24" y="30" width="42" height="42" rx="10" fill="#147d6c" stroke="#147d6c"/>
+<text x="33" y="58" font-size="20" fill="#ffffff" font-weight="700">DL</text>
+<text x="80" y="52" font-size="17" fill="#183735" font-weight="700">LENDING</text>
+<text x="80" y="71" font-size="12" fill="#61736f" font-weight="400">IS355.R11</text>
+<text x="24" y="125" font-size="11" fill="#61736f" font-weight="700">KHÔNG GIAN LÀM VIỆC</text>
+<rect x="16" y="150" width="212" height="46" rx="8" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="29" y="179" font-size="12" fill="#147d6c" font-weight="700">01</text>
+<text x="59" y="179" font-size="14" fill="#147d6c" font-weight="700">Lending Dashboard</text>
+<text x="29" y="237" font-size="12" fill="#61736f" font-weight="700">02</text>
+<text x="59" y="237" font-size="14" fill="#183735" font-weight="400">Borrowing Console</text>
+<text x="29" y="295" font-size="12" fill="#61736f" font-weight="700">03</text>
+<text x="59" y="295" font-size="14" fill="#183735" font-weight="400">IPFS Document Hub</text>
+<text x="29" y="353" font-size="12" fill="#61736f" font-weight="700">04</text>
+<text x="59" y="353" font-size="14" fill="#183735" font-weight="400">Analytics &amp; Demo</text>
+<line x1="24" y1="428" x2="220" y2="428" stroke="#d6e0dc" stroke-width="1" stroke-linecap="round"/>
+<text x="24" y="460" font-size="12" fill="#61736f" font-weight="400">L01 · Thiết kế của Lâm</text>
+<text x="24" y="483" font-size="12" fill="#61736f" font-weight="400">Giai đoạn 1</text>
+<text x="24" y="506" font-size="12" fill="#61736f" font-weight="400">Khung desktop 1600 px</text>
+<rect x="24" y="990" width="190" height="30" rx="15" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="36" y="1010" font-size="12" fill="#147d6c" font-weight="700">DỮ LIỆU MINH HỌA</text>
+<text x="24" y="1044" font-size="12" fill="#61736f" font-weight="400">Các nút là bản vẽ.</text>
+<text x="24" y="1067" font-size="12" fill="#61736f" font-weight="400">Chưa kết nối giao dịch.</text>
+<text x="280" y="35" font-size="12" fill="#147d6c" font-weight="700">DEFI LENDING / L01</text>
+<text x="280" y="78" font-size="30" fill="#183735" font-weight="700">Lending Dashboard</text>
+<text x="280" y="104" font-size="14" fill="#61736f" font-weight="400">Thanh khoản Pool, lãi tiền gửi và quyền sở hữu vị thế cho vay.</text>
+<rect x="1190" y="40" width="150" height="30" rx="15" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="1202" y="60" font-size="12" fill="#147d6c" font-weight="700">Local · 31337</text>
+<rect x="1350" y="40" width="216" height="30" rx="15" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="1362" y="60" font-size="12" fill="#147d6c" font-weight="700">Lender · 0x7099…79C8</text>
+<rect x="280" y="130" width="1286" height="42" rx="8" fill="#e7f3ee" stroke="#e7f3ee"/>
+<text x="296" y="157" font-size="13" fill="#147d6c" font-weight="400">WIREFRAME · Snapshot minh họa theo HI01 · APR on-chain / APY quy đổi tham khảo</text>
+<line x1="280" y1="1075" x2="1566" y2="1075" stroke="#d6e0dc" stroke-width="1" stroke-linecap="round"/>
+<text x="280" y="1100" font-size="12" fill="#61736f" font-weight="400">L01 / H01 + HI01 đã có · API bổ sung chờ xác nhận Q05 · Xem docs/ui_wireframes.md</text>
+<rect x="280" y="196" width="304" height="110" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="300" y="224" font-size="13" fill="#61736f" font-weight="400">SUPPLY APY · THAM KHẢO</text>
+<text x="300" y="262" font-size="29" fill="#183735" font-weight="700">5.1267%</text>
+<text x="300" y="286" font-size="12" fill="#61736f" font-weight="400">APR on-chain: 5.00% / năm</text>
+<rect x="608" y="196" width="304" height="110" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="628" y="224" font-size="13" fill="#61736f" font-weight="400">TỔNG GỬI VÀO POOL</text>
+<text x="628" y="262" font-size="29" fill="#183735" font-weight="700">1,000.00</text>
+<text x="628" y="286" font-size="12" fill="#61736f" font-weight="400">MyUSDT · Tổng vay: 500.00</text>
+<rect x="936" y="196" width="304" height="110" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="956" y="224" font-size="13" fill="#61736f" font-weight="400">THANH KHOẢN KHẢ DỤNG</text>
+<text x="956" y="262" font-size="29" fill="#183735" font-weight="700">500.00</text>
+<text x="956" y="286" font-size="12" fill="#61736f" font-weight="400">MyUSDT · Lấy từ số dư Pool thực tế</text>
+<rect x="1264" y="196" width="304" height="110" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="1284" y="224" font-size="13" fill="#61736f" font-weight="400">LÃI CỦA TÔI</text>
+<text x="1284" y="262" font-size="29" fill="#183735" font-weight="700">0.000000</text>
+<text x="1284" y="286" font-size="12" fill="#61736f" font-weight="400">MyUSDT · Cập nhật theo timestamp</text>
+<rect x="280" y="330" width="800" height="334" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="302" y="364" font-size="19" fill="#183735" font-weight="700">Gửi &amp; rút MyUSDT</text>
+<text x="302" y="388" font-size="12" fill="#61736f" font-weight="400">Số dư ví minh họa: 1,000.00 MyUSDT (đã lấy thêm faucet)</text>
+<text x="302" y="423" font-size="13" fill="#147d6c" font-weight="700">GỬI TIỀN</text>
+<rect x="302" y="439" width="345" height="45" rx="7" fill="#f4f7f5" stroke="#d6e0dc"/>
+<text x="316" y="468" font-size="15" fill="#183735" font-weight="400">1,000.00 MyUSDT</text>
+<text x="302" y="514" font-size="13" fill="#61736f" font-weight="400">Cấp quyền đúng lượng trước khi gửi.</text>
+<text x="302" y="537" font-size="13" fill="#61736f" font-weight="400">Bạn nhận LendingPositionNFT.</text>
+<rect x="302" y="582" width="345" height="42" rx="8" fill="#147d6c" stroke="#147d6c"/>
+<text x="317" y="609" font-size="14" fill="#ffffff" font-weight="700">Xem trước giao dịch gửi</text>
+<text x="688" y="423" font-size="13" fill="#183735" font-weight="700">RÚT TIỀN · VỊ THẾ #1</text>
+<rect x="688" y="439" width="368" height="45" rx="7" fill="#f4f7f5" stroke="#d6e0dc"/>
+<text x="702" y="468" font-size="15" fill="#183735" font-weight="400">600.00 MyUSDT</text>
+<text x="688" y="514" font-size="13" fill="#b54741" font-weight="400">Quyền rút: 1,000.00 · Pool rỗi: 500.00</text>
+<text x="688" y="537" font-size="13" fill="#b54741" font-weight="400">Số tiền vượt thanh khoản khả dụng.</text>
+<rect x="688" y="582" width="368" height="42" rx="8" fill="#edf0ee" stroke="#edf0ee"/>
+<text x="703" y="609" font-size="14" fill="#61736f" font-weight="700">Rút tiền · Chưa hợp lệ</text>
+<rect x="1104" y="330" width="462" height="334" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="1126" y="364" font-size="19" fill="#183735" font-weight="700">Xem trước khi ký</text>
+<text x="1126" y="388" font-size="12" fill="#61736f" font-weight="400">Chỉ mở MetaMask sau khi kiểm tra lại dữ liệu</text>
+<text x="1126" y="423" font-size="13" fill="#61736f" font-weight="400">Hành động: approve → depositLender</text>
+<text x="1126" y="451" font-size="13" fill="#61736f" font-weight="400">Số lượng: 1,000.00 MyUSDT</text>
+<text x="1126" y="479" font-size="13" fill="#61736f" font-weight="400">MyUSDT: 0x5FbD…0aa3 · Pool: chờ HI02</text>
+<text x="1126" y="507" font-size="13" fill="#61736f" font-weight="400">Phí gas: ước lượng từ RPC trước khi ký</text>
+<text x="1126" y="535" font-size="13" fill="#61736f" font-weight="400">APR hiện tại: 5.00% · Sau gửi: tính lại</text>
+<text x="1126" y="563" font-size="13" fill="#61736f" font-weight="400">Chặn ký nếu chưa có địa chỉ/code Pool.</text>
+<rect x="280" y="688" width="1286" height="190" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="302" y="722" font-size="19" fill="#183735" font-weight="700">Lending Position NFT</text>
+<text x="302" y="746" font-size="12" fill="#61736f" font-weight="400">Chủ NFT hiện tại có quyền rút gốc + lãi của vị thế</text>
+<text x="302" y="778" font-size="12" fill="#61736f" font-weight="700">VỊ THẾ</text>
+<text x="510" y="778" font-size="12" fill="#61736f" font-weight="700">GỐC / LÃI</text>
+<text x="855" y="778" font-size="12" fill="#61736f" font-weight="700">CHỦ HIỆN TẠI</text>
+<text x="1290" y="778" font-size="12" fill="#61736f" font-weight="700">HÀNH ĐỘNG</text>
+<line x1="302" y1="791" x2="1544" y2="791" stroke="#d6e0dc" stroke-width="1" stroke-linecap="round"/>
+<text x="302" y="824" font-size="14" fill="#183735" font-weight="400">#1 · Đang hoạt động</text>
+<text x="510" y="824" font-size="14" fill="#183735" font-weight="400">1,000.00 / 0.000000 MyUSDT</text>
+<text x="855" y="824" font-size="14" fill="#183735" font-weight="400">0x7099…79C8 (ví của bạn)</text>
+<rect x="1290" y="800" width="252" height="42" rx="8" fill="#147d6c" stroke="#147d6c"/>
+<text x="1305" y="827" font-size="14" fill="#ffffff" font-weight="700">Chuyển nhượng NFT</text>
+<rect x="280" y="902" width="1286" height="150" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
+<text x="302" y="936" font-size="19" fill="#183735" font-weight="700">Trạng thái dùng chung</text>
+<text x="302" y="971" font-size="13" fill="#61736f" font-weight="400">Chưa kết nối: xem số liệu công khai; nút ghi chuyển thành Kết nối ví. Sai mạng: yêu cầu chuyển mạng.</text>
+<text x="302" y="998" font-size="13" fill="#61736f" font-weight="400">Luồng ký: Xem trước → Chờ ký → Đang xác nhận → Thành công / Thất bại. Approve và gửi có trạng thái riêng.</text>
+<text x="302" y="1025" font-size="13" fill="#61736f" font-weight="400">Sau chuyển NFT: làm mới ownerOf; ví cũ mất quyền rút, ví nhận thấy gốc và lãi của vị thế.</text>
+</g>
+</svg>
