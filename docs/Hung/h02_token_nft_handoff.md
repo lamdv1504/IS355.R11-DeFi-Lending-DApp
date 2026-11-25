@@ -5,11 +5,11 @@
 H02 nhận đầu vào H01 và các quy tắc/interface đã có trong HI01:
 
 - [MyUSDT và bàn giao H01](h01_myusdt_handoff.md).
-- [Đặc tả HI01, mục 4.2 và 6](smart_contract_spec.md).
-- [ICollateralNFT](../contracts/interfaces/ICollateralNFT.sol),
-  [ICollateralReceiptNFT](../contracts/interfaces/ICollateralReceiptNFT.sol),
-  [IDebtToken](../contracts/interfaces/IDebtToken.sol),
-  [ILendingPositionNFT](../contracts/interfaces/ILendingPositionNFT.sol).
+- [Đặc tả HI01, mục 4.2 và 6](../Hieu/smart_contract_spec.md).
+- [ICollateralNFT](../../contracts/interfaces/ICollateralNFT.sol),
+  [ICollateralReceiptNFT](../../contracts/interfaces/ICollateralReceiptNFT.sol),
+  [IDebtToken](../../contracts/interfaces/IDebtToken.sol),
+  [ILendingPositionNFT](../../contracts/interfaces/ILendingPositionNFT.sol).
 
 Theo kế hoạch, HI02 nhận đầu ra H02 để xây dựng LendingPool. Repo hiện chưa có
 implementation `contracts/LendingPool.sol`. H02 cung cấp token, ABI, địa chỉ local
@@ -138,14 +138,14 @@ MyUSDT đã được redeploy/export trên node mới để bytecode khớp Open
 
 ## 5. File bàn giao
 
-- [Manifest local](../deployments/localhost.json): address, txHash, blockNumber,
+- [Manifest local](../../deployments/localhost.json): address, txHash, blockNumber,
   owner, abiPath và trạng thái.
-- [Registry backend](../backend/config/contracts.json): cập nhật 4 mục token H02;
+- [Registry backend](../../backend/config/contracts.json): cập nhật 4 mục token H02;
   không đăng ký test caller và không sửa các địa chỉ Sepolia/PriceOracle/LendingPool.
-- [ABI implementations](../deployments/abi/CollateralNFT.json) và
-  [interfaces](../deployments/abi/interfaces/ICollateralNFT.json).
-- [Kiểm tra deployment local](../reports/h02_local_verification.json).
-- [Log kiểm thử và phần chờ tích hợp](../reports/h02_token_validation.md).
+- [ABI implementations](../../deployments/abi/CollateralNFT.json) và
+  [interfaces](../../deployments/abi/interfaces/ICollateralNFT.json).
+- [Kiểm tra deployment local](../../reports/Hung/h02_local_verification.json).
+- [Log kiểm thử và phần chờ tích hợp](../../reports/Hung/h02_token_validation.md).
 
 CollateralNFT ở trạng thái DEPLOYED; ba token còn lại là AWAITING_HI02_POOL,
 lendingPool = address zero. Các địa chỉ/txHash này là bằng chứng local.

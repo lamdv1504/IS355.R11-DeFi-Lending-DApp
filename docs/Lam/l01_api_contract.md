@@ -2,7 +2,7 @@
 
 ## 1. Trạng thái của tài liệu
 
-Nguồn chuẩn: [HI01 6](smart_contract_spec.md), các interface trong
+Nguồn chuẩn: [HI01 6](../Hieu/smart_contract_spec.md), các interface trong
 `contracts/interfaces/` và `backend/config/constants.py`.
 L01 bổ sung lớp dữ liệu phục vụ 4 wireframe; **các endpoint mới là đề xuất thiết kế,
 chưa được implement hoặc được Quân/Hiếu xác nhận**.

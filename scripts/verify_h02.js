@@ -70,10 +70,10 @@ async function main() {
     status: "LOCAL_TOKEN_DEPLOYMENTS_VERIFIED_AWAITING_HI02",
     pending: ["Deploy actual HI02 LendingPool and bind each token once.", "Verify debt-aware collateral release and principal/interest payouts with HI02/HI03."],
   };
-  const output = path.join(root, "reports/h02_local_verification.json");
+  const output = path.join(root, "reports/Hung/h02_local_verification.json");
   fs.writeFileSync(output, JSON.stringify(report, null, 2) + "\n", "utf8");
   console.log("PASS: 5 deployed bytecodes/receipts, 4 interface exports, ERC165 IDs, registry, ownership and 10 MyUSDT wallets.");
-  console.log("Saved reports/h02_local_verification.json; H02 tokens remain unbound for HI02.");
+  console.log("Saved reports/Hung/h02_local_verification.json; H02 tokens remain unbound for HI02.");
 }
 
 main().catch((error) => { console.error(error); process.exitCode = 1; });

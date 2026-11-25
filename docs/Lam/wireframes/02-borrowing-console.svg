@@ -37,7 +37,7 @@
 <rect x="280" y="130" width="1286" height="42" rx="8" fill="#e7f3ee" stroke="#e7f3ee"/>
 <text x="296" y="157" font-size="13" fill="#147d6c" font-weight="400">WIREFRAME · Snapshot minh họa theo HI01 · APR on-chain / APY quy đổi tham khảo</text>
 <line x1="280" y1="1075" x2="1566" y2="1075" stroke="#d6e0dc" stroke-width="1" stroke-linecap="round"/>
-<text x="280" y="1100" font-size="12" fill="#61736f" font-weight="400">L01 / H01 + HI01 đã có · API bổ sung chờ xác nhận Q05 · Xem docs/ui_wireframes.md</text>
+<text x="280" y="1100" font-size="12" fill="#61736f" font-weight="400">L01 / H01 + HI01 đã có · API bổ sung chờ xác nhận Q05 · Xem docs/Lam/ui_wireframes.md</text>
 <rect x="280" y="196" width="304" height="110" rx="12" fill="#ffffff" stroke="#d6e0dc"/>
 <text x="300" y="224" font-size="13" fill="#61736f" font-weight="400">TÀI SẢN THẾ CHẤP</text>
 <text x="300" y="262" font-size="29" fill="#183735" font-weight="700">1,000.00</text>

@@ -1,7 +1,7 @@
 # H02 – Kết quả kiểm thử Token/NFT
 
 Đây là log tóm tắt các kiểm tra đã chạy trong phiên triển khai H02 của Hùng.
-Mã nguồn test: [H02_Tokens.test.js](../tests/H02_Tokens.test.js).
+Mã nguồn test: [H02_Tokens.test.js](../../tests/H02_Tokens.test.js).
 Các giao dịch trong unit test dùng mạng Hardhat tạm và test caller,
 không phải giao dịch nghiệp vụ của LendingPool HI02.
 
@@ -42,7 +42,7 @@ không phải giao dịch nghiệp vụ của LendingPool HI02.
 ## Bằng chứng deploy local
 
 Xem [h02_local_verification.json](h02_local_verification.json) và
-[deployments/localhost.json](../deployments/localhost.json) để lấy địa chỉ,
+[deployments/localhost.json](../../deployments/localhost.json) để lấy địa chỉ,
 txHash, blockNumber, owner và runtimeCodeHash. Không có CID hoặc địa chỉ Pool giả.
 
 Ba token Pool-controlled hiện chưa bind: `lendingPool = address(0)`,
@@ -58,5 +58,5 @@ Báo cáo xác minh chỉ có hiệu lực với node local hiện tại; restar
 - Kiểm thử cả chuỗi gửi → thế chấp → vay → trả → rút với tiền và lãi thực tế.
 
 Những mục này không được đánh dấu đã chạy từ unit test token.
-Hiếu nhận [hướng dẫn cấu hình và vòng đời H02](../docs/h02_token_nft_handoff.md)
+Hiếu nhận [hướng dẫn cấu hình và vòng đời H02](../../docs/Hung/h02_token_nft_handoff.md)
 để tích hợp. Không cần tạo implementation LendingPool thay Hiếu trong H02.
