@@ -5,23 +5,27 @@
       "MyUSDT": {
         "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
         "abiPath": "deployments/abi/MyUSDT.json",
-        "txHash": "0x8fae72182df4715f1157b67f5e927a5426dd7abfac1486433e36091062d2ef9e"
+        "txHash": "0x69dd32c7c57ead3a1213e2e4884e8cbcfa9862bec7635433a6441af6cf4f7ca0"
       },
       "CollateralNFT": {
-        "address": "",
-        "abiPath": "artifacts/contracts/tokens/CollateralNFT.sol/CollateralNFT.json"
+        "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+        "abiPath": "deployments/abi/CollateralNFT.json",
+        "txHash": "0x41450c850144f87141322a0dec7cd4c2dbeae0295d711ba2c7e47cab7b39c0e4"
       },
       "CollateralReceiptNFT": {
-        "address": "",
-        "abiPath": "artifacts/contracts/tokens/CollateralReceiptNFT.sol/CollateralReceiptNFT.json"
+        "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+        "abiPath": "deployments/abi/CollateralReceiptNFT.json",
+        "txHash": "0xb33080f866dfe82254675690361c90aca27fd130765642fd7337711a55968864"
       },
       "DebtToken": {
-        "address": "",
-        "abiPath": "artifacts/contracts/tokens/DebtToken.sol/DebtToken.json"
+        "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+        "abiPath": "deployments/abi/DebtToken.json",
+        "txHash": "0xd1e615dbc6165b54526101bc952c39e9c4294dd58ba58e9e4f001a085490a0fb"
       },
       "LendingPositionNFT": {
-        "address": "",
-        "abiPath": "artifacts/contracts/tokens/LendingPositionNFT.sol/LendingPositionNFT.json"
+        "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+        "abiPath": "deployments/abi/LendingPositionNFT.json",
+        "txHash": "0x7915f89ea15bd597ee0b27066072d3fac7fc4a7784d592c1eafff1a00311b600"
       },
       "PriceOracle": {
         "address": "",

@@ -1,11 +1,11 @@
 {
   "network": "localhost",
   "chainId": 31337,
-  "deployedAt": "2026-11-25T08:44:10.860Z",
+  "deployedAt": "2026-11-25T18:50:53.456Z",
   "contracts": {
     "MyUSDT": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      "txHash": "0x8fae72182df4715f1157b67f5e927a5426dd7abfac1486433e36091062d2ef9e",
+      "txHash": "0x69dd32c7c57ead3a1213e2e4884e8cbcfa9862bec7635433a6441af6cf4f7ca0",
       "blockNumber": 1,
       "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "abiPath": "deployments/abi/MyUSDT.json",
@@ -28,7 +28,7 @@
           "address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
           "balance": "1000000000000000000000",
           "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0xf024e2299aa98047a73eeb599721ee8f3dd3006597eef2830cf207c21f4cf040"
+          "seedTxHash": "0x5f5df6bacafc978d32bb8dad8da755338dd9235c123de371fe182da78c7d9da4"
         },
         {
           "index": 2,
@@ -36,7 +36,7 @@
           "address": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
           "balance": "1000000000000000000000",
           "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0x19dbf86228d72790220c7570634b6f583d061de484ecb32bc37e8114b1b362ce"
+          "seedTxHash": "0xd31670515925f4b13dad85f7a2838ec5f6ddb0709af0c1c47922a5eb26d2857e"
         },
         {
           "index": 3,
@@ -44,7 +44,7 @@
           "address": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
           "balance": "1000000000000000000000",
           "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0x3c37202354ecf0ff2da8c6f658350b1c26a4e858fe0b4e636dc3a307e87512b7"
+          "seedTxHash": "0xa5d4ee4f13c143cdf5f344f9fab8c415471e1a3a740405f0347bf864f524a892"
         },
         {
           "index": 4,
@@ -52,7 +52,7 @@
           "address": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
           "balance": "1000000000000000000000",
           "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0x203cbcdea00d6be36838ffadfcedc914419b45084ff1b3d62ae060d917eeb091"
+          "seedTxHash": "0xa6a919fec4c8c5f0d8f01534c31db0585b423a516ee4ef882618a0d3eed39e52"
         },
         {
           "index": 5,
@@ -60,7 +60,7 @@
           "address": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
           "balance": "1000000000000000000000",
           "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0x51dedcdbe0653a94c9733505e4fb3ff1293270b7a858b69c3705531b0bc89c0c"
+          "seedTxHash": "0x42d5493472a1cfcb69554a9552c2f8645295cd56c5a50be03bae97e734832fd9"
         },
         {
           "index": 6,
@@ -68,7 +68,7 @@
           "address": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
           "balance": "1000000000000000000000",
           "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0x7ca90f25daed49e6942cc68789a1ec484ec10b4dae1c7fc29fc0aed766b45392"
+          "seedTxHash": "0xed8bfb7e39358d84109e2ada96b23e96683d7abd5270eb10d0cc2febbdacd1ac"
         },
         {
           "index": 7,
@@ -76,7 +76,7 @@
           "address": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
           "balance": "1000000000000000000000",
           "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0x237a7ef12bbde97b960174acdbfb5d052f93c40bdb22484443b9b388472ed337"
+          "seedTxHash": "0x0b2757357a34f000e150d47bb7a68b3a1581ac28576939c417bdc1aaf2684936"
         },
         {
           "index": 8,
@@ -84,7 +84,7 @@
           "address": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
           "balance": "1000000000000000000000",
           "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0x6bdaba8d9330607edd4bf71fc58e9165116a2b45663dddb6592316acf9aca1d9"
+          "seedTxHash": "0x7fb104d920c178dbb25dfa696235574fdf4ea9e54bf7c1ed3ff8e27711c555eb"
         },
         {
           "index": 9,
@@ -92,9 +92,44 @@
           "address": "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720",
           "balance": "1000000000000000000000",
           "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0x7b58ccbf1a3073398e2687803203a885aa80902a427a4519e3ffbbd0c660cd0b"
+          "seedTxHash": "0x6bd542d9aa2cf1cf730e7964c9062ae717a18ed8c7668f5a8323aeb88a36f2ed"
         }
       ]
+    },
+    "CollateralNFT": {
+      "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+      "txHash": "0x41450c850144f87141322a0dec7cd4c2dbeae0295d711ba2c7e47cab7b39c0e4",
+      "blockNumber": 11,
+      "abiPath": "deployments/abi/CollateralNFT.json",
+      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "status": "DEPLOYED"
+    },
+    "CollateralReceiptNFT": {
+      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+      "txHash": "0xb33080f866dfe82254675690361c90aca27fd130765642fd7337711a55968864",
+      "blockNumber": 12,
+      "abiPath": "deployments/abi/CollateralReceiptNFT.json",
+      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "status": "AWAITING_HI02_POOL",
+      "lendingPool": "0x0000000000000000000000000000000000000000"
+    },
+    "DebtToken": {
+      "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+      "txHash": "0xd1e615dbc6165b54526101bc952c39e9c4294dd58ba58e9e4f001a085490a0fb",
+      "blockNumber": 13,
+      "abiPath": "deployments/abi/DebtToken.json",
+      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "status": "AWAITING_HI02_POOL",
+      "lendingPool": "0x0000000000000000000000000000000000000000"
+    },
+    "LendingPositionNFT": {
+      "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+      "txHash": "0x7915f89ea15bd597ee0b27066072d3fac7fc4a7784d592c1eafff1a00311b600",
+      "blockNumber": 14,
+      "abiPath": "deployments/abi/LendingPositionNFT.json",
+      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "status": "AWAITING_HI02_POOL",
+      "lendingPool": "0x0000000000000000000000000000000000000000"
     }
   }
 }

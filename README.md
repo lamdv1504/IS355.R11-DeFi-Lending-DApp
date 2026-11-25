@@ -137,3 +137,7 @@ Dự án không phải nền tảng cung cấp dịch vụ tài chính hay sản
 ## Thiết kế giao diện (L01 - Lâm)
 
 [Wireframe 4 màn hình, user flow, quyền truy cập và dữ liệu bàn giao](docs/ui_wireframes.md).
+
+## H02 - Token & NFT (Hùng, giai đoạn 2)
+
+[Contract, ABI, kiểm thử và hướng dẫn tích hợp LendingPool](docs/h02_token_nft_handoff.md).
