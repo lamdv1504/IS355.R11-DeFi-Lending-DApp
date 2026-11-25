@@ -1,0 +1,21 @@
+# Core Blockchain & Web3
+web3>=6.15.0,<8.0.0
+eth-account>=0.11.0
+
+# Backend REST API
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.7.0
+python-multipart>=0.0.9
+
+# Environment, HTTP & IPFS Document Generation
+python-dotenv>=1.0.1
+requests>=2.31.0
+reportlab>=4.1.0
+
+# Security & AES-256-GCM Encryption (RBAC / Private IPFS Documents)
+cryptography>=42.0.0
+
+# Testing
+pytest>=8.1.0
+httpx>=0.27.0
