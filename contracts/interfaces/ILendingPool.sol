@@ -45,6 +45,17 @@ interface ILendingPool {
         bool active;                   // True while collateral is locked or debt > 0
     }
 
+    struct InterestRateSnapshot {
+        uint256 timestamp;             // Current block.timestamp when snapshot is read
+        uint256 utilizationBps;        // Current pool utilization rate (BPS, 0..10000)
+        uint256 borrowAprBps;          // On-chain simple Borrow APR (BPS)
+        uint256 supplyAprBps;          // On-chain simple Supply APR (BPS)
+        uint256 borrowApyRefBps;       // Reference daily-compounded Borrow APY (BPS, display only)
+        uint256 supplyApyRefBps;       // Reference daily-compounded Supply APY (BPS, display only)
+        uint256 borrowIndexWad;        // Live cumulative borrow index preview (WAD)
+        uint256 supplyIndexWad;        // Live cumulative supply index preview (WAD)
+    }
+
     // -------------------------------------------------------------------------
     // Standard Custom Errors (Parsed by Web3.py Q02/Q05 & Frontend L02/L03)
     // -------------------------------------------------------------------------
@@ -159,11 +170,17 @@ interface ILendingPool {
     /// @notice Liquidator settles an underwater borrower's debt strictly when `getHealthFactor(borrower) < 1e18`.
     function liquidate(address borrower) external;
 
+    /// @notice Checkpoints pool indices up to `block.timestamp` and emits `InterestRateUpdated` for Audit Logs.
+    function accrueInterest() external;
+
     // -------------------------------------------------------------------------
     // View Functions (Consumed by Web3.py Q02/Q05 and Frontend L02/L03/L04)
     // -------------------------------------------------------------------------
 
     function getPoolInfo() external view returns (PoolInfo memory);
+
+    /// @notice Returns live APR (on-chain simple) vs reference APY (daily compounded) and live indices.
+    function getInterestRateSnapshot() external view returns (InterestRateSnapshot memory);
 
     function getAvailableLiquidity() external view returns (uint256);
 
@@ -182,11 +199,17 @@ interface ILendingPool {
 
     function calculateAccruedInterest(address borrower) external view returns (uint256);
 
+    /// @notice Projects total borrower accrued interest after `extraSeconds` at the current borrow APR.
+    function previewBorrowerInterest(address borrower, uint256 extraSeconds) external view returns (uint256);
+
     function getTotalDebt(address borrower) external view returns (uint256);
 
     function getHealthFactor(address borrower) external view returns (uint256);
 
     function getLenderEarnedInterest(uint256 positionId) external view returns (uint256);
+
+    /// @notice Projects total lender earned interest for `positionId` after `extraSeconds` at the current supply APR.
+    function previewLenderEarnedInterest(uint256 positionId, uint256 extraSeconds) external view returns (uint256);
 
     function getLenderClaimableBalance(uint256 positionId) external view returns (uint256);
 

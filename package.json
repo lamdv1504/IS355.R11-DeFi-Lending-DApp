@@ -16,10 +16,12 @@
     "test:h02": "hardhat test tests/H02_Tokens.test.js",
     "test:hi02": "hardhat test tests/HI02_LendingPool.test.js",
     "test:hi03": "hardhat test tests/HI03_Constraints.test.js",
+    "test:hi04": "hardhat test tests/HI04_InterestMath.test.js",
     "export:h02": "hardhat run scripts/export_h02.js",
     "export:hi02": "hardhat run scripts/export_hi02.js",
     "deploy:h02": "hardhat run scripts/deploy_h02.js --network localhost",
     "deploy:hi02": "hardhat run scripts/deploy_hi02.js --network localhost",
+    "demo:fast-forward": "hardhat run scripts/fast_forward_time.js --network localhost",
     "verify:h02": "hardhat run scripts/verify_h02.js --network localhost"
   },
   "dependencies": {

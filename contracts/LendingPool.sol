@@ -17,6 +17,7 @@ import {ILendingPositionNFT} from "./interfaces/ILendingPositionNFT.sol";
 import {IPriceOracle} from "./interfaces/IPriceOracle.sol";
 import {ProtocolConstants} from "./libraries/ProtocolConstants.sol";
 import {ProtocolMath} from "./libraries/ProtocolMath.sol";
+import {InterestMath} from "./libraries/InterestMath.sol";
 
 /// @title LendingPool - Core DeFi Credit & Lending Contract (HI02/HI03/HI04/HI05).
 /// @notice Implements lender deposits/withdrawals via transferable LendingPositionNFT,
@@ -447,6 +448,12 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable, IERC721Receiver 
         );
     }
 
+    /// @inheritdoc ILendingPool
+    function accrueInterest() external override nonReentrant {
+        _accruePoolInterest();
+        _updateInterestRates();
+    }
+
     // -------------------------------------------------------------------------
     // View Functions (Real-Time Preview Including Uncheckpointed Interest)
     // -------------------------------------------------------------------------
@@ -457,6 +464,21 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable, IERC721Receiver 
         (uint256 nextBorrowIdx, uint256 nextSupplyIdx) = _previewIndices();
         info.borrowIndex = nextBorrowIdx;
         info.supplyIndex = nextSupplyIdx;
+    }
+
+    /// @inheritdoc ILendingPool
+    function getInterestRateSnapshot() external view override returns (InterestRateSnapshot memory snap) {
+        (uint256 nextBorrowIdx, uint256 nextSupplyIdx) = _previewIndices();
+        snap = InterestRateSnapshot({
+            timestamp: block.timestamp,
+            utilizationBps: _pool.utilizationBps,
+            borrowAprBps: _pool.borrowAprBps,
+            supplyAprBps: _pool.supplyAprBps,
+            borrowApyRefBps: InterestMath.calculateReferenceApyBps(_pool.borrowAprBps),
+            supplyApyRefBps: InterestMath.calculateReferenceApyBps(_pool.supplyAprBps),
+            borrowIndexWad: nextBorrowIdx,
+            supplyIndexWad: nextSupplyIdx
+        });
     }
 
     /// @inheritdoc ILendingPool
@@ -514,14 +536,38 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable, IERC721Receiver 
         uint256 snapshot = loan.borrowIndexSnapshot == 0
             ? ProtocolConstants.INITIAL_INDEX_WAD
             : loan.borrowIndexSnapshot;
-        if (currentBorrowIndex <= snapshot) return loan.accruedInterest;
-
-        uint256 pendingInterest = Math.mulDiv(
+        return loan.accruedInterest + InterestMath.accrueFromIndexDelta(
             loan.principal,
-            currentBorrowIndex - snapshot,
-            ProtocolConstants.WAD
+            currentBorrowIndex,
+            snapshot
         );
-        return loan.accruedInterest + pendingInterest;
+    }
+
+    /// @inheritdoc ILendingPool
+    function previewBorrowerInterest(
+        address borrower,
+        uint256 extraSeconds
+    ) external view override returns (uint256) {
+        LoanPosition storage loan = _loanPositions[borrower];
+        if (!loan.active) return 0;
+        if (loan.principal == 0) return loan.accruedInterest;
+
+        uint256 deltaTime = (block.timestamp > _pool.lastAccrualTimestamp
+            ? block.timestamp - _pool.lastAccrualTimestamp
+            : 0) + extraSeconds;
+        uint256 futureBorrowIndex = InterestMath.advanceCumulativeIndex(
+            _pool.borrowIndex,
+            _pool.borrowAprBps,
+            deltaTime
+        );
+        uint256 snapshot = loan.borrowIndexSnapshot == 0
+            ? ProtocolConstants.INITIAL_INDEX_WAD
+            : loan.borrowIndexSnapshot;
+        return loan.accruedInterest + InterestMath.accrueFromIndexDelta(
+            loan.principal,
+            futureBorrowIndex,
+            snapshot
+        );
     }
 
     /// @inheritdoc ILendingPool
@@ -546,14 +592,38 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable, IERC721Receiver 
         uint256 snapshot = pos.supplyIndexSnapshot == 0
             ? ProtocolConstants.INITIAL_INDEX_WAD
             : pos.supplyIndexSnapshot;
-        if (currentSupplyIndex <= snapshot) return pos.accruedInterest;
-
-        uint256 pendingEarned = Math.mulDiv(
+        return pos.accruedInterest + InterestMath.accrueFromIndexDelta(
             pos.principal,
-            currentSupplyIndex - snapshot,
-            ProtocolConstants.WAD
+            currentSupplyIndex,
+            snapshot
         );
-        return pos.accruedInterest + pendingEarned;
+    }
+
+    /// @inheritdoc ILendingPool
+    function previewLenderEarnedInterest(
+        uint256 positionId,
+        uint256 extraSeconds
+    ) external view override returns (uint256) {
+        LenderPosition storage pos = _lenderPositions[positionId];
+        if (!pos.active) return 0;
+        if (pos.principal == 0) return pos.accruedInterest;
+
+        uint256 deltaTime = (block.timestamp > _pool.lastAccrualTimestamp
+            ? block.timestamp - _pool.lastAccrualTimestamp
+            : 0) + extraSeconds;
+        uint256 futureSupplyIndex = InterestMath.advanceCumulativeIndex(
+            _pool.supplyIndex,
+            _pool.supplyAprBps,
+            deltaTime
+        );
+        uint256 snapshot = pos.supplyIndexSnapshot == 0
+            ? ProtocolConstants.INITIAL_INDEX_WAD
+            : pos.supplyIndexSnapshot;
+        return pos.accruedInterest + InterestMath.accrueFromIndexDelta(
+            pos.principal,
+            futureSupplyIndex,
+            snapshot
+        );
     }
 
     /// @inheritdoc ILendingPool
@@ -588,12 +658,12 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable, IERC721Receiver 
         uint256 deltaTime = block.timestamp > _pool.lastAccrualTimestamp
             ? block.timestamp - _pool.lastAccrualTimestamp
             : 0;
-        nextBorrowIndex = ProtocolMath.calculateNextIndex(
+        nextBorrowIndex = InterestMath.advanceCumulativeIndex(
             _pool.borrowIndex,
             _pool.borrowAprBps,
             deltaTime
         );
-        nextSupplyIndex = ProtocolMath.calculateNextIndex(
+        nextSupplyIndex = InterestMath.advanceCumulativeIndex(
             _pool.supplyIndex,
             _pool.supplyAprBps,
             deltaTime
@@ -605,12 +675,12 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable, IERC721Receiver 
             ? block.timestamp - _pool.lastAccrualTimestamp
             : 0;
         if (deltaTime > 0) {
-            _pool.borrowIndex = ProtocolMath.calculateNextIndex(
+            _pool.borrowIndex = InterestMath.advanceCumulativeIndex(
                 _pool.borrowIndex,
                 _pool.borrowAprBps,
                 deltaTime
             );
-            _pool.supplyIndex = ProtocolMath.calculateNextIndex(
+            _pool.supplyIndex = InterestMath.advanceCumulativeIndex(
                 _pool.supplyIndex,
                 _pool.supplyAprBps,
                 deltaTime
@@ -620,12 +690,12 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable, IERC721Receiver 
     }
 
     function _updateInterestRates() internal {
-        uint256 utilizationBps = ProtocolMath.calculateUtilizationBps(
+        uint256 utilizationBps = InterestMath.calculateUtilizationBps(
             _pool.totalBorrowed,
             _pool.totalSupplied
         );
-        uint256 borrowAprBps = ProtocolMath.calculateBorrowAprBps(utilizationBps);
-        uint256 supplyAprBps = ProtocolMath.calculateSupplyAprBps(borrowAprBps, utilizationBps);
+        uint256 borrowAprBps = InterestMath.calculateBorrowAprBps(utilizationBps);
+        uint256 supplyAprBps = InterestMath.calculateSupplyAprBps(borrowAprBps, utilizationBps);
 
         _pool.utilizationBps = utilizationBps;
         _pool.borrowAprBps = borrowAprBps;
@@ -642,27 +712,21 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable, IERC721Receiver 
     }
 
     function _checkpointBorrowerLoan(LoanPosition storage loan) internal {
-        if (loan.principal > 0 && _pool.borrowIndex > loan.borrowIndexSnapshot) {
-            uint256 pending = Math.mulDiv(
-                loan.principal,
-                _pool.borrowIndex - loan.borrowIndexSnapshot,
-                ProtocolConstants.WAD
-            );
-            loan.accruedInterest += pending;
-        }
+        loan.accruedInterest += InterestMath.accrueFromIndexDelta(
+            loan.principal,
+            _pool.borrowIndex,
+            loan.borrowIndexSnapshot
+        );
         loan.borrowIndexSnapshot = _pool.borrowIndex;
         loan.lastInterestUpdate = block.timestamp;
     }
 
     function _checkpointLenderPosition(LenderPosition storage pos) internal {
-        if (pos.principal > 0 && _pool.supplyIndex > pos.supplyIndexSnapshot) {
-            uint256 pending = Math.mulDiv(
-                pos.principal,
-                _pool.supplyIndex - pos.supplyIndexSnapshot,
-                ProtocolConstants.WAD
-            );
-            pos.accruedInterest += pending;
-        }
+        pos.accruedInterest += InterestMath.accrueFromIndexDelta(
+            pos.principal,
+            _pool.supplyIndex,
+            pos.supplyIndexSnapshot
+        );
         pos.supplyIndexSnapshot = _pool.supplyIndex;
     }
 

@@ -225,6 +225,53 @@ def apr_bps_to_apy_percent(apr_bps: int, compounding_periods_per_year: int = 365
     return round(apy_decimal * 100.0, 4)
 
 
+def calculate_reference_apy_wad(apr_bps: int) -> int:
+    """Exact WAD integer mirror of Solidity `InterestMath.calculateReferenceApyWad` (n = 365)."""
+    if apr_bps < 0:
+        raise ValueError("apr_bps must be non-negative")
+    if apr_bps == 0:
+        return 0
+    days_per_year = 365
+    daily_rate_wad = (apr_bps * WAD) // (BPS * days_per_year)
+    base = WAD + daily_rate_wad
+    result = WAD
+    exp = days_per_year
+    while exp > 0:
+        if exp & 1:
+            result = (result * base) // WAD
+        exp >>= 1
+        if exp > 0:
+            base = (base * base) // WAD
+    return result - WAD
+
+
+def calculate_reference_apy_bps(apr_bps: int) -> int:
+    """Exact BPS integer mirror of Solidity `InterestMath.calculateReferenceApyBps`."""
+    return (calculate_reference_apy_wad(apr_bps) * BPS) // WAD
+
+
+def format_rate_snapshot_for_api(
+    borrow_apr_bps: int,
+    supply_apr_bps: int,
+    utilization_bps: int,
+) -> Dict[str, Any]:
+    """Serialize on-chain simple APR separately from reference compounded APY for UI/API parity."""
+    return {
+        "utilization_bps": int(utilization_bps),
+        "utilization_percent": apr_bps_to_percent(utilization_bps),
+        "borrow_apr_bps": int(borrow_apr_bps),
+        "borrow_apr_percent": apr_bps_to_percent(borrow_apr_bps),
+        "borrow_apy_ref_bps": calculate_reference_apy_bps(borrow_apr_bps),
+        "borrow_apy_ref_percent": apr_bps_to_apy_percent(borrow_apr_bps),
+        "supply_apr_bps": int(supply_apr_bps),
+        "supply_apr_percent": apr_bps_to_percent(supply_apr_bps),
+        "supply_apy_ref_bps": calculate_reference_apy_bps(supply_apr_bps),
+        "supply_apy_ref_percent": apr_bps_to_apy_percent(supply_apr_bps),
+        "accrual_model": "SIMPLE_APR_PER_SECOND",
+        "apy_disclaimer_vi": "Lãi trên Smart Contract tính theo APR đơn theo từng giây; APY chỉ là mức quy đổi lãi kép theo ngày tham khảo.",
+    }
+
+
 def wad_to_decimal_str(value_wad: int, precision: int = 6) -> str:
     """Format WAD integer into human-readable decimal string without float precision loss."""
     val = Decimal(value_wad) / Decimal(WAD)

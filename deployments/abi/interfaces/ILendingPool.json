@@ -458,6 +458,13 @@
       "type": "event"
     },
     {
+      "inputs": [],
+      "name": "accrueInterest",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "uint256",
@@ -621,6 +628,61 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getInterestRateSnapshot",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "utilizationBps",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "borrowAprBps",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "supplyAprBps",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "borrowApyRefBps",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "supplyApyRefBps",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "borrowIndexWad",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "supplyIndexWad",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct ILendingPool.InterestRateSnapshot",
+          "name": "",
+          "type": "tuple"
         }
       ],
       "stateMutability": "view",
@@ -943,6 +1005,54 @@
       "name": "liquidate",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "borrower",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "extraSeconds",
+          "type": "uint256"
+        }
+      ],
+      "name": "previewBorrowerInterest",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "positionId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "extraSeconds",
+          "type": "uint256"
+        }
+      ],
+      "name": "previewLenderEarnedInterest",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
