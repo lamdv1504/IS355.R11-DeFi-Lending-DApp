@@ -1,0 +1,253 @@
+{
+  "task": "H03",
+  "owner": "Hung",
+  "generated_at_utc": "2026-11-26T16:22:46Z",
+  "verification_status": "LOCAL_CONTENT_ADDRESSED_VERIFIED_LIVE_PIN_PENDING_KUBO_OR_PINATA",
+  "mode_requested": "local_fallback",
+  "ipfs_health": {
+    "provider_mode": "local_fallback",
+    "kubo_local": {
+      "reachable": false,
+      "api_url": "http://127.0.0.1:5001",
+      "error": "HTTPConnectionPool(host='127.0.0.1', port=5001): Max retries exceeded with url: /api/v0/version (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000233640D7E00>: Failed to establish a new connection: [WinError 10013] An attempt was made to access a socket in a way forbidden by its access permissions'))"
+    },
+    "pinata_cloud": {
+      "configured": false,
+      "authenticated": false,
+      "gateway_url": "https://gateway.pinata.cloud/ipfs"
+    },
+    "local_fallback_store": {
+      "enabled": true,
+      "path": "C:\\Users\\ASUS\\Documents\\GitHub\\IS355.R11-DeFi-Lending-DApp\\ipfs_storage\\local_repo",
+      "pinned_count": 0
+    }
+  },
+  "documents": [
+    {
+      "document_type": "LOAN_AGREEMENT",
+      "format": "PDF",
+      "visibility": "PRIVATE",
+      "encrypted_on_ipfs": true,
+      "data_kind": "SIMULATED",
+      "sample_plaintext_file": "ipfs_storage/samples/loan_agreement_sample.pdf",
+      "sample_encrypted_file": "ipfs_storage/samples/loan_agreement_sample.encrypted.json",
+      "plaintext_sha256": "44960ce49b66a8c45a2181f2d86895020d06a204f0c7955f1409383bab2b355c",
+      "plaintext_cid_v1_reference": "bafkreicesygojg3gvdcfuimb6lmgrficbudkebhqy6kv6fajha52wkzvlq",
+      "ipfs_cid": "bafkreihkemritep5uxob6ymkzsc5n6qcf3yxwhzrspct2hyukxa46xthfu",
+      "ipfs_cid_valid": true,
+      "ipfs_payload_sha256": "ea23228991fda5dc1f618acc85d6fa022ef17b1f3193c53d1f1455c1cf5e672d",
+      "provider_used": "local_store",
+      "gateway_url": "http://127.0.0.1:8080/ipfs/bafkreihkemritep5uxob6ymkzsc5n6qcf3yxwhzrspct2hyukxa46xthfu",
+      "owner_wallet": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+      "tx_hash": null
+    },
+    {
+      "document_type": "CREDIT_REPORT",
+      "format": "JSON",
+      "visibility": "PRIVATE",
+      "encrypted_on_ipfs": true,
+      "data_kind": "SIMULATED",
+      "sample_plaintext_file": "ipfs_storage/samples/credit_report_sample.json",
+      "sample_encrypted_file": "ipfs_storage/samples/credit_report_sample.encrypted.json",
+      "plaintext_sha256": "96b8a8ea7e2b1e934e8f688811fdd5a8d88a5baf66aec81402c5d464af5f41aa",
+      "plaintext_cid_v1_reference": "bafkreiewxcuou7rld2ju5d3irai73vni3cffxl3gv3ebiawf2rsk6x2bvi",
+      "ipfs_cid": "bafkreibrhtjgbutfb7axl2irz3ublip72ldhce3jngpdd3jhn2gcxsrll4",
+      "ipfs_cid_valid": true,
+      "ipfs_payload_sha256": "313cd260d2650fc175e911cee815a1ffd2c6711369699e31ed276e8c2bca2b5f",
+      "provider_used": "local_store",
+      "gateway_url": "http://127.0.0.1:8080/ipfs/bafkreibrhtjgbutfb7axl2irz3ublip72ldhce3jngpdd3jhn2gcxsrll4",
+      "owner_wallet": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc"
+    },
+    {
+      "document_type": "AUDIT_LOGS",
+      "format": "JSON/CSV",
+      "visibility": "PUBLIC",
+      "encrypted_on_ipfs": false,
+      "data_kind": "SIMULATED",
+      "sample_plaintext_file": "ipfs_storage/samples/audit_logs_sample.json",
+      "sample_csv_file": "ipfs_storage/samples/audit_logs_sample.csv",
+      "plaintext_sha256": "1408b1e5bef43eca4dff9e26359a0481f88956ab780071b2a6be183e1d8e046b",
+      "ipfs_cid": "bafkreiaubcy6lpxuh3fe3746ey2zubeb7cevnk3yaby3fjv6da7b3dqenm",
+      "ipfs_cid_valid": true,
+      "ipfs_payload_sha256": "1408b1e5bef43eca4dff9e26359a0481f88956ab780071b2a6be183e1d8e046b",
+      "provider_used": "local_store",
+      "gateway_url": "http://127.0.0.1:8080/ipfs/bafkreiaubcy6lpxuh3fe3746ey2zubeb7cevnk3yaby3fjv6da7b3dqenm",
+      "owner_wallet": null
+    },
+    {
+      "document_type": "COLLATERAL_PROOF",
+      "format": "PNG (OPTIONAL)",
+      "visibility": "PRIVATE",
+      "encrypted_on_ipfs": true,
+      "data_kind": "SIMULATED",
+      "sample_plaintext_file": "ipfs_storage/samples/collateral_proof_sample.png",
+      "sample_encrypted_file": "ipfs_storage/samples/collateral_proof_sample.encrypted.json",
+      "plaintext_sha256": "812b0008182d16bb70d674810ea111258152a8b14fae1b043c73ecdcd1a85a95",
+      "plaintext_cid_v1_reference": "bafkreiebfmaaqgbnc25xbvtuqehkcejfqfjkrmkpvynqipdt5tondkc2su",
+      "ipfs_cid": "bafkreibtrlkzopzrkijgrjh466ye3zf5mvaxiftuvge3i46am62o35toee",
+      "ipfs_cid_valid": true,
+      "ipfs_payload_sha256": "338ad5973f31521268a4fcf7b04de4bd6541741674a989b473c067b4edf66e21",
+      "provider_used": "local_store",
+      "gateway_url": "http://127.0.0.1:8080/ipfs/bafkreibtrlkzopzrkijgrjh466ye3zf5mvaxiftuvge3i46am62o35toee",
+      "owner_wallet": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc"
+    }
+  ],
+  "ciphertext_only_check": {
+    "credit_report_plaintext_leaked": false,
+    "loan_agreement_pdf_header_leaked": false,
+    "decryption_key_present_in_ipfs_payload": false
+  },
+  "rbac_verification": [
+    {
+      "document_type": "LOAN_AGREEMENT",
+      "actor": "guest",
+      "http_status": 401,
+      "allowed": false,
+      "reason": "AUTHENTICATION_REQUIRED_SIGN_NONCE_WITH_METAMASK"
+    },
+    {
+      "document_type": "LOAN_AGREEMENT",
+      "actor": "lender_a",
+      "http_status": 403,
+      "allowed": false,
+      "reason": "FORBIDDEN_NOT_DOCUMENT_OWNER_OR_ADMIN"
+    },
+    {
+      "document_type": "LOAN_AGREEMENT",
+      "actor": "borrower_b_other",
+      "http_status": 403,
+      "allowed": false,
+      "reason": "FORBIDDEN_NOT_DOCUMENT_OWNER_OR_ADMIN"
+    },
+    {
+      "document_type": "LOAN_AGREEMENT",
+      "actor": "borrower_a_owner",
+      "http_status": 200,
+      "allowed": true,
+      "decrypted": true,
+      "plaintext_sha256_match": true
+    },
+    {
+      "document_type": "LOAN_AGREEMENT",
+      "actor": "admin",
+      "http_status": 200,
+      "allowed": true,
+      "decrypted": true,
+      "plaintext_sha256_match": true
+    },
+    {
+      "document_type": "CREDIT_REPORT",
+      "actor": "guest",
+      "http_status": 401,
+      "allowed": false,
+      "reason": "AUTHENTICATION_REQUIRED_SIGN_NONCE_WITH_METAMASK"
+    },
+    {
+      "document_type": "CREDIT_REPORT",
+      "actor": "lender_a",
+      "http_status": 403,
+      "allowed": false,
+      "reason": "FORBIDDEN_NOT_DOCUMENT_OWNER_OR_ADMIN"
+    },
+    {
+      "document_type": "CREDIT_REPORT",
+      "actor": "borrower_b_other",
+      "http_status": 403,
+      "allowed": false,
+      "reason": "FORBIDDEN_NOT_DOCUMENT_OWNER_OR_ADMIN"
+    },
+    {
+      "document_type": "CREDIT_REPORT",
+      "actor": "borrower_a_owner",
+      "http_status": 200,
+      "allowed": true,
+      "decrypted": true,
+      "plaintext_sha256_match": true
+    },
+    {
+      "document_type": "CREDIT_REPORT",
+      "actor": "admin",
+      "http_status": 200,
+      "allowed": true,
+      "decrypted": true,
+      "plaintext_sha256_match": true
+    },
+    {
+      "document_type": "AUDIT_LOGS",
+      "actor": "guest",
+      "http_status": 200,
+      "allowed": true,
+      "decrypted": false,
+      "plaintext_sha256_match": true
+    },
+    {
+      "document_type": "AUDIT_LOGS",
+      "actor": "lender_a",
+      "http_status": 200,
+      "allowed": true,
+      "decrypted": false,
+      "plaintext_sha256_match": true
+    },
+    {
+      "document_type": "AUDIT_LOGS",
+      "actor": "borrower_b_other",
+      "http_status": 200,
+      "allowed": true,
+      "decrypted": false,
+      "plaintext_sha256_match": true
+    },
+    {
+      "document_type": "AUDIT_LOGS",
+      "actor": "borrower_a_owner",
+      "http_status": 200,
+      "allowed": true,
+      "decrypted": false,
+      "plaintext_sha256_match": true
+    },
+    {
+      "document_type": "AUDIT_LOGS",
+      "actor": "admin",
+      "http_status": 200,
+      "allowed": true,
+      "decrypted": false,
+      "plaintext_sha256_match": true
+    },
+    {
+      "document_type": "COLLATERAL_PROOF",
+      "actor": "guest",
+      "http_status": 401,
+      "allowed": false,
+      "reason": "AUTHENTICATION_REQUIRED_SIGN_NONCE_WITH_METAMASK"
+    },
+    {
+      "document_type": "COLLATERAL_PROOF",
+      "actor": "lender_a",
+      "http_status": 403,
+      "allowed": false,
+      "reason": "FORBIDDEN_NOT_DOCUMENT_OWNER_OR_ADMIN"
+    },
+    {
+      "document_type": "COLLATERAL_PROOF",
+      "actor": "borrower_b_other",
+      "http_status": 403,
+      "allowed": false,
+      "reason": "FORBIDDEN_NOT_DOCUMENT_OWNER_OR_ADMIN"
+    },
+    {
+      "document_type": "COLLATERAL_PROOF",
+      "actor": "borrower_a_owner",
+      "http_status": 200,
+      "allowed": true,
+      "decrypted": true,
+      "plaintext_sha256_match": true
+    },
+    {
+      "document_type": "COLLATERAL_PROOF",
+      "actor": "admin",
+      "http_status": 200,
+      "allowed": true,
+      "decrypted": true,
+      "plaintext_sha256_match": true
+    }
+  ]
+}
