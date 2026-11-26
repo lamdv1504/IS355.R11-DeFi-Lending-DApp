@@ -1,0 +1,106 @@
+{
+  "additionalProperties": false,
+  "description": "Pydantic mirror of ``src.ipfs.encryption.EncryptedEnvelope`` for JSON Schema export.",
+  "properties": {
+    "aad_b64": {
+      "title": "Aad B64",
+      "type": "string"
+    },
+    "algorithm": {
+      "const": "AES-256-GCM",
+      "default": "AES-256-GCM",
+      "title": "Algorithm",
+      "type": "string"
+    },
+    "ciphertext_b64": {
+      "title": "Ciphertext B64",
+      "type": "string"
+    },
+    "content_type": {
+      "title": "Content Type",
+      "type": "string"
+    },
+    "created_at_utc": {
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "document_type": {
+      "enum": [
+        "LOAN_AGREEMENT",
+        "CREDIT_REPORT",
+        "COLLATERAL_PROOF"
+      ],
+      "title": "Document Type",
+      "type": "string"
+    },
+    "encrypted": {
+      "const": true,
+      "default": true,
+      "title": "Encrypted",
+      "type": "boolean"
+    },
+    "kdf": {
+      "const": "HKDF-SHA256",
+      "default": "HKDF-SHA256",
+      "title": "Kdf",
+      "type": "string"
+    },
+    "key_id": {
+      "title": "Key Id",
+      "type": "string"
+    },
+    "key_salt_b64": {
+      "title": "Key Salt B64",
+      "type": "string"
+    },
+    "nonce_b64": {
+      "title": "Nonce B64",
+      "type": "string"
+    },
+    "original_filename": {
+      "title": "Original Filename",
+      "type": "string"
+    },
+    "owner_wallet": {
+      "title": "Owner Wallet",
+      "type": "string"
+    },
+    "plaintext_sha256": {
+      "title": "Plaintext Sha256",
+      "type": "string"
+    },
+    "plaintext_size_bytes": {
+      "minimum": 0,
+      "title": "Plaintext Size Bytes",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "visibility": {
+      "const": "PRIVATE",
+      "default": "PRIVATE",
+      "title": "Visibility",
+      "type": "string"
+    }
+  },
+  "required": [
+    "document_type",
+    "content_type",
+    "original_filename",
+    "owner_wallet",
+    "key_id",
+    "key_salt_b64",
+    "nonce_b64",
+    "aad_b64",
+    "ciphertext_b64",
+    "plaintext_size_bytes",
+    "plaintext_sha256",
+    "created_at_utc"
+  ],
+  "title": "EncryptedEnvelopeSchema",
+  "type": "object"
+}

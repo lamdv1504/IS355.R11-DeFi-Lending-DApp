@@ -1,0 +1,88 @@
+{
+  "additionalProperties": false,
+  "description": "Post-confirmation reconciliation record binding Agreement CID <-> Loan ID <-> TxHash (HI01/Q03).",
+  "properties": {
+    "agreement_cid": {
+      "title": "Agreement Cid",
+      "type": "string"
+    },
+    "agreement_id": {
+      "title": "Agreement Id",
+      "type": "string"
+    },
+    "block_number": {
+      "minimum": 0,
+      "title": "Block Number",
+      "type": "integer"
+    },
+    "borrower_wallet": {
+      "title": "Borrower Wallet",
+      "type": "string"
+    },
+    "chain_id": {
+      "title": "Chain Id",
+      "type": "integer"
+    },
+    "confirmed_at_utc": {
+      "title": "Confirmed At Utc",
+      "type": "string"
+    },
+    "encrypted_ipfs_sha256": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Encrypted Ipfs Sha256"
+    },
+    "loan_id": {
+      "title": "Loan Id",
+      "type": "string"
+    },
+    "network": {
+      "enum": [
+        "local",
+        "sepolia"
+      ],
+      "title": "Network",
+      "type": "string"
+    },
+    "pdf_plaintext_sha256": {
+      "title": "Pdf Plaintext Sha256",
+      "type": "string"
+    },
+    "principal_wad": {
+      "title": "Principal Wad",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "tx_hash": {
+      "title": "Tx Hash",
+      "type": "string"
+    }
+  },
+  "required": [
+    "agreement_id",
+    "agreement_cid",
+    "pdf_plaintext_sha256",
+    "loan_id",
+    "borrower_wallet",
+    "principal_wad",
+    "network",
+    "chain_id",
+    "tx_hash",
+    "block_number",
+    "confirmed_at_utc"
+  ],
+  "title": "LoanTxBindingRecord",
+  "type": "object"
+}

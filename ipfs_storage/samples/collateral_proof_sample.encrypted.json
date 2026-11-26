@@ -1,0 +1,19 @@
+{
+  "aad_b64": "eyJkb2N1bWVudF90eXBlIjoiQ09MTEFURVJBTF9QUk9PRiIsImtleV9pZCI6InNhbXBsZS1kZW1vLWtleS1kby1ub3QtdXNlLWluLXByb2QiLCJvd25lcl93YWxsZXQiOiIweDNjNDRjZGRkYjZhOTAwZmEyYjU4NWRkMjk5ZTAzZDEyZmE0MjkzYmMiLCJzY2hlbWFfdmVyc2lvbiI6IjEuMCIsInZpc2liaWxpdHkiOiJQUklWQVRFIn0=",
+  "algorithm": "AES-256-GCM",
+  "ciphertext_b64": "vk8vdVGqSYnpuiFuWqQCY9JI248+BsOzb6XHK9kss9kqtJ72VW64s4xtWVGLKWwtod358+xq3nnwOIUsLgukgDJb4gSuKZlhbkcRPcuFlFCi0vpa4u0BXbp0aIAhlKD7/H6Ac9acCv7BAeLH9NbE9u8Z506X0/blN/UwhzdGWPH0etc5aaaMrYshP/YhQv78y9lTjHUIYNK0Y5FOubLI49i6iE9fHF+RrhdTmtgUQG4fXf/ozn/maKsE0f6Vo6yVfxWrE5WIQdMgMGaoR/1E7kgQ40QTnYddjzCN4eNvoiM+RGxjQB4P6rAQH21lU6me6O8A5plbXWMSLEdlpoDmpNDiwlmqwy5EhqTPTyWBPx9AzcPwEHGbhROsgQDXQwa/TOuYai03orHqJZ3Wv4bul2MxzvI7hQ4WyvglUejpaQVUlqe65RjtX7iwRwhtIDKfMN6eZoMU8jE3c/3nYif1aIM5U7ItxYZnPPy8nLrapOHubSzZRvt2BAb1VnAHce+SEMYcTd+N5t3bMLXnd1iP+w9NCsa+fC60iUVswjeHM5PUWGafJhby69My50A3N3mmRyrX+mhhuXu6c0/bv00lJqeAE8fSXnCGKOsDHrOT9IyNeadzGTDz/zQ59IUF8HerZY/L1Kz4DyozEi2tqUGO/SU0ogv68sDwBbZkDkokJjQbUwJj7uCGyQ3DVeRQ1B9RjPPCQUnHjeVYIbVwf2pngQ4CsCSf0z3VNc46iO7nRjp8lmHfBEu9x8Qt4zZI4K4wRWvbBY9Uo2k4ZdOb6wXMgbQ8f3kMgI7jQctQSQmOPXLhe9pP2kWIujMNNkj99ZaY1cMFKHKJ4czgtfXMKAGH1ZZ0pmDgLC3rJPg40+csXVagN061yEAYJt2HbFdfDCOUW19hT3RuBE9Vqjzd6tuYBBeXO5Bu9KZM5WSm28n1KYvgGYwzczpkjmo/MPkqGmKN2xQY4dNdI3D1oszVivUoc2/e83VqFi+1VUOMVqOLzqFjMJ3OiyE3n/InqKzXd4w0u0h8Ape1h8WD0uF8K91d/b022potjpV5MhQpw2qz56r4omMJBrNZTyGh7ZIGtIm0I4OIPpnC5KjV6f4KG9cDEXVGkxp/uUpB6jeCXRyzQ1SJshyjdyvqtVjis/XhiAYGvPiKEweX7EM+7+5snirAtL6jjDM=",
+  "content_type": "image/png",
+  "created_at_utc": "2026-11-26T16:22:45Z",
+  "document_type": "COLLATERAL_PROOF",
+  "encrypted": true,
+  "kdf": "HKDF-SHA256",
+  "key_id": "sample-demo-key-do-not-use-in-prod",
+  "key_salt_b64": "WhDbPV1HRWhv2gNTD6BLzw==",
+  "nonce_b64": "4vUSK0+IW8yNnaM2",
+  "original_filename": "collateral_proof_sample.png",
+  "owner_wallet": "0x3c44cdddb6a900fa2b585dd299e03d12fa4293bc",
+  "plaintext_sha256": "812b0008182d16bb70d674810ea111258152a8b14fae1b043c73ecdcd1a85a95",
+  "plaintext_size_bytes": 868,
+  "schema_version": "1.0",
+  "visibility": "PRIVATE"
+}
