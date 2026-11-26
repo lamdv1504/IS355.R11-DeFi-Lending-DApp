@@ -139,12 +139,12 @@ def calculate_simple_interest(principal_wad: int, apr_bps: int, delta_seconds: i
 
 
 def calculate_next_index(previous_index_wad: int, apr_bps: int, delta_seconds: int) -> int:
-    """Advance cumulative WAD interest index for a single non-retroactive period."""
+    """Advance additive cumulative APR WAD index for a single non-retroactive period."""
     if previous_index_wad <= 0 or apr_bps < 0 or delta_seconds < 0:
         raise ValueError("invalid index accrual inputs")
     if delta_seconds == 0 or apr_bps == 0:
         return previous_index_wad
-    delta_index = (previous_index_wad * apr_bps * delta_seconds) // (SECONDS_PER_YEAR * BPS)
+    delta_index = (WAD * apr_bps * delta_seconds) // (SECONDS_PER_YEAR * BPS)
     return previous_index_wad + delta_index
 
 

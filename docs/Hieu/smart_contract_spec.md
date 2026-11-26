@@ -70,8 +70,9 @@ Tài liệu này là **Nguồn chuẩn duy nhất (Single Source of Truth)** c�
 2. **Quy tắc cộng dồn lãi theo kỳ / Snapshot (Không hồi tố)**:
    - Pool duy trì hai chỉ số tích lũy `borrowIndex` và `supplyIndex` (khởi tạo `1e18` ở thời điểm deploy) cùng `lastAccrualTimestamp`.
    - **Trước mọi giao dịch làm thay đổi `totalSupplied` hoặc `totalBorrowed`** (`depositLender`, `withdrawLender`, `borrow`, `repay`, `liquidate`), Smart Contract bắt buộc gọi `_accruePoolInterest()`:
-     - Chốt chỉ số tích lũy cho khoảng thời gian $\Delta t$ vừa qua bằng **mức lãi suất CŨ** (`borrowAprBps`, `supplyAprBps` trước khi thay đổi thanh khoản):
-       $$\text{Index}_{\text{new}} = \text{Index}_{\text{old}} + \left\lfloor \frac{\text{Index}_{\text{old}} \times \text{aprBps}_{\text{old}} \times \Delta t}{31\,536\,000 \times 10\,000} \right\rfloor$$
+     - Chốt chỉ số tích lũy APR tuyến tính cho khoảng thời gian $\Delta t$ vừa qua bằng **mức lãi suất CŨ** (`borrowAprBps`, `supplyAprBps` trước khi thay đổi thanh khoản):
+       $$\text{Index}_{\text{new}} = \text{Index}_{\text{old}} + \left\lfloor \frac{\text{WAD} \times \text{aprBps}_{\text{old}} \times \Delta t}{31\,536\,000 \times 10\,000} \right\rfloor$$
+     - Lãi phát sinh của từng vị thế được tính trực tiếp từ chênh lệch chỉ số: $\text{Interest} = \left\lfloor \frac{\text{principal} \times (\text{Index}_{\text{now}} - \text{Index}_{\text{snapshot}})}{\text{WAD}} \right\rfloor$, đảm bảo tổng lãi Lender nhận không bao giờ vượt tổng lãi Borrower đóng vào Pool dù có nhiều lần trả góp một phần.
      - Cập nhật `lastAccrualTimestamp = block.timestamp`.
      - Sau khi cập nhật `totalSupplied` / `totalBorrowed`, tính lại `utilizationBps`, `borrowAprBps`, `supplyAprBps` mới và phát sự kiện `InterestRateUpdated(...)`.
    - Với từng vị thế vay hoặc gửi, trước khi thay đổi gốc `principal`, chốt phần lãi đã phát sinh từ `indexSnapshot` tới `currentIndex` vào `accruedInterest` rồi mới cập nhật `indexSnapshot = currentIndex`.

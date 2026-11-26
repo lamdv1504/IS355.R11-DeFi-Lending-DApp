@@ -14,8 +14,11 @@
     "export:myusdt": "hardhat run scripts/export_myusdt.js",
     "deploy:myusdt": "hardhat run scripts/deploy_myusdt.js --network localhost",
     "test:h02": "hardhat test tests/H02_Tokens.test.js",
+    "test:hi02": "hardhat test tests/HI02_LendingPool.test.js",
     "export:h02": "hardhat run scripts/export_h02.js",
+    "export:hi02": "hardhat run scripts/export_hi02.js",
     "deploy:h02": "hardhat run scripts/deploy_h02.js --network localhost",
+    "deploy:hi02": "hardhat run scripts/deploy_hi02.js --network localhost",
     "verify:h02": "hardhat run scripts/verify_h02.js --network localhost"
   },
   "dependencies": {
