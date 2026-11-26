@@ -486,6 +486,25 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable, IERC721Receiver 
     }
 
     /// @inheritdoc ILendingPool
+    function getRemainingBorrowCapacity(address borrower) public view override returns (uint256) {
+        uint256 maxBorrowable = getMaxBorrowable(borrower);
+        uint256 totalDebt = getTotalDebt(borrower);
+        return maxBorrowable > totalDebt ? maxBorrowable - totalDebt : 0;
+    }
+
+    /// @inheritdoc ILendingPool
+    function getAvailableToBorrow(address borrower) external view override returns (uint256) {
+        uint256 remainingCapacity = getRemainingBorrowCapacity(borrower);
+        uint256 available = getAvailableLiquidity();
+        return remainingCapacity < available ? remainingCapacity : available;
+    }
+
+    /// @inheritdoc ILendingPool
+    function getCurrentLtvBps(address borrower) external view override returns (uint256) {
+        return ProtocolMath.calculateLtvBps(getTotalDebt(borrower), getCollateralValue(borrower));
+    }
+
+    /// @inheritdoc ILendingPool
     function calculateAccruedInterest(address borrower) public view override returns (uint256) {
         LoanPosition storage loan = _loanPositions[borrower];
         if (!loan.active) return 0;
@@ -538,10 +557,17 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable, IERC721Receiver 
     }
 
     /// @inheritdoc ILendingPool
-    function getLenderClaimableBalance(uint256 positionId) external view override returns (uint256) {
+    function getLenderClaimableBalance(uint256 positionId) public view override returns (uint256) {
         LenderPosition storage pos = _lenderPositions[positionId];
         if (!pos.active) return 0;
         return pos.principal + getLenderEarnedInterest(positionId);
+    }
+
+    /// @inheritdoc ILendingPool
+    function getMaxWithdrawable(uint256 positionId) external view override returns (uint256) {
+        uint256 claimable = getLenderClaimableBalance(positionId);
+        uint256 available = getAvailableLiquidity();
+        return claimable < available ? claimable : available;
     }
 
     /// @inheritdoc ILendingPool
