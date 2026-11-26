@@ -1,1 +1,63 @@
-"""Document processing utilities."""
+"""Document schemas, Loan Agreement PDF template, and optional Collateral Proof PNG helpers (H03)."""
+
+from src.documents.collateral_proof_template import (
+    generate_collateral_proof_png,
+    save_collateral_proof_png,
+)
+from src.documents.loan_agreement_template import (
+    render_loan_agreement_pdf,
+    save_loan_agreement_pdf,
+)
+from src.documents.schemas import (
+    SAMPLE_ADMIN_WALLET,
+    SAMPLE_BORROWER_A_WALLET,
+    SAMPLE_BORROWER_B_WALLET,
+    SAMPLE_LENDER_A_WALLET,
+    SCHEMA_VERSION,
+    AuditLogEntry,
+    AuditLogsDocument,
+    AuditRateModelInfo,
+    CreditLoanRecord,
+    CreditReportDocument,
+    CreditReportSummary,
+    CreditScoreInfo,
+    EncryptedEnvelopeSchema,
+    LoanAgreementPayload,
+    LoanCollateralInfo,
+    LoanTermsInfo,
+    LoanTxBindingRecord,
+    audit_logs_to_csv,
+    build_sample_audit_logs,
+    build_sample_credit_report,
+    build_sample_loan_agreement,
+    export_all_json_schemas,
+)
+
+__all__ = [
+    "AuditLogEntry",
+    "AuditLogsDocument",
+    "AuditRateModelInfo",
+    "CreditLoanRecord",
+    "CreditReportDocument",
+    "CreditReportSummary",
+    "CreditScoreInfo",
+    "EncryptedEnvelopeSchema",
+    "LoanAgreementPayload",
+    "LoanCollateralInfo",
+    "LoanTermsInfo",
+    "LoanTxBindingRecord",
+    "SAMPLE_ADMIN_WALLET",
+    "SAMPLE_BORROWER_A_WALLET",
+    "SAMPLE_BORROWER_B_WALLET",
+    "SAMPLE_LENDER_A_WALLET",
+    "SCHEMA_VERSION",
+    "audit_logs_to_csv",
+    "build_sample_audit_logs",
+    "build_sample_credit_report",
+    "build_sample_loan_agreement",
+    "export_all_json_schemas",
+    "generate_collateral_proof_png",
+    "render_loan_agreement_pdf",
+    "save_collateral_proof_png",
+    "save_loan_agreement_pdf",
+]

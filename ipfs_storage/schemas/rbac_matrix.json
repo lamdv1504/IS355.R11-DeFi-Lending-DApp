@@ -1,0 +1,77 @@
+{
+  "encryption": {
+    "algorithm": "AES-256-GCM",
+    "kdf": "HKDF-SHA256",
+    "key_storage": "Backend-only (.env DOCUMENT_AES_KEY_HEX / KMS); never stored in IPFS CID or on-chain",
+    "nonce_bytes": 12
+  },
+  "matrix": [
+    {
+      "admin": "ALLOW (200)",
+      "borrower_other": "ALLOW (200)",
+      "borrower_owner": "ALLOW (200)",
+      "document_type": "AUDIT_LOGS",
+      "encrypted_on_ipfs": false,
+      "guest": "ALLOW (200)",
+      "lender": "ALLOW (200)",
+      "notes": "Chỉ chứa chỉ số tổng hợp Pool (APR/APY/Utilization/TVL); không chứa PII hay secret.",
+      "resource": "Audit Logs (JSON/CSV)",
+      "visibility": "PUBLIC"
+    },
+    {
+      "admin": "ALLOW (200)",
+      "borrower_other": "DENY (403)",
+      "borrower_owner": "ALLOW (200)",
+      "document_type": "LOAN_AGREEMENT",
+      "encrypted_on_ipfs": true,
+      "guest": "DENY (401)",
+      "lender": "DENY (403)",
+      "notes": "Lender không mặc nhiên xem thỏa thuận vay riêng của Borrower; cần phiên ký nonce ví.",
+      "resource": "Loan Agreement (PDF) – Bản rõ / Giải mã",
+      "visibility": "PRIVATE"
+    },
+    {
+      "admin": "ALLOW (200)",
+      "borrower_other": "DENY (403)",
+      "borrower_owner": "ALLOW (200)",
+      "document_type": "CREDIT_REPORT",
+      "encrypted_on_ipfs": true,
+      "guest": "DENY (401)",
+      "lender": "DENY (403)",
+      "notes": "Bắt buộc mã hóa AES-256-GCM trước khi upload IPFS; biết CID chỉ tải được bản mã.",
+      "resource": "Credit Report (JSON) – Bản rõ / Giải mã",
+      "visibility": "PRIVATE"
+    },
+    {
+      "admin": "ALLOW (200)",
+      "borrower_other": "DENY (403)",
+      "borrower_owner": "ALLOW (200)",
+      "document_type": "COLLATERAL_PROOF",
+      "encrypted_on_ipfs": true,
+      "guest": "DENY (401)",
+      "lender": "DENY (403)",
+      "notes": "Minh chứng định dạng ảnh thứ 3 (tùy chọn); bảo vệ cùng chính sách chủ sở hữu/Admin.",
+      "resource": "Collateral Proof (PNG) – Tùy chọn",
+      "visibility": "PRIVATE"
+    },
+    {
+      "admin": "CIPHERTEXT ONLY (Decrypt via Auth Backend)",
+      "borrower_other": "CIPHERTEXT ONLY (No Key)",
+      "borrower_owner": "CIPHERTEXT ONLY (Decrypt via Auth Backend)",
+      "document_type": "PRIVATE_ENVELOPE",
+      "encrypted_on_ipfs": true,
+      "guest": "CIPHERTEXT ONLY (No Key)",
+      "lender": "CIPHERTEXT ONLY (No Key)",
+      "notes": "Khóa AES-256-GCM quản lý tại Backend; không bao giờ xuất hiện trong CID hay on-chain.",
+      "resource": "Raw Ciphertext qua Public IPFS Gateway (biết CID)",
+      "visibility": "CIPHERTEXT_ONLY"
+    }
+  ],
+  "roles": [
+    "GUEST",
+    "BORROWER",
+    "LENDER",
+    "ADMIN"
+  ],
+  "schema_version": "1.0"
+}

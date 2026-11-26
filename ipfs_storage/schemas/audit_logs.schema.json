@@ -1,0 +1,246 @@
+{
+  "$defs": {
+    "AuditLogEntry": {
+      "additionalProperties": false,
+      "description": "Single monthly interest rate & pool liquidity audit log entry (no PII).",
+      "properties": {
+        "available_liquidity_display": {
+          "title": "Available Liquidity Display",
+          "type": "string"
+        },
+        "available_liquidity_wad": {
+          "title": "Available Liquidity Wad",
+          "type": "string"
+        },
+        "borrow_apr_bps": {
+          "minimum": 0,
+          "title": "Borrow Apr Bps",
+          "type": "integer"
+        },
+        "borrow_apr_percent": {
+          "minimum": 0.0,
+          "title": "Borrow Apr Percent",
+          "type": "number"
+        },
+        "borrow_apy_percent": {
+          "minimum": 0.0,
+          "title": "Borrow Apy Percent",
+          "type": "number"
+        },
+        "data_kind": {
+          "enum": [
+            "SIMULATED",
+            "ON_CHAIN"
+          ],
+          "title": "Data Kind",
+          "type": "string"
+        },
+        "event_tx_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Event Tx Hash"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        },
+        "period": {
+          "description": "Tháng ghi nhận (YYYY-MM).",
+          "pattern": "^\\d{4}-\\d{2}$",
+          "title": "Period",
+          "type": "string"
+        },
+        "recorded_at_utc": {
+          "title": "Recorded At Utc",
+          "type": "string"
+        },
+        "supply_apr_bps": {
+          "minimum": 0,
+          "title": "Supply Apr Bps",
+          "type": "integer"
+        },
+        "supply_apr_percent": {
+          "minimum": 0.0,
+          "title": "Supply Apr Percent",
+          "type": "number"
+        },
+        "supply_apy_percent": {
+          "minimum": 0.0,
+          "title": "Supply Apy Percent",
+          "type": "number"
+        },
+        "total_borrowed_display": {
+          "title": "Total Borrowed Display",
+          "type": "string"
+        },
+        "total_borrowed_wad": {
+          "title": "Total Borrowed Wad",
+          "type": "string"
+        },
+        "total_supplied_display": {
+          "title": "Total Supplied Display",
+          "type": "string"
+        },
+        "total_supplied_wad": {
+          "title": "Total Supplied Wad",
+          "type": "string"
+        },
+        "utilization_bps": {
+          "maximum": 10000,
+          "minimum": 0,
+          "title": "Utilization Bps",
+          "type": "integer"
+        },
+        "utilization_percent": {
+          "maximum": 100.0,
+          "minimum": 0.0,
+          "title": "Utilization Percent",
+          "type": "number"
+        }
+      },
+      "required": [
+        "period",
+        "recorded_at_utc",
+        "data_kind",
+        "total_supplied_wad",
+        "total_supplied_display",
+        "total_borrowed_wad",
+        "total_borrowed_display",
+        "available_liquidity_wad",
+        "available_liquidity_display",
+        "utilization_bps",
+        "utilization_percent",
+        "borrow_apr_bps",
+        "borrow_apr_percent",
+        "borrow_apy_percent",
+        "supply_apr_bps",
+        "supply_apr_percent",
+        "supply_apy_percent"
+      ],
+      "title": "AuditLogEntry",
+      "type": "object"
+    },
+    "AuditRateModelInfo": {
+      "additionalProperties": false,
+      "description": "Snapshot of the HI01 hybrid interest rate model parameters.",
+      "properties": {
+        "apr_vs_apy_note": {
+          "default": "borrow_apr_percent / supply_apr_percent are on-chain simple annual rates (APR); borrow_apy_percent / supply_apy_percent are daily-compounded (n=365) reference values.",
+          "title": "Apr Vs Apy Note",
+          "type": "string"
+        },
+        "base_borrow_apr_bps": {
+          "default": 500,
+          "title": "Base Borrow Apr Bps",
+          "type": "integer"
+        },
+        "protocol_reserve_factor_bps": {
+          "default": 0,
+          "title": "Protocol Reserve Factor Bps",
+          "type": "integer"
+        },
+        "seconds_per_year": {
+          "default": 31536000,
+          "title": "Seconds Per Year",
+          "type": "integer"
+        },
+        "utilization_slope_bps": {
+          "default": 1000,
+          "title": "Utilization Slope Bps",
+          "type": "integer"
+        }
+      },
+      "title": "AuditRateModelInfo",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Canonical Public Audit Logs JSON schema (safe for public IPFS pinning; no PII/secrets).",
+  "properties": {
+    "chain_id": {
+      "title": "Chain Id",
+      "type": "integer"
+    },
+    "contains_pii": {
+      "const": false,
+      "default": false,
+      "title": "Contains Pii",
+      "type": "boolean"
+    },
+    "document_type": {
+      "const": "AUDIT_LOGS",
+      "default": "AUDIT_LOGS",
+      "title": "Document Type",
+      "type": "string"
+    },
+    "encryption_required": {
+      "const": false,
+      "default": false,
+      "title": "Encryption Required",
+      "type": "boolean"
+    },
+    "entries": {
+      "items": {
+        "$ref": "#/$defs/AuditLogEntry"
+      },
+      "minItems": 1,
+      "title": "Entries",
+      "type": "array"
+    },
+    "generated_at_utc": {
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "lending_pool_address": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Lending Pool Address"
+    },
+    "network": {
+      "default": "local",
+      "enum": [
+        "local",
+        "sepolia"
+      ],
+      "title": "Network",
+      "type": "string"
+    },
+    "rate_model": {
+      "$ref": "#/$defs/AuditRateModelInfo"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "visibility": {
+      "const": "PUBLIC",
+      "default": "PUBLIC",
+      "title": "Visibility",
+      "type": "string"
+    }
+  },
+  "required": [
+    "generated_at_utc",
+    "chain_id",
+    "entries"
+  ],
+  "title": "AuditLogsDocument",
+  "type": "object"
+}

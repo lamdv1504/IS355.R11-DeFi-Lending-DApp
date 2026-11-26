@@ -1,0 +1,318 @@
+{
+  "$defs": {
+    "CreditLoanRecord": {
+      "additionalProperties": false,
+      "description": "Individual loan history entry inside a borrower's Credit Report.",
+      "properties": {
+        "agreement_cid": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Agreement Cid"
+        },
+        "borrow_tx_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Borrow Tx Hash"
+        },
+        "borrowed_at_utc": {
+          "title": "Borrowed At Utc",
+          "type": "string"
+        },
+        "closed_at_utc": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Closed At Utc"
+        },
+        "loan_id": {
+          "title": "Loan Id",
+          "type": "string"
+        },
+        "principal_display": {
+          "title": "Principal Display",
+          "type": "string"
+        },
+        "principal_wad": {
+          "title": "Principal Wad",
+          "type": "string"
+        },
+        "repaid_display": {
+          "title": "Repaid Display",
+          "type": "string"
+        },
+        "repaid_wad": {
+          "title": "Repaid Wad",
+          "type": "string"
+        },
+        "repay_or_liquidate_tx_hash": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Repay Or Liquidate Tx Hash"
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "REPAID_ON_TIME",
+            "LIQUIDATED"
+          ],
+          "title": "Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "loan_id",
+        "principal_wad",
+        "principal_display",
+        "repaid_wad",
+        "repaid_display",
+        "status",
+        "borrowed_at_utc"
+      ],
+      "title": "CreditLoanRecord",
+      "type": "object"
+    },
+    "CreditReportSummary": {
+      "additionalProperties": false,
+      "description": "Aggregate on-chain credit metrics for a wallet.",
+      "properties": {
+        "active_loans_count": {
+          "minimum": 0,
+          "title": "Active Loans Count",
+          "type": "integer"
+        },
+        "current_debt_display": {
+          "title": "Current Debt Display",
+          "type": "string"
+        },
+        "current_debt_wad": {
+          "title": "Current Debt Wad",
+          "type": "string"
+        },
+        "liquidation_count": {
+          "minimum": 0,
+          "title": "Liquidation Count",
+          "type": "integer"
+        },
+        "on_time_repayment_ratio_bps": {
+          "maximum": 10000,
+          "minimum": 0,
+          "title": "On Time Repayment Ratio Bps",
+          "type": "integer"
+        },
+        "repaid_on_time_count": {
+          "minimum": 0,
+          "title": "Repaid On Time Count",
+          "type": "integer"
+        },
+        "total_borrowed_display": {
+          "title": "Total Borrowed Display",
+          "type": "string"
+        },
+        "total_borrowed_wad": {
+          "title": "Total Borrowed Wad",
+          "type": "string"
+        },
+        "total_loans": {
+          "minimum": 0,
+          "title": "Total Loans",
+          "type": "integer"
+        },
+        "total_repaid_display": {
+          "title": "Total Repaid Display",
+          "type": "string"
+        },
+        "total_repaid_wad": {
+          "title": "Total Repaid Wad",
+          "type": "string"
+        }
+      },
+      "required": [
+        "total_loans",
+        "repaid_on_time_count",
+        "active_loans_count",
+        "liquidation_count",
+        "total_borrowed_wad",
+        "total_borrowed_display",
+        "total_repaid_wad",
+        "total_repaid_display",
+        "current_debt_wad",
+        "current_debt_display",
+        "on_time_repayment_ratio_bps"
+      ],
+      "title": "CreditReportSummary",
+      "type": "object"
+    },
+    "CreditScoreInfo": {
+      "additionalProperties": false,
+      "description": "Decentralized on-chain credit score (300 - 850 scale).",
+      "properties": {
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "scale_max": {
+          "const": 850,
+          "default": 850,
+          "title": "Scale Max",
+          "type": "integer"
+        },
+        "scale_min": {
+          "const": 300,
+          "default": 300,
+          "title": "Scale Min",
+          "type": "integer"
+        },
+        "score": {
+          "maximum": 850,
+          "minimum": 300,
+          "title": "Score",
+          "type": "integer"
+        },
+        "scoring_model_version": {
+          "default": "defi-onchain-v1",
+          "title": "Scoring Model Version",
+          "type": "string"
+        },
+        "tier": {
+          "enum": [
+            "POOR",
+            "FAIR",
+            "GOOD",
+            "VERY_GOOD",
+            "EXCELLENT"
+          ],
+          "title": "Tier",
+          "type": "string"
+        }
+      },
+      "required": [
+        "score",
+        "tier",
+        "rationale"
+      ],
+      "title": "CreditScoreInfo",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Canonical Credit Report JSON schema (MUST be AES-256-GCM encrypted before IPFS upload).",
+  "properties": {
+    "chain_id": {
+      "title": "Chain Id",
+      "type": "integer"
+    },
+    "credit_score": {
+      "$ref": "#/$defs/CreditScoreInfo"
+    },
+    "data_kind": {
+      "default": "ON_CHAIN",
+      "enum": [
+        "ON_CHAIN",
+        "SIMULATED"
+      ],
+      "title": "Data Kind",
+      "type": "string"
+    },
+    "document_type": {
+      "const": "CREDIT_REPORT",
+      "default": "CREDIT_REPORT",
+      "title": "Document Type",
+      "type": "string"
+    },
+    "encryption_required": {
+      "const": true,
+      "default": true,
+      "title": "Encryption Required",
+      "type": "boolean"
+    },
+    "generated_at_utc": {
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "loan_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Loan Ids",
+      "type": "array"
+    },
+    "loans": {
+      "items": {
+        "$ref": "#/$defs/CreditLoanRecord"
+      },
+      "title": "Loans",
+      "type": "array"
+    },
+    "network": {
+      "default": "local",
+      "enum": [
+        "local",
+        "sepolia"
+      ],
+      "title": "Network",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_events": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Events",
+      "type": "array"
+    },
+    "summary": {
+      "$ref": "#/$defs/CreditReportSummary"
+    },
+    "visibility": {
+      "const": "PRIVATE",
+      "default": "PRIVATE",
+      "title": "Visibility",
+      "type": "string"
+    },
+    "wallet_address": {
+      "title": "Wallet Address",
+      "type": "string"
+    }
+  },
+  "required": [
+    "generated_at_utc",
+    "chain_id",
+    "wallet_address",
+    "summary",
+    "credit_score"
+  ],
+  "title": "CreditReportDocument",
+  "type": "object"
+}

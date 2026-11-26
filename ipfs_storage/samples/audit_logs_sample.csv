@@ -1,0 +1,7 @@
+period,recorded_at_utc,data_kind,total_supplied_display,total_borrowed_display,available_liquidity_display,utilization_bps,utilization_percent,borrow_apr_bps,borrow_apr_percent,borrow_apy_percent,supply_apr_bps,supply_apr_percent,supply_apy_percent,event_tx_hash,notes
+2026-06,2026-06-30T23:59:59Z,SIMULATED,1000.000000,200.000000,800.000000,2000,20.0,700,7.0,7.2501,140,1.4,1.4098,,SIMULATED seed month 1 (low utilization)
+2026-07,2026-07-31T23:59:59Z,SIMULATED,1500.000000,450.000000,1050.000000,3000,30.0,800,8.0,8.3278,240,2.4,2.429,,SIMULATED seed month 2 (growing borrowing)
+2026-08,2026-08-31T23:59:59Z,SIMULATED,2000.000000,1000.000000,1000.000000,5000,50.0,1000,10.0,10.5156,500,5.0,5.1267,,SIMULATED seed month 3 (50% target utilization)
+2026-09,2026-09-30T23:59:59Z,SIMULATED,2500.000000,1500.000000,1000.000000,6000,60.0,1100,11.0,11.626,660,6.6,6.822,,SIMULATED seed month 4 (60% utilization)
+2026-10,2026-10-31T23:59:59Z,SIMULATED,3000.000000,2100.000000,900.000000,7000,70.0,1200,12.0,12.7475,840,8.4,8.7618,,SIMULATED seed month 5 (70% utilization)
+2026-11,2026-11-26T12:00:00Z,SIMULATED,1000.000000,500.000000,500.000000,5000,50.0,1000,10.0,10.5156,500,5.0,5.1267,,SIMULATED seed month 6 (Demo 1000->500 baseline)
