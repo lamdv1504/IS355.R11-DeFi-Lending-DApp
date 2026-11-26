@@ -24,6 +24,20 @@ library ProtocolMath {
         );
     }
 
+    /// @notice Computes current Loan-to-Value ratio in BPS (0 if debt == 0, type(uint256).max if collateral == 0 && debt > 0).
+    function calculateLtvBps(
+        uint256 totalDebtWad,
+        uint256 collateralValueWad
+    ) internal pure returns (uint256) {
+        if (totalDebtWad == 0) {
+            return 0;
+        }
+        if (collateralValueWad == 0) {
+            return type(uint256).max;
+        }
+        return Math.mulDiv(totalDebtWad, ProtocolConstants.BPS, collateralValueWad);
+    }
+
     /// @notice Computes Health Factor in WAD (1e18) using 8000 BPS liquidation threshold.
     /// @dev Formula: HF_WAD = (CollateralValue * 8000 * 1e18) / (TotalDebt * 10000).
     ///      Returns `type(uint256).max` when `totalDebtWad == 0`.

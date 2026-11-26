@@ -171,6 +171,15 @@ interface ILendingPool {
 
     function getMaxBorrowable(address borrower) external view returns (uint256);
 
+    /// @notice Remaining additional MyUSDT borrowable under 70% LTV: max(0, maxBorrowable - totalDebt).
+    function getRemainingBorrowCapacity(address borrower) external view returns (uint256);
+
+    /// @notice Actual maximum additional MyUSDT borrowable right now: min(remainingBorrowCapacity, availableLiquidity).
+    function getAvailableToBorrow(address borrower) external view returns (uint256);
+
+    /// @notice Current Loan-to-Value ratio in BPS (0 if debt == 0, type(uint256).max if collateral == 0 && debt > 0).
+    function getCurrentLtvBps(address borrower) external view returns (uint256);
+
     function calculateAccruedInterest(address borrower) external view returns (uint256);
 
     function getTotalDebt(address borrower) external view returns (uint256);
@@ -180,6 +189,9 @@ interface ILendingPool {
     function getLenderEarnedInterest(uint256 positionId) external view returns (uint256);
 
     function getLenderClaimableBalance(uint256 positionId) external view returns (uint256);
+
+    /// @notice Actual maximum MyUSDT withdrawable right now for `positionId`: min(claimable, availableLiquidity).
+    function getMaxWithdrawable(uint256 positionId) external view returns (uint256);
 
     function getLoanPosition(address borrower) external view returns (LoanPosition memory);
 

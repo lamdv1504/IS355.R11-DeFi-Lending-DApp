@@ -83,6 +83,56 @@ def calculate_max_borrow(collateral_value_wad: int) -> int:
     return (collateral_value_wad * MAX_LTV_BPS) // BPS
 
 
+def calculate_ltv_bps(total_debt_wad: int, collateral_value_wad: int) -> int:
+    """Current Loan-to-Value ratio in BPS matching `ProtocolMath.calculateLtvBps`."""
+    if total_debt_wad < 0 or collateral_value_wad < 0:
+        raise ValueError("total_debt_wad and collateral_value_wad must be non-negative")
+    if total_debt_wad == 0:
+        return 0
+    if collateral_value_wad == 0:
+        return INFINITE_HEALTH_FACTOR
+    return (total_debt_wad * BPS) // collateral_value_wad
+
+
+def calculate_remaining_borrow_capacity(collateral_value_wad: int, total_debt_wad: int) -> int:
+    """Remaining additional borrowable WAD under 70% LTV: max(0, maxBorrowable - totalDebt)."""
+    if total_debt_wad < 0:
+        raise ValueError("total_debt_wad must be non-negative")
+    max_borrow = calculate_max_borrow(collateral_value_wad)
+    return max_borrow - total_debt_wad if max_borrow > total_debt_wad else 0
+
+
+def calculate_available_liquidity(
+    pool_myusdt_balance_wad: int,
+    reserved_liquidity_wad: int = 0,
+    locked_token_collateral_wad: int = 0,
+) -> int:
+    """Real pool withdrawable/lendable MyUSDT liquidity matching `LendingPool.getAvailableLiquidity()`."""
+    if pool_myusdt_balance_wad < 0 or reserved_liquidity_wad < 0 or locked_token_collateral_wad < 0:
+        raise ValueError("liquidity balances must be non-negative")
+    locked = reserved_liquidity_wad + locked_token_collateral_wad
+    return pool_myusdt_balance_wad - locked if pool_myusdt_balance_wad > locked else 0
+
+
+def calculate_available_to_borrow(
+    collateral_value_wad: int,
+    total_debt_wad: int,
+    available_liquidity_wad: int,
+) -> int:
+    """Exact max additional MyUSDT borrowable now: min(remainingLtvCapacity, availableLiquidity)."""
+    if available_liquidity_wad < 0:
+        raise ValueError("available_liquidity_wad must be non-negative")
+    remaining = calculate_remaining_borrow_capacity(collateral_value_wad, total_debt_wad)
+    return min(remaining, available_liquidity_wad)
+
+
+def calculate_max_withdrawable(claimable_wad: int, available_liquidity_wad: int) -> int:
+    """Exact max MyUSDT withdrawable now for a lender position: min(claimable, availableLiquidity)."""
+    if claimable_wad < 0 or available_liquidity_wad < 0:
+        raise ValueError("claimable_wad and available_liquidity_wad must be non-negative")
+    return min(claimable_wad, available_liquidity_wad)
+
+
 def calculate_health_factor(collateral_value_wad: int, total_debt_wad: int) -> int:
     """Compute Health Factor in WAD (1e18). Returns 2^256 - 1 if total_debt_wad == 0."""
     if collateral_value_wad < 0 or total_debt_wad < 0:
