@@ -113,8 +113,10 @@ library ProtocolMath {
         );
     }
 
-    /// @notice Advances a cumulative interest index (WAD) for a single non-retroactive period.
-    /// @dev Ensures historical periods are locked in before any utilization/rate change occurs.
+    /// @notice Advances an additive cumulative APR index (WAD) for a single non-retroactive period.
+    /// @dev Simple-APR cumulative index: `nextIndex = previousIndex + floor(WAD * aprBps * deltaSeconds / (SECONDS_PER_YEAR * BPS))`.
+    ///      Ensures historical periods are locked before any utilization/rate change and guarantees
+    ///      total lender simple-APR interest never exceeds collected borrower simple-APR interest.
     function calculateNextIndex(
         uint256 previousIndexWad,
         uint256 aprBps,
@@ -124,7 +126,7 @@ library ProtocolMath {
             return previousIndexWad;
         }
         uint256 deltaIndex = Math.mulDiv(
-            previousIndexWad,
+            ProtocolConstants.WAD,
             aprBps * deltaSeconds,
             ProtocolConstants.SECONDS_PER_YEAR * ProtocolConstants.BPS
         );
