@@ -240,12 +240,15 @@ sequenceDiagram
 
 ### 6.2. Các hàm View phục vụ Web3.py (`Q02`/`Q05`) & Frontend (`L02`/`L03`)
 - `getPoolInfo()` → trả về `PoolInfo` (tổng gửi, tổng vay, chỉ số lãi, `borrowAprBps`, `supplyAprBps`, `utilizationBps`).
-- `getAvailableLiquidity()` → `MyUSDT.balanceOf(address(this)) - reservedLiquidity`.
+- `getAvailableLiquidity()` → `MyUSDT.balanceOf(address(this)) - reservedLiquidity - totalTokenCollateralLocked` (khi `collateralToken == myUSDT`).
 - `getCollateralValue(borrower)` → giá trị định giá hiện tại theo `PriceOracle` (WAD `1e18`).
-- `getMaxBorrowable(borrower)` → `(collateralValue * 7000) / 10000` (WAD `1e18`).
+- `getMaxBorrowable(borrower)` → trần tổng nợ `(collateralValue * 7000) / 10000` (WAD `1e18`).
+- `getRemainingBorrowCapacity(borrower)` → hạn mức LTV còn lại `max(0, maxBorrowable - totalDebt)` (WAD `1e18`).
+- `getAvailableToBorrow(borrower)` → hạn mức vay thêm thực tế `min(remainingBorrowCapacity, availableLiquidity)` (WAD `1e18`).
+- `getCurrentLtvBps(borrower)` → tỷ lệ LTV hiện tại theo `BPS` (`0` khi không có nợ).
 - `calculateAccruedInterest(borrower)` & `getTotalDebt(borrower)` → tiền lãi realtime và tổng dư nợ (WAD `1e18`).
 - `getHealthFactor(borrower)` → `HF_WAD` (`1e18`, hoặc `type(uint256).max` nếu nợ = 0).
-- `getLenderEarnedInterest(positionId)` & `getLenderClaimableBalance(positionId)` → lãi tích lũy và tổng quyền rút của vị thế NFT.
+- `getLenderEarnedInterest(positionId)`, `getLenderClaimableBalance(positionId)` & `getMaxWithdrawable(positionId)` → lãi tích lũy, tổng quyền rút và hạn mức rút thực tế theo thanh khoản rỗi của vị thế NFT.
 
 ### 6.3. Danh sách Events chuẩn (Quân `Q04` quét làm Credit Report & Audit Logs)
 1. `LenderDeposited(address indexed lender, uint256 indexed positionId, uint256 amountWad, uint256 timestamp)`
