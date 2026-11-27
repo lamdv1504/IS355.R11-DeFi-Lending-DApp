@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import replace
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -10,6 +12,7 @@ from eth_account import Account
 from web3 import Web3
 
 from backend.config import constants
+from backend.config.settings import settings
 from backend.services.web3_service import (
     ContractNotDeployedError,
     TransactionValidationError,
@@ -151,8 +154,18 @@ def web3_service() -> tuple[Web3Service, _FakeWeb3]:
     return service, fake_w3
 
 
-def test_missing_core_deployment_has_clear_error() -> None:
-    service = Web3Service(network_name="local", w3=_FakeWeb3())
+def test_missing_core_deployment_has_clear_error(tmp_path: Path) -> None:
+    config_path = tmp_path / "contracts.json"
+    config_path.write_text(
+        json.dumps({"local": {"chainId": 31337, "contracts": {"PriceOracle": {"address": ""}}}}),
+        encoding="utf-8",
+    )
+    service = Web3Service(
+        network_name="local",
+        w3=_FakeWeb3(),
+        app_settings=replace(settings, contracts_config_path=config_path),
+    )
+
     with pytest.raises(ContractNotDeployedError, match="PriceOracle has no deployment address"):
         service.get_contract("PriceOracle")
 
