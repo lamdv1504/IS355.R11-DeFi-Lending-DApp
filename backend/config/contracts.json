@@ -28,13 +28,14 @@
         "txHash": "0x862c1ac927ccf25369a90665bf5be49c01ebe79506f5eb39719d24dd7b72460c"
       },
       "PriceOracle": {
-        "address": "",
-        "abiPath": "artifacts/contracts/PriceOracle.sol/PriceOracle.json"
+        "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+        "abiPath": "deployments/abi/PriceOracle.json",
+        "txHash": "0x58ed4b1763cec07ef9355e3e6a54445913b9a753cc6323799f2801e19e8a036c"
       },
       "LendingPool": {
         "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
         "abiPath": "deployments/abi/LendingPool.json",
-        "txHash": "0x395c9e8f82bec46a4e70d2f2bdc4a60b52a8ca905daf6a328aef93cf78495563"
+        "txHash": "0xa8eb93b58fb177247eb0ab6c56c71b78a87b73ec4d24e72d68a86280736e0813"
       }
     }
   },

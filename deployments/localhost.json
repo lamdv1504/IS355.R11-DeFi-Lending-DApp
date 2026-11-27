@@ -1,7 +1,7 @@
 {
   "network": "localhost",
   "chainId": 31337,
-  "deployedAt": "2026-11-26T11:34:31.798Z",
+  "deployedAt": "2026-11-27T01:20:00.732Z",
   "contracts": {
     "MyUSDT": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
@@ -112,7 +112,7 @@
       "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "status": "BOUND_TO_POOL",
       "lendingPool": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "bindTxHash": "0x8749a3f818dd0513004c4eb734dc9788b05a1ea4ba2ca5c22c145cc869e25abe"
+      "bindTxHash": "0xe3ffb9f894d006379c7c403dd5a5c695dabb9630fc47e7118506542581ec5a85"
     },
     "DebtToken": {
       "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
@@ -122,7 +122,7 @@
       "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "status": "BOUND_TO_POOL",
       "lendingPool": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "bindTxHash": "0xdbfbc6c81aae7263ede387f05d2fa8a554924ad9af5fc2bf42f5e58ef6798e8b"
+      "bindTxHash": "0xe0aa1ac0a3de74ecc876e15c2ddf502887b3a3135283d7e7ced8292837fa00e0"
     },
     "LendingPositionNFT": {
       "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
@@ -132,22 +132,38 @@
       "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "status": "BOUND_TO_POOL",
       "lendingPool": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "bindTxHash": "0x01bdb971cd6ce2c442e0dc2b77b9c72074377605b4447f1fed3cabb97a8b5215"
+      "bindTxHash": "0x2632d0c74a9f20f2ce89f729158e73218d9beabed765d45a355c37713b6be0a6"
     },
     "LendingPool": {
       "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "txHash": "0x395c9e8f82bec46a4e70d2f2bdc4a60b52a8ca905daf6a328aef93cf78495563",
+      "txHash": "0xa8eb93b58fb177247eb0ab6c56c71b78a87b73ec4d24e72d68a86280736e0813",
       "blockNumber": 15,
       "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "abiPath": "deployments/abi/LendingPool.json",
       "interfaceAbiPath": "deployments/abi/interfaces/ILendingPool.json",
       "status": "DEPLOYED_AND_BOUND",
       "boundTokens": {
-        "DebtToken": "0xdbfbc6c81aae7263ede387f05d2fa8a554924ad9af5fc2bf42f5e58ef6798e8b",
-        "CollateralReceiptNFT": "0x8749a3f818dd0513004c4eb734dc9788b05a1ea4ba2ca5c22c145cc869e25abe",
-        "LendingPositionNFT": "0x01bdb971cd6ce2c442e0dc2b77b9c72074377605b4447f1fed3cabb97a8b5215"
+        "DebtToken": "0xe0aa1ac0a3de74ecc876e15c2ddf502887b3a3135283d7e7ced8292837fa00e0",
+        "CollateralReceiptNFT": "0xe3ffb9f894d006379c7c403dd5a5c695dabb9630fc47e7118506542581ec5a85",
+        "LendingPositionNFT": "0x2632d0c74a9f20f2ce89f729158e73218d9beabed765d45a355c37713b6be0a6"
       },
-      "priceOracle": "0x0000000000000000000000000000000000000000"
+      "priceOracle": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+      "priceOracleBindTxHash": "0xc31ddc26197f6aa20bddda1f43f3eb7d91041f342ff3f4dc9b231fdcdec375a5"
+    },
+    "PriceOracle": {
+      "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+      "txHash": "0x58ed4b1763cec07ef9355e3e6a54445913b9a753cc6323799f2801e19e8a036c",
+      "blockNumber": 19,
+      "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "collateralNFT": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+      "abiPath": "deployments/abi/PriceOracle.json",
+      "interfaceAbiPath": "deployments/abi/interfaces/IPriceOracle.json",
+      "status": "DEPLOYED_AND_BOUND",
+      "lendingPool": "0x9A676e781A523b5d0C0e43731313A708CB607508",
+      "bindTxHash": "0xc31ddc26197f6aa20bddda1f43f3eb7d91041f342ff3f4dc9b231fdcdec375a5",
+      "collateralTokenPriceWad": "1000000000000000000",
+      "priceMultiplierBps": "10000"
     }
   }
 }
