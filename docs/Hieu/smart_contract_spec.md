@@ -249,6 +249,7 @@ sequenceDiagram
 - `getCurrentLtvBps(borrower)` → tỷ lệ LTV hiện tại theo `BPS` (`0` khi không có nợ).
 - `calculateAccruedInterest(borrower)`, `previewBorrowerInterest(borrower, extraSeconds)` & `getTotalDebt(borrower)` → tiền lãi realtime, dự phóng sau `extraSeconds` và tổng dư nợ (WAD `1e18`).
 - `getHealthFactor(borrower)` → `HF_WAD` (`1e18`, hoặc `type(uint256).max` nếu nợ = 0).
+- `getLiquidationPreview(borrower)` → trả `LiquidationPreview` (`liquidatable`, `healthFactorWad`, `totalDebtWad`, `collateralValueWad`, `seizeValueWad`, `isNFTCollateral`) phục vụ nút `Liquidate` trên `L03` & `/api/tx/prepare-liquidate` (`HI05`).
 - `getLenderEarnedInterest(positionId)`, `previewLenderEarnedInterest(positionId, extraSeconds)`, `getLenderClaimableBalance(positionId)` & `getMaxWithdrawable(positionId)` → lãi tích lũy, dự phóng lãi gửi, tổng quyền rút và hạn mức rút thực tế của vị thế NFT.
 - `accrueInterest()` *(write, permissionless)* → chốt chỉ số lãi tích lũy tới `block.timestamp` và phát sự kiện `InterestRateUpdated` phục vụ `Q04` Audit Logs.
 

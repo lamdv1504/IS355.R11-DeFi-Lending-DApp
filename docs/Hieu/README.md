@@ -4,3 +4,4 @@
 - [Bàn giao Hợp đồng Lõi LendingPool.sol (HI02)](hi02_lending_pool_handoff.md)
 - [Bàn giao Ràng buộc LTV ≤ 70%, Thanh khoản Pool & Mã lỗi (HI03)](hi03_constraints_handoff.md)
 - [Bàn giao Tính lãi Thời gian thực (Timestamp), InterestMath & Tua thời gian Demo (HI04)](hi04_timestamp_interest_handoff.md)
+- [Bàn giao PriceOracle, Health Factor & Cơ chế Thanh lý liquidate() (HI05)](hi05_oracle_liquidation_handoff.md)
