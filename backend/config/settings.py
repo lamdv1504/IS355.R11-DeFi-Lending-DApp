@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
+from typing import List, Tuple
 
 from dotenv import load_dotenv
 
@@ -62,6 +62,12 @@ class AppSettings:
     ipfs_local_api_url: str
     ipfs_local_gateway_url: str
     pinata_gateway_url: str
+    auth_token_secret: str = ""
+    auth_domain: str = "localhost"
+    auth_nonce_ttl_seconds: int = 300
+    auth_session_ttl_seconds: int = 3600
+    admin_wallets: Tuple[str, ...] = ()
+    lender_wallets: Tuple[str, ...] = ()
 
     def get_network(self, network_name: str | None = None) -> NetworkSettings:
         target = (network_name or self.active_network).strip().lower()
@@ -107,7 +113,8 @@ def load_settings() -> AppSettings:
     )
 
     cors_raw = os.getenv(
-        "CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173"
+        "CORS_ORIGINS",
+        "http://localhost:3000,http://localhost:5173,http://127.0.0.1:5173",
     )
     cors_origins = [origin.strip() for origin in cors_raw.split(",") if origin.strip()]
 
@@ -133,6 +140,20 @@ def load_settings() -> AppSettings:
         pinata_gateway_url=os.getenv(
             "PINATA_GATEWAY_URL", "https://gateway.pinata.cloud/ipfs"
         ).strip(),
+        auth_token_secret=os.getenv("AUTH_TOKEN_SECRET", ""),
+        auth_domain=os.getenv("AUTH_DOMAIN", "localhost").strip(),
+        auth_nonce_ttl_seconds=int(os.getenv("AUTH_NONCE_TTL_SECONDS", "300")),
+        auth_session_ttl_seconds=int(os.getenv("AUTH_SESSION_TTL_SECONDS", "3600")),
+        admin_wallets=tuple(
+            wallet.strip()
+            for wallet in os.getenv("ADMIN_WALLETS", "").split(",")
+            if wallet.strip()
+        ),
+        lender_wallets=tuple(
+            wallet.strip()
+            for wallet in os.getenv("LENDER_WALLETS", "").split(",")
+            if wallet.strip()
+        ),
     )
     app_settings.validate_security_rules()
     return app_settings
