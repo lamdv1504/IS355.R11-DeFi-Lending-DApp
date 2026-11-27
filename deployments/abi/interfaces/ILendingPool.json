@@ -785,6 +785,57 @@
           "type": "address"
         }
       ],
+      "name": "getLiquidationPreview",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bool",
+              "name": "liquidatable",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint256",
+              "name": "healthFactorWad",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "totalDebtWad",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "collateralValueWad",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "seizeValueWad",
+              "type": "uint256"
+            },
+            {
+              "internalType": "bool",
+              "name": "isNFTCollateral",
+              "type": "bool"
+            }
+          ],
+          "internalType": "struct ILendingPool.LiquidationPreview",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "borrower",
+          "type": "address"
+        }
+      ],
       "name": "getLoanPosition",
       "outputs": [
         {
