@@ -18,11 +18,11 @@ export function InterestChart({ principal, aprBps }: { principal: string; aprBps
     <div className="chart" role="img" aria-label={"Vốn gốc " + amountLabel(principal) + " MyUSDT, dự phóng lãi " + projected.toFixed(4) + " MyUSDT sau " + days + " ngày, giả định APR không đổi."}>
       <ResponsiveContainer width="100%" height="100%" initialDimension={{ width: 600, height: 220 }}>
         <AreaChart data={points} margin={{ left: -10, right: 16, top: 16, bottom: 0 }} accessibilityLayer={false}>
-          <CartesianGrid stroke="#e6eee8" vertical={false} strokeDasharray="3 5" />
-          <XAxis dataKey="day" tickLine={false} axisLine={false} tick={{ fill: "#506e60", fontSize: 13 }} tickFormatter={(v) => "Ngày " + v} minTickGap={22} />
-          <YAxis tickLine={false} axisLine={false} width={48} tick={{ fill: "#506e60", fontSize: 13 }} tickFormatter={(v: number) => v.toFixed(1)} />
-          <Tooltip formatter={(v) => [Number(v).toLocaleString("vi-VN", { maximumFractionDigits: 6 }) + " MyUSDT", "Tiền lãi"]} labelFormatter={(v) => "Ngày " + v} contentStyle={{ borderRadius: 12, border: "1px solid #dce8df", fontSize: 14 }} />
-          <Area type="monotone" dataKey="interest" stroke="#168a4a" strokeWidth={2.5} fill="#e4f6e9" isAnimationActive={false} activeDot={{ r: 5, fill: "#168a4a", stroke: "white", strokeWidth: 2 }} />
+          <CartesianGrid stroke="var(--line)" vertical={false} strokeDasharray="3 5" />
+          <XAxis dataKey="day" tickLine={false} axisLine={false} tick={{ fill: "var(--muted)", fontSize: 14 }} tickFormatter={(v) => "Ngày " + v} minTickGap={22} />
+          <YAxis tickLine={false} axisLine={false} width={48} tick={{ fill: "var(--muted)", fontSize: 14 }} tickFormatter={(v: number) => v.toFixed(1)} />
+          <Tooltip formatter={(v) => [Number(v).toLocaleString("vi-VN", { maximumFractionDigits: 6 }) + " MyUSDT", "Tiền lãi"]} labelFormatter={(v) => "Ngày " + v} contentStyle={{ borderRadius: 12, border: "1px solid var(--line)", color: "var(--ink)", background: "var(--surface)", boxShadow: "none", fontSize: 14 }} />
+          <Area type="monotone" dataKey="interest" stroke="var(--accent)" strokeWidth={2.5} fill="var(--soft)" isAnimationActive={false} activeDot={{ r: 5, fill: "var(--accent)", stroke: "white", strokeWidth: 2 }} />
         </AreaChart>
       </ResponsiveContainer>
     </div>
