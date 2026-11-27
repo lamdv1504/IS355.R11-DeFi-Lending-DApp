@@ -1,0 +1,678 @@
+"""Q05 API tests for EIP-191 auth, RBAC, transaction flow, and IPFS documents."""
+
+from __future__ import annotations
+
+from datetime import datetime, timezone
+from pathlib import Path
+from types import SimpleNamespace
+from typing import Any
+
+import pytest
+from eth_account import Account
+from eth_account.messages import encode_defunct
+from fastapi.testclient import TestClient
+from web3 import Web3
+
+from backend.main import create_app
+from backend.security.auth import AuthenticationError, WalletAuthManager
+from backend.services.agreement_generator import AgreementGeneratorService
+from backend.services.credit_and_audit_ipfs import CreditAndAuditIPFSService
+from backend.config import constants
+from src.ipfs.encryption import DocumentEncryptor
+from src.ipfs.ipfs_client import IPFSClient, IPFSConfig
+from src.ipfs.rbac import AuthorizedIPFSGateway, DocumentType, DocumentVisibility
+
+
+POOL = "0x0000000000000000000000000000000000000010"
+TOKEN = "0x0000000000000000000000000000000000000020"
+ORACLE = "0x0000000000000000000000000000000000000030"
+
+
+class _FakeEvent:
+    def __init__(self, service: "_FakeWeb3Service", name: str) -> None:
+        self.service = service
+        self.name = name
+
+    def get_logs(
+        self,
+        *,
+        from_block: int,
+        to_block: int | str,
+        argument_filters: dict[str, Any],
+    ) -> list[dict[str, Any]]:
+        return [
+            log
+            for log in self.service.events.get(self.name, [])
+            if int(log.get("blockNumber", 0)) >= from_block
+            and all(log["args"].get(key) == value for key, value in argument_filters.items())
+        ]
+
+    def process_receipt(self, _receipt: Any) -> list[dict[str, Any]]:
+        return self.service.borrow_receipt_events
+
+
+class _FakeEvents:
+    def __init__(self, service: "_FakeWeb3Service") -> None:
+        self.service = service
+
+    def __getattr__(self, name: str) -> Any:
+        return lambda: _FakeEvent(self.service, name)
+
+
+class _FakeCall:
+    def call(self) -> int:
+        return 0
+
+
+class _FakeFunctions:
+    def __getattr__(self, _name: str) -> Any:
+        return lambda *_args: _FakeCall()
+
+
+class _FakeEth:
+    def __init__(self) -> None:
+        self.chain_id = 31337
+        self.transaction: dict[str, Any] = {}
+        self.receipt: dict[str, Any] = {}
+        self.timestamp = int(datetime.now(timezone.utc).timestamp())
+        self.block_number = 10
+
+    def get_block(self, _identifier: str) -> dict[str, int]:
+        return {"timestamp": self.timestamp, "number": self.block_number}
+
+    def get_transaction(self, _tx_hash: str) -> dict[str, Any]:
+        return self.transaction
+
+    def get_transaction_receipt(self, _tx_hash: str) -> dict[str, Any]:
+        return self.receipt
+
+
+class _FakeWeb3:
+    def __init__(self) -> None:
+        self.eth = _FakeEth()
+        self.provider = self
+
+    @staticmethod
+    def to_checksum_address(address: str) -> str:
+        return Web3.to_checksum_address(address)
+
+    @staticmethod
+    def to_hex(value: bytes | str) -> str:
+        if isinstance(value, str) and value.startswith("0x"):
+            return value
+        return Web3.to_hex(value)
+
+    def make_request(self, method: str, params: list[Any]) -> dict[str, Any]:
+        if method == "evm_increaseTime":
+            self.eth.timestamp += int(params[0])
+            return {"result": hex(self.eth.timestamp)}
+        if method == "evm_mine":
+            self.eth.block_number += 1
+            return {"result": "0x0"}
+        raise AssertionError(f"Unexpected RPC method: {method}")
+
+
+class _FakeWeb3Service:
+    def __init__(self) -> None:
+        self.network = SimpleNamespace(name="local")
+        self.chain_id = 31337
+        self.w3 = _FakeWeb3()
+        self.registry = {
+            "contracts": {
+                "LendingPool": {"address": POOL},
+                "MyUSDT": {"address": TOKEN},
+                "CollateralNFT": {"address": ORACLE},
+                "PriceOracle": {"address": ORACLE},
+            }
+        }
+        self.events: dict[str, list[dict[str, Any]]] = {
+            "CollateralDeposited": [],
+            "LoanBorrowed": [],
+            "LoanRepaid": [],
+            "LoanLiquidated": [],
+            "InterestRateUpdated": [
+                {
+                    "address": POOL,
+                    "args": {
+                        "timestamp": 1_672_531_200,
+                        "totalSuppliedWad": 1_000 * constants.WAD,
+                        "totalBorrowedWad": 200 * constants.WAD,
+                        "utilizationBps": 2_000,
+                        "borrowAprBps": 700,
+                        "supplyAprBps": 140,
+                    },
+                    "blockNumber": 1,
+                    "logIndex": 0,
+                    "transactionHash": "0x" + "01" * 32,
+                }
+            ],
+        }
+        self.borrow_receipt_events: list[dict[str, Any]] = []
+
+    @staticmethod
+    def _checksum_address(address: str, field_name: str) -> str:
+        if not Web3.is_address(address):
+            raise ValueError(f"Invalid {field_name} address.")
+        return Web3.to_checksum_address(address)
+
+    def get_contract(self, name: str) -> Any:
+        if name == "LendingPool":
+            return SimpleNamespace(events=_FakeEvents(self), functions=_FakeFunctions())
+        if name in {"LendingPositionNFT", "CollateralNFT"}:
+            return SimpleNamespace(functions=_FakeFunctions())
+        raise AssertionError(f"Unexpected contract lookup: {name}")
+
+    def get_pool_info(self) -> dict[str, Any]:
+        return {
+            "total_supplied": {"wad": str(1_000 * constants.WAD)},
+            "total_borrowed": {"wad": str(200 * constants.WAD)},
+            "reserved_liquidity": {"wad": "0"},
+            "borrow_apr_bps": 700,
+            "supply_apr_bps": 140,
+            "utilization_bps": 2_000,
+        }
+
+    def get_available_liquidity(self) -> dict[str, str]:
+        return {"wad": str(800 * constants.WAD), "display": "800"}
+
+    def get_interest_rate_snapshot(self) -> dict[str, Any]:
+        return {
+            "timestamp": int(datetime.now(timezone.utc).timestamp()),
+            "utilization": {"bps": 2_000, "percent": 20.0},
+            "borrow_apr": {"bps": 700, "percent": 7.0},
+            "supply_apr": {"bps": 140, "percent": 1.4},
+            "borrow_apy_reference": {"bps": 725, "percent": 7.2501},
+            "supply_apy_reference": {"bps": 140, "percent": 1.4098},
+        }
+
+    def get_loan_position(self, borrower: str) -> dict[str, Any]:
+        return {
+            "borrower": borrower,
+            "active": True,
+            "receipt_token_id": 7,
+            "is_nft_collateral": False,
+            "collateral_amount": {"wad": str(1_000 * constants.WAD)},
+            "principal": {"wad": str(100 * constants.WAD)},
+            "ipfs_agreement_cid": "",
+        }
+
+    def get_borrower_risk(self, _borrower: str) -> dict[str, Any]:
+        return {
+            "collateral_value": {"wad": str(1_000 * constants.WAD)},
+            "total_debt": {"wad": str(100 * constants.WAD)},
+            "health_factor_wad": str(constants.WAD * 4),
+        }
+
+    def get_current_ltv_bps(self, _borrower: str) -> dict[str, Any]:
+        return {"bps": 1_000, "percent": 10.0, "is_infinite": False}
+
+    def get_max_borrowable(self, _borrower: str) -> dict[str, str]:
+        return {"wad": str(700 * constants.WAD)}
+
+    def get_remaining_borrow_capacity(self, _borrower: str) -> dict[str, str]:
+        return {"wad": str(600 * constants.WAD)}
+
+    def get_available_to_borrow(self, _borrower: str) -> dict[str, str]:
+        return {"wad": str(600 * constants.WAD)}
+
+    def calculate_accrued_interest(self, _borrower: str) -> dict[str, str]:
+        return {"wad": "0"}
+
+    def get_collateral_receipt_info(self, receipt_id: int) -> dict[str, Any]:
+        assert receipt_id == 7
+        return {
+            "active": True,
+            "is_nft": False,
+            "asset_id_or_amount": {"wad": str(1_000 * constants.WAD)},
+        }
+
+    def get_max_withdrawable(self, _position_id: int) -> dict[str, str]:
+        return {"wad": "0"}
+
+    def get_myusdt_balance(self, _account: str) -> dict[str, str]:
+        return {"wad": "0"}
+
+    def get_debt_token_balance(self, _account: str) -> dict[str, str]:
+        return {"wad": "0"}
+
+    def get_myusdt_allowance(
+        self, _owner: str, _spender: str
+    ) -> dict[str, str]:
+        return {"wad": "0"}
+
+    def get_active_collateral_receipt(self, _borrower: str) -> int:
+        return 0
+
+    def build_unsigned_transaction(
+        self,
+        contract_name: str,
+        _function_name: str,
+        _args: tuple[Any, ...],
+        *,
+        from_address: str,
+        **kwargs: Any,
+    ) -> dict[str, Any]:
+        to_address = self.registry["contracts"][contract_name]["address"]
+        tx = {
+            "from": from_address,
+            "to": to_address,
+            "data": "0x1234",
+            "value": 0,
+            "chainId": self.chain_id,
+            "gas": 100_000,
+        }
+        return {
+            "transaction": tx,
+            "gas_quote": {"estimated_gas": 80_000, "gas_price_wei": "1"},
+            "interest_quote": (
+                {"apr": {"rate_basis": "simple_apr"}, "apy_reference_percent": 7.2501}
+                if "principal_wad" in kwargs
+                else None
+            ),
+            "signing": "client_wallet",
+        }
+
+
+@pytest.fixture
+def api_env(tmp_path: Path) -> dict[str, Any]:
+    owner = Account.create()
+    lender = Account.create()
+    admin = Account.create()
+    web3_service = _FakeWeb3Service()
+    gateway = AuthorizedIPFSGateway(
+        IPFSClient(
+            IPFSConfig(provider="local_store", local_store_dir=tmp_path / "ipfs")
+        ),
+        DocumentEncryptor.from_hex_key("11" * 32),
+    )
+    agreement = AgreementGeneratorService(
+        web3_service,
+        gateway=gateway,
+        binding_store_path=tmp_path / "q03-index.json",
+    )
+    credit_audit = CreditAndAuditIPFSService(
+        web3_service,
+        gateway=gateway,
+        agreement_generator=agreement,
+        metadata_store_path=tmp_path / "q04-index.json",
+    )
+    manager = WalletAuthManager(
+        "test-only-signing-secret-that-is-at-least-32-bytes",
+        domain="localhost",
+        allowed_chain_ids=(31337,),
+        admin_wallets=(admin.address,),
+        lender_wallets=(lender.address,),
+    )
+    app = create_app()
+    app.state.auth_manager = manager
+    app.state.web3_service = web3_service
+    app.state.agreement_generator = agreement
+    app.state.credit_audit_service = credit_audit
+    return {
+        "client": TestClient(app),
+        "owner": owner,
+        "lender": lender,
+        "admin": admin,
+        "manager": manager,
+        "web3": web3_service,
+        "agreement": agreement,
+        "credit_audit": credit_audit,
+        "gateway": gateway,
+    }
+
+
+def _login(
+    client: TestClient, account: Any, *, chain_id: int = 31337
+) -> dict[str, str]:
+    response = client.post(
+        "/api/auth/nonce",
+        json={
+            "wallet_address": account.address,
+            "chain_id": chain_id,
+            "domain": "localhost",
+        },
+    )
+    assert response.status_code == 200, response.text
+    challenge = response.json()
+    signed = Account.sign_message(
+        encode_defunct(text=challenge["message"]), account.key
+    ).signature.hex()
+    if not signed.startswith("0x"):
+        signed = "0x" + signed
+    verified = client.post(
+        "/api/auth/verify",
+        json={
+            "wallet_address": account.address,
+            "chain_id": chain_id,
+            "domain": "localhost",
+            "nonce": challenge["nonce"],
+            "signature": signed,
+        },
+    )
+    assert verified.status_code == 200, verified.text
+    return {"Authorization": f"Bearer {verified.json()['access_token']}"}
+
+
+def test_eip191_nonce_is_wallet_bound_and_single_use(api_env: dict[str, Any]) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+    nonce = client.post(
+        "/api/auth/nonce",
+        json={"wallet_address": owner.address, "chain_id": 31337},
+    ).json()
+    signed = Account.sign_message(
+        encode_defunct(text=nonce["message"]), owner.key
+    ).signature.hex()
+    if not signed.startswith("0x"):
+        signed = "0x" + signed
+    payload = {
+        "wallet_address": owner.address,
+        "chain_id": 31337,
+        "nonce": nonce["nonce"],
+        "signature": signed,
+    }
+    assert signed.startswith("0x")
+    assert client.post("/api/auth/verify", json=payload).status_code == 200
+    assert client.post("/api/auth/verify", json=payload).status_code == 401
+    with pytest.raises(AuthenticationError):
+        api_env["manager"].verify_signature(
+            api_env["lender"].address,
+            31337,
+            nonce["nonce"],
+            signed,
+        )
+    second = client.post(
+        "/api/auth/nonce",
+        json={"wallet_address": owner.address, "chain_id": 31337},
+    ).json()
+    forged_signature = Account.sign_message(
+        encode_defunct(text=second["message"]), api_env["lender"].key
+    ).signature.hex()
+    if not forged_signature.startswith("0x"):
+        forged_signature = "0x" + forged_signature
+    forged_payload = {
+        "wallet_address": owner.address,
+        "chain_id": 31337,
+        "nonce": second["nonce"],
+        "signature": forged_signature,
+    }
+    assert client.post("/api/auth/verify", json=forged_payload).status_code == 401
+    genuine_signature = Account.sign_message(
+        encode_defunct(text=second["message"]), owner.key
+    ).signature.hex()
+    if not genuine_signature.startswith("0x"):
+        genuine_signature = "0x" + genuine_signature
+    forged_payload["signature"] = genuine_signature
+    assert client.post("/api/auth/verify", json=forged_payload).status_code == 200
+
+
+def test_nonce_and_session_expiry_are_enforced() -> None:
+    now = [1_700_000_000.0]
+    account = Account.create()
+    manager = WalletAuthManager(
+        "test-only-signing-secret-that-is-at-least-32-bytes",
+        domain="localhost",
+        allowed_chain_ids=(31337,),
+        nonce_ttl_seconds=2,
+        session_ttl_seconds=2,
+        clock=lambda: now[0],
+    )
+    challenge = manager.issue_nonce(account.address, 31337)
+    signature = Account.sign_message(
+        encode_defunct(text=challenge["message"]), account.key
+    ).signature.hex()
+    if not signature.startswith("0x"):
+        signature = "0x" + signature
+    session = manager.verify_signature(
+        account.address, 31337, str(challenge["nonce"]), signature
+    )
+    manager.verify_session(str(session["access_token"]))
+    now[0] += 3
+    with pytest.raises(AuthenticationError, match="expired"):
+        manager.verify_session(str(session["access_token"]))
+    with pytest.raises(AuthenticationError, match="expired"):
+        manager.verify_signature(
+            account.address, 31337, str(challenge["nonce"]), signature
+        )
+
+
+def test_authentication_and_account_ownership_status_codes(api_env: dict[str, Any]) -> None:
+    client = api_env["client"]
+    assert client.get("/api/accounts/" + api_env["owner"].address + "/loan").status_code == 200
+    headers = _login(client, api_env["owner"])
+    assert client.get("/api/pool").status_code == 200
+    other = api_env["lender"].address
+    assert client.get(f"/api/accounts/{other}/loan", headers=headers).status_code == 200
+    assert client.get(
+        f"/api/accounts/{api_env['owner'].address}/loan", headers=headers
+    ).status_code == 200
+    positions = client.get(
+        f"/api/accounts/{api_env['owner'].address}/lending-positions",
+        headers=headers,
+    )
+    balances = client.get(
+        f"/api/accounts/{api_env['owner'].address}/balances", headers=headers
+    )
+    assert positions.status_code == balances.status_code == 200
+    assert positions.json()["positions"] == []
+    assert balances.json()["balances"]["myusdt"]["wad"] == "0"
+
+
+def test_local_only_admin_demo_and_mock_oracle_guard(api_env: dict[str, Any]) -> None:
+    client = api_env["client"]
+    owner_headers = _login(client, api_env["owner"])
+    assert client.post("/api/demo/time", json={"seconds": 60}, headers=owner_headers).status_code == 403
+
+    web3_service = api_env["web3"]
+    admin_headers = _login(client, api_env["admin"])
+    local_demo = client.post(
+        "/api/demo/time", json={"seconds": 60}, headers=admin_headers
+    )
+    assert local_demo.status_code == 200
+    assert local_demo.json()["environment"] == "LOCAL_DEMO_ONLY"
+    local_mock = client.post(
+        "/api/transactions/prepare",
+        json={
+            "wallet_address": api_env["admin"].address,
+            "action": "MOCK_ORACLE_MULTIPLIER",
+            "multiplier_bps": 12_000,
+        },
+        headers=admin_headers,
+    )
+    assert local_mock.status_code == 200
+    web3_service.network = SimpleNamespace(name="sepolia")
+    assert client.post("/api/demo/time", json={"seconds": 60}, headers=admin_headers).status_code == 403
+    mock_oracle = client.post(
+        "/api/transactions/prepare",
+        json={
+            "wallet_address": api_env["admin"].address,
+            "action": "MOCK_ORACLE_MULTIPLIER",
+            "multiplier_bps": 12_000,
+        },
+        headers=admin_headers,
+    )
+    assert mock_oracle.status_code == 403
+
+
+def test_prepare_and_confirm_borrow_binds_agreement_after_success(api_env: dict[str, Any]) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+    headers = _login(client, owner)
+    created = client.post(
+        "/api/ipfs/create-agreement",
+        json={
+            "principal_wad": str(100 * constants.WAD),
+            "asset_description": "Test ERC20 collateral",
+        },
+        headers=headers,
+    )
+    assert created.status_code == 200, created.text
+    agreement = created.json()
+    assert agreement["status"] == "PRE_BORROW_UNSIGNED"
+    assert agreement["tx_hash"] is None
+
+    prepared = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "network": "local",
+            "chain_id": 31337,
+            "action": "BORROW",
+            "args": {
+                "amount_wad": str(100 * constants.WAD),
+                "agreement_cid": agreement["cid"],
+            },
+            "duration_seconds": 86_400,
+        },
+        headers=headers,
+    )
+    assert prepared.status_code == 200, prepared.text
+    tx_data = prepared.json()
+    assert tx_data["unsignedTransaction"]["from"].lower() == owner.address.lower()
+    assert tx_data["signing"] == "client_wallet"
+    assert tx_data["interest_quote"]["apr"]["rate_basis"] == "simple_apr"
+
+    tx_hash_bytes = bytes.fromhex("ab" * 32)
+    web3_service = api_env["web3"]
+    web3_service.w3.eth.transaction = {
+        "from": owner.address,
+        "to": POOL,
+        "input": tx_data["unsignedTransaction"]["data"],
+        "chainId": 31337,
+        "value": 0,
+    }
+    web3_service.w3.eth.receipt = {
+        "status": 1,
+        "blockNumber": 42,
+        "transactionHash": tx_hash_bytes,
+    }
+    web3_service.borrow_receipt_events = [
+        {
+            "address": POOL,
+            "args": {
+                "borrower": owner.address,
+                "amountWad": 100 * constants.WAD,
+                "agreementCid": agreement["cid"],
+            }
+        }
+    ]
+    confirmed = client.post(
+        "/api/transactions/confirm",
+        json={"intent_id": tx_data["intent_id"], "tx_hash": "0x" + tx_hash_bytes.hex()},
+        headers=headers,
+    )
+    assert confirmed.status_code == 200, confirmed.text
+    binding = confirmed.json()["loan_binding"]
+    assert binding["agreement_cid"] == agreement["cid"]
+    assert binding["borrower_wallet"].lower() == owner.address.lower()
+    assert binding["tx_hash"] == "0x" + tx_hash_bytes.hex()
+
+
+def test_private_agreement_and_credit_report_rbac_and_integrity(api_env: dict[str, Any]) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+    borrower_headers = _login(client, owner)
+    lender_headers = _login(client, api_env["lender"])
+    admin_headers = _login(client, api_env["admin"])
+
+    agreement_result = client.post(
+        "/api/ipfs/create-agreement",
+        json={
+            "principal_wad": str(100 * constants.WAD),
+            "asset_description": "Encrypted agreement test",
+        },
+        headers=borrower_headers,
+    ).json()
+    cid = agreement_result["cid"]
+    encrypted_raw = api_env["gateway"].ipfs_client.retrieve_bytes(cid).content
+    assert b"%PDF-" not in encrypted_raw
+    assert client.get(f"/api/ipfs/documents/{cid}/retrieve").status_code == 401
+    assert client.get(
+        f"/api/ipfs/documents/{cid}/retrieve", headers=lender_headers
+    ).status_code == 403
+    owner_pdf = client.get(f"/api/ipfs/documents/{cid}/retrieve", headers=borrower_headers)
+    admin_pdf = client.get(f"/api/ipfs/documents/{cid}/retrieve", headers=admin_headers)
+    assert owner_pdf.status_code == admin_pdf.status_code == 200
+    assert owner_pdf.content.startswith(b"%PDF-")
+    assert owner_pdf.headers["X-Content-SHA256"] == agreement_result["pdf_plaintext_sha256"]
+    assert owner_pdf.content == admin_pdf.content
+
+    report_response = client.post(
+        f"/api/ipfs/credit-report/{owner.address}",
+        json={"from_block": 0},
+        headers=borrower_headers,
+    )
+    assert report_response.status_code == 200, report_response.text
+    report = report_response.json()
+    assert report["credit_score"]["score"] in range(300, 851)
+    assert report["acl_metadata"]["encrypted"] is True
+    assert client.get(
+        f"/api/ipfs/documents/{report['cid']}/retrieve"
+    ).status_code == 401
+    assert client.get(
+        f"/api/ipfs/documents/{report['cid']}/retrieve", headers=lender_headers
+    ).status_code == 403
+    retrieved = client.get(
+        f"/api/ipfs/documents/{report['cid']}/retrieve", headers=borrower_headers
+    )
+    assert retrieved.status_code == 200, retrieved.text
+    assert retrieved.json()["content"]["wallet_address"].lower() == owner.address.lower()
+    assert retrieved.headers["X-Content-SHA256"] == report["plaintext_sha256"]
+    admin_report = client.get(
+        f"/api/ipfs/documents/{report['cid']}/retrieve", headers=admin_headers
+    )
+    assert admin_report.status_code == 200
+    assert admin_report.headers["X-Content-SHA256"] == report["plaintext_sha256"]
+
+
+def test_admin_audit_publication_and_guest_json_csv_retrieval(api_env: dict[str, Any]) -> None:
+    client = api_env["client"]
+    borrower_headers = _login(client, api_env["owner"])
+    admin_headers = _login(client, api_env["admin"])
+    forbidden = client.post(
+        "/api/ipfs/audit-logs",
+        json={"from_block": 0, "seed_simulated_months": 2},
+        headers=borrower_headers,
+    )
+    assert forbidden.status_code == 403
+    generated = client.post(
+        "/api/ipfs/audit-logs",
+        json={"from_block": 0, "seed_simulated_months": 2},
+        headers=admin_headers,
+    )
+    assert generated.status_code == 200, generated.text
+    response = generated.json()
+    assert response["json"]["acl_metadata"]["visibility"] == "PUBLIC"
+    assert response["csv"]["acl_metadata"]["visibility"] == "PUBLIC"
+    assert response["json"]["acl_metadata"]["encrypted"] is False
+    assert any(entry["data_kind"] == "ON_CHAIN" for entry in response["entries"])
+    assert any(entry["data_kind"] == "SIMULATED" for entry in response["entries"])
+    assert response["document"]["contains_pii"] is False
+
+    public_json = client.get(f"/api/ipfs/documents/{response['json']['cid']}/retrieve")
+    public_csv = client.get(f"/api/ipfs/documents/{response['csv']['cid']}/retrieve")
+    assert public_json.status_code == public_csv.status_code == 200
+    assert public_json.json()["content"]["contains_pii"] is False
+    assert "period,recorded_at_utc,data_kind" in public_csv.text
+    assert public_json.headers["X-Content-SHA256"] == response["json"]["sha256"]
+    assert public_csv.headers["X-Content-SHA256"] == response["csv"]["sha256"]
+
+
+def test_sepolia_history_requires_explicit_from_block(api_env: dict[str, Any]) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+    api_env["web3"].network = SimpleNamespace(name="sepolia")
+    api_env["web3"].chain_id = 11155111
+    api_env["manager"] = WalletAuthManager(
+        "test-only-signing-secret-that-is-at-least-32-bytes",
+        domain="localhost",
+        allowed_chain_ids=(11155111,),
+    )
+    client.app.state.auth_manager = api_env["manager"]
+    headers = _login(client, owner, chain_id=11155111)
+    missing_range = client.post(
+        f"/api/ipfs/credit-report/{owner.address}",
+        json={},
+        headers=headers,
+    )
+    assert missing_range.status_code == 422
