@@ -578,8 +578,38 @@ contract LendingPool is ILendingPool, ReentrancyGuard, Ownable, IERC721Receiver 
     }
 
     /// @inheritdoc ILendingPool
-    function getHealthFactor(address borrower) external view override returns (uint256) {
+    function getHealthFactor(address borrower) public view override returns (uint256) {
         return ProtocolMath.calculateHealthFactor(getCollateralValue(borrower), getTotalDebt(borrower));
+    }
+
+    /// @inheritdoc ILendingPool
+    function getLiquidationPreview(
+        address borrower
+    ) external view override returns (LiquidationPreview memory preview) {
+        LoanPosition storage loan = _loanPositions[borrower];
+        if (!loan.active) {
+            preview.healthFactorWad = ProtocolConstants.INFINITE_HEALTH_FACTOR;
+            return preview;
+        }
+        uint256 collateralValue = getCollateralValue(borrower);
+        uint256 totalDebt = getTotalDebt(borrower);
+        uint256 hf = ProtocolMath.calculateHealthFactor(collateralValue, totalDebt);
+        bool canLiquidate = ProtocolMath.isLiquidatable(hf);
+        uint256 seizeValue = 0;
+        if (canLiquidate) {
+            seizeValue = loan.isNFTCollateral
+                ? collateralValue
+                : ProtocolMath.calculateLiquidationSeizeValue(totalDebt, collateralValue);
+        }
+
+        preview = LiquidationPreview({
+            liquidatable: canLiquidate,
+            healthFactorWad: hf,
+            totalDebtWad: totalDebt,
+            collateralValueWad: collateralValue,
+            seizeValueWad: seizeValue,
+            isNFTCollateral: loan.isNFTCollateral
+        });
     }
 
     /// @inheritdoc ILendingPool
