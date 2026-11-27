@@ -1,0 +1,244 @@
+/* L03 follows the current Be Vietnam Pro and blue/neutral application system. */
+.borrowing-console .kpi-value { font-size: clamp(25px, 2.1vw, 31px); }
+.borrowing-console .kpi-foot { min-height: 42px; align-content: end; flex-wrap: wrap; }
+.borrowing-grid { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.15fr); gap: 24px; align-items: start; }
+.borrowing-column { display: grid; gap: 24px; min-width: 0; }
+.collateral-panel, .health-panel, .loan-panel { padding: 24px; }
+.borrowing-console .panel-head { align-items: flex-start; }
+.risk-banner { display: flex; align-items: center; gap: 14px; padding: 18px 20px; border: 1px solid; margin-bottom: 24px; }
+.risk-banner > div { flex: 1; }
+.risk-banner strong { font-size: 16px; font-weight: 600; }
+.risk-banner p { margin-top: 4px; font-size: 14px; line-height: 1.65; }
+.risk-symbol { display: grid; place-items: center; flex-shrink: 0; }
+.risk-badge { padding: 7px 12px; border: 1px solid currentColor; border-radius: 999px; font-size: 14px; white-space: nowrap; font-weight: 600; }
+.risk-safe { color: #14532d; background: #f0f9f3; border-color: #c3e3cd; }
+.risk-warning { color: #713f12; background: #fffbeb; border-color: #f1d68e; }
+.risk-danger { color: #7a271a; background: #fff4f2; border-color: #f2b8b0; }
+.collateral-asset { display: flex; gap: 18px; align-items: center; padding: 26px 0; border-bottom: 1px solid var(--line); }
+.collateral-art { width: 72px; height: 82px; display: grid; place-items: center; color: var(--accent-strong); background: var(--soft); border: 1px solid #cedcf4; flex-shrink: 0; }
+.asset-type { font-size: 12px; color: var(--muted); letter-spacing: .05em; margin-bottom: 5px; font-weight: 500; }
+.collateral-asset h3 { font-size: 20px; }
+.locked-tag { display: inline-flex; gap: 6px; align-items: center; margin-top: 10px; color: var(--accent-strong); font-size: 13px; }
+.collateral-facts, .preview-rows { margin: 16px 0 0; }
+.collateral-facts > div, .preview-rows > div { display: flex; justify-content: space-between; gap: 18px; align-items: baseline; padding: 9px 0; font-size: 14px; }
+.collateral-facts dt, .preview-rows dt { color: var(--muted); }
+.collateral-facts dd, .preview-rows dd { margin: 0; font-weight: 500; text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.collateral-hint, .health-formula { margin-top: 18px; font-size: 14px; color: var(--muted); line-height: 1.7; }
+.collateral-panel > .button { margin-top: 20px; }
+.asset-switch { display: flex; gap: 6px; margin-top: 22px; padding: 4px; background: var(--background); border: 1px solid var(--line); border-radius: 999px; }
+.asset-switch button { min-height: 44px; background: transparent; border: 0; padding: 9px 14px; border-radius: 999px; font-size: 14px; flex: 1; color: var(--muted); }
+.asset-switch button[aria-pressed=true] { color: white; background: var(--accent-strong); }
+.collateral-panel .field { margin-top: 22px; }
+.collateral-panel .field input { border-radius: 24px; }
+.nft-choice { margin-top: 20px; font-size: 14px; line-height: 1.7; }
+.nft-choice > svg { display: inline; vertical-align: middle; margin-right: 6px; color: var(--accent); }
+.nft-choice > span { display: block; color: var(--muted); margin-top: 6px; }
+.collateral-buttons { display: grid; gap: 10px; margin-top: 22px; }
+.borrow-loading { padding: 36px 0; color: var(--muted); }
+.hf-gauge { position: relative; padding: 18px 0 0; color: var(--ink); }
+.hf-gauge svg { width: min(100%,280px); height: auto; display: block; margin: 0 auto; overflow: visible; }
+.hf-gauge path { fill: none; stroke-width: 10; stroke-linecap: butt; }
+.gauge-danger { stroke: #c74b42; }
+.gauge-warning { stroke: #d8a01b; }
+.gauge-safe { stroke: #25825b; }
+.gauge-needle { stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; }
+.hf-gauge text { font-family: inherit; font-size: 14px; fill: var(--muted); }
+.hf-reading { text-align: center; margin-top: 4px; }
+.hf-reading > strong { display: block; font-size: 36px; letter-spacing: -.04em; line-height: 1.2; font-weight: 600; font-variant-numeric: tabular-nums; }
+.hf-reading > span { display: block; font-size: 14px; margin-top: 8px; }
+.hf-safe .hf-reading { color: #16613f; }
+.hf-warning .hf-reading { color: #805416; }
+.hf-danger .hf-reading { color: #a22e27; }
+.health-legend { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; margin-top: 24px; }
+.health-legend > span { display: flex; align-items: center; gap: 6px; }
+.risk-dot { width: 7px; height: 7px; display: inline-block; border-radius: 50%; }
+.risk-dot.danger { background: #c74b42; }
+.risk-dot.warning { background: #b78108; }
+.risk-dot.safe { background: #25825b; }
+.health-formula { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+.liquidation-control { border-top: 1px solid var(--line); margin-top: 22px; padding-top: 20px; }
+.liquidation-control > strong { font-size: 14px; }
+.liquidation-control > p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-top: 8px; }
+.liquidation-control .button { margin-top: 14px; }
+.liquidation-button:not(:disabled) { color: #9f2a22; border-color: #d7a09a; }
+.loan-standard { font-size: 12px; max-width: 180px; text-align: right; color: var(--muted); }
+.loan-balances { display: grid; grid-template-columns: 1fr 1fr; margin-top: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--line); gap: 20px; }
+.loan-balances > div + div { border-left: 1px solid var(--line); padding-left: 20px; }
+.loan-balances span { font-size: 14px; color: var(--muted); display: block; }
+.loan-balances strong { font-size: 22px; font-weight: 600; letter-spacing: -.025em; display: block; margin-top: 8px; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.loan-balances small { font-size: 12px; color: var(--muted); letter-spacing: 0; font-weight: 400; }
+.loan-tabs { display: flex; gap: 24px; margin-top: 22px; border-bottom: 1px solid var(--line); }
+.loan-tabs > button { min-height: 48px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--muted); padding: 10px 4px; font-size: 16px; font-weight: 500; }
+.loan-tabs > button[aria-selected=true] { color: var(--accent-strong); border-bottom-color: var(--accent); }
+.loan-form .field { margin-top: 24px; }
+.loan-form .amount-input { border-radius: 24px; background: #fcfdff; }
+.loan-form .amount-input input { padding: 16px; font-size: 28px; font-weight: 500; }
+.loan-form .amount-input button { border-radius: 999px; min-height: 40px; padding-inline: 14px; background: var(--soft); color: var(--accent-strong); font-weight: 500; }
+.loan-form .field-hint { font-size: 14px; margin-top: 10px; }
+.borrow-role-note { margin-top: 18px; padding: 12px; background: var(--soft); font-size: 14px; line-height: 1.7; }
+.ltv-control { margin-top: 26px; }
+.ltv-caption { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+.ltv-caption label { font-weight: 500; }
+.ltv-caption strong { font-weight: 600; }
+.ltv-caption strong > span { color: var(--muted); font-weight: 400; }
+.ltv-control input[type=range] { display: block; width: 100%; min-height: 44px; margin: 8px 0 0; accent-color: var(--accent); padding: 0; }
+.ltv-scale { display: flex; justify-content: space-between; gap: 12px; font-size: 13px; color: var(--muted); }
+.ltv-control > p, .repay-options > p { font-size: 14px; line-height: 1.7; color: var(--muted); margin-top: 14px; }
+.repay-options { margin-top: 20px; }
+.repay-options > label { display: flex; align-items: center; gap: 9px; font-size: 14px; min-height: 44px; cursor: pointer; }
+.repay-options input { width: 19px; height: 19px; accent-color: var(--accent); flex-shrink: 0; }
+.pool-available { display: flex; justify-content: space-between; gap: 14px; padding-top: 18px; border-top: 1px solid var(--line); margin-top: 24px; font-size: 14px; }
+.pool-available > span { color: var(--muted); }
+.pool-available > strong { font-weight: 500; text-align: right; }
+.transaction-preview { padding: 24px; margin: 28px -24px -24px; background: #f8faff; border-top: 1px solid var(--line); }
+.preview-heading { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; }
+.preview-heading > svg { color: var(--accent); }
+.preview-heading h3 { font-size: 16px; }
+.preview-heading p { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.gas-assumption { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 14px; }
+.gas-assumption > div { display: flex; gap: 8px; align-items: center; }
+.gas-assumption input { width: 92px; min-height: 44px; border: 1px solid #bdcee7; border-radius: 999px; padding: 8px 12px; background: white; color: var(--ink); font-size: 16px; }
+.gas-assumption > div > span { color: var(--muted); }
+.preview-rows { margin-top: 14px; }
+.preview-rows > div { padding: 7px 0; }
+.preview-rows dd { max-width: 55%; }
+.preview-rows small { color: var(--muted); font-size: 12px; font-weight: 400; }
+.preview-gas { border-top: 1px solid #dce4f1; margin-top: 12px; padding-top: 16px !important; }
+.preview-gas dt { display: flex; align-items: center; gap: 6px; }
+.preview-gas dd { font-weight: 600; color: var(--accent-strong); }
+.quote-source { font-size: 14px; color: var(--muted); margin-top: 14px; line-height: 1.7; }
+.transaction-preview > .button { margin-top: 22px; }
+.approval-step { margin-top: 20px; border-top: 1px solid var(--line); padding-top: 18px; }
+.approval-step > p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 12px; }
+.borrow-review { width: min(550px, calc(100% - 32px)); }
+.borrow-review .preview-rows { margin-top: 0; }
+.approval-summary { margin-bottom: 20px; padding: 12px; background: var(--soft); font-size: 14px; line-height: 1.7; }
+.liquidation-disclosure { display: flex; align-items: flex-start; gap: 9px; color: #7a271a; background: #fff4f2; padding: 14px; margin-top: 18px; font-size: 14px; line-height: 1.7; }
+.borrowing-scenarios { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; padding: 24px; margin-top: 24px; background: #fafbfe; }
+.borrowing-scenarios h2 { margin-top: 10px; }
+.borrowing-scenarios p { font-size: 14px; color: var(--muted); line-height: 1.7; margin-top: 10px; max-width: 480px; }
+.scenario-controls { display: flex; align-items: flex-start; justify-content: flex-end; gap: 28px; }
+.scenario-label { display: block; color: var(--muted); font-size: 14px; margin-bottom: 10px; }
+.scenario-buttons { display: flex; gap: 6px; }
+.scenario-buttons button { min-height: 44px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: white; font-size: 14px; }
+.scenario-buttons button[aria-pressed=true] { background: var(--accent-strong); color: white; border-color: var(--accent-strong); }
+.scenario-controls > div > small { display: block; font-size: 13px; color: var(--muted); margin-top: 8px; text-align: right; }
+.borrow-lower-grid { display: grid; grid-template-columns: minmax(0,1.5fr) minmax(280px,1fr); gap: 24px; margin-top: 24px; }
+.borrow-activity-list { list-style: none; margin: 18px 0 0; padding: 0; }
+.borrow-activity-list > li { display: flex; gap: 12px; align-items: flex-start; padding: 14px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.borrow-activity-list strong { font-weight: 400; flex: 1; }
+.borrow-activity-list > li > svg { color: var(--subtle); margin-top: 2px; }
+.borrow-activity-list time { color: var(--muted); font-size: 12px; text-align: right; white-space: nowrap; }
+.borrowing-console .app-footer { margin-top: 0; }
+@media (max-width:1250px) {
+  .borrowing-grid { gap: 18px; grid-template-columns: minmax(0,.9fr) minmax(0,1.2fr); }
+  .borrowing-column { gap: 18px; }
+  .collateral-panel, .health-panel, .loan-panel { padding: 20px; }
+  .transaction-preview { margin: 24px -20px -20px; padding: 20px; }
+  .loan-panel .panel-head { flex-direction: column; gap: 8px; }
+  .loan-standard { max-width: none; text-align: left; }
+  .collateral-asset { gap: 12px; }
+  .collateral-art { width: 56px; height: 68px; }
+  .collateral-asset h3 { font-size: 17px; }
+  .asset-type { font-size: 11px; }
+  .locked-tag { font-size: 12px; }
+  .collateral-facts > div { flex-wrap: wrap; gap: 4px 14px; }
+  .collateral-facts dd { margin-left: auto; }
+  .health-panel .panel-head { flex-direction: column; gap: 6px; }
+  .health-legend { flex-wrap: wrap; gap: 10px 16px; }
+  .borrowing-scenarios { grid-template-columns: 1fr; gap: 22px; }
+  .scenario-controls { justify-content: flex-start; }
+  .borrow-lower-grid { grid-template-columns: minmax(0,1.2fr) minmax(260px,1fr); gap: 18px; }
+}
+@media (max-width:1050px) {
+  .loan-balances { grid-template-columns: 1fr; gap: 14px; }
+  .loan-balances > div + div { border: 0; padding-left: 0; }
+  .risk-banner { align-items: flex-start; }
+  .risk-badge { font-size: 12px; padding-inline: 8px; }
+  .borrow-lower-grid { grid-template-columns: 1fr; }
+}
+@media (max-width:850px) {
+  .borrowing-grid { grid-template-columns: minmax(0,.9fr) minmax(0,1.2fr); }
+  .borrowing-console .kpi-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .borrowing-console .page-heading { align-items: flex-start; }
+  .borrowing-console h1 { font-size: 32px; }
+}
+@media (max-width:700px) {
+  .borrowing-console .page-heading { flex-direction: column; gap: 16px; }
+  .borrowing-console .page-heading > .button { align-self: flex-start; }
+  .borrowing-console h1 { font-size: 30px; }
+  .borrowing-grid { display: flex; flex-direction: column; gap: 20px; }
+  .borrowing-column { display: contents; }
+  .collateral-panel { width: 100%; order: 0; }
+  .loan-panel { width: 100%; order: 1; }
+  .health-panel { width: 100%; order: 2; }
+  .loan-balances { grid-template-columns: 1fr 1fr; gap: 14px; }
+  .loan-balances > div + div { border-left: 1px solid var(--line); padding-left: 14px; }
+  .loan-balances strong { font-size: 20px; }
+  .loan-balances small { display: block; margin-top: 4px; }
+  .risk-banner { flex-wrap: wrap; padding: 16px; gap: 10px; }
+  .risk-banner > div { flex: 1; min-width: 210px; }
+  .risk-banner .risk-badge { margin-left: 32px; }
+  .risk-banner p { font-size: 14px; }
+  .collateral-art { width: 64px; height: 76px; }
+  .collateral-asset h3 { font-size: 19px; }
+  .asset-type { font-size: 12px; }
+  .locked-tag { font-size: 13px; }
+  .health-panel .panel-head { flex-direction: row; }
+  .hf-gauge { padding-top: 24px; }
+  .health-legend { justify-content: center; gap: 20px; }
+  .collateral-facts > div { flex-wrap: nowrap; gap: 14px; }
+  .pool-available { flex-wrap: wrap; gap: 6px; }
+  .pool-available strong { margin-left: auto; }
+  .preview-rows > div { gap: 12px; font-size: 14px; }
+  .preview-rows dt { max-width: 60%; }
+  .preview-rows dd { max-width: 52%; }
+  .preview-gas dt { align-items: flex-start; }
+  .ltv-caption { flex-wrap: wrap; }
+  .ltv-scale { font-size: 12px; }
+  .borrowing-scenarios { margin-top: 20px; padding: 20px; gap: 22px; }
+  .scenario-controls { flex-wrap: wrap; gap: 24px; }
+  .scenario-controls > div > small { text-align: left; }
+  .borrow-lower-grid { margin-top: 20px; gap: 20px; }
+  .borrow-activity-list > li { flex-wrap: wrap; gap: 8px; }
+  .borrow-activity-list time { margin-left: 25px; width: 100%; text-align: left; }
+  .borrow-review { padding: 22px; }
+  .borrow-review h2 { font-size: 23px; }
+  .borrow-review .dialog-actions { flex-direction: column-reverse; }
+}
+@media (max-width:370px) {
+  .borrowing-console h1 { font-size: 27px; }
+  .borrowing-console .kpi-value { font-size: 25px; }
+  .borrowing-console .kpi-top { min-height: 44px; }
+  .collateral-facts > div { flex-wrap: wrap; gap: 4px; }
+  .collateral-facts dd { width: 100%; text-align: left; margin-left: 0; }
+  .loan-balances { grid-template-columns: 1fr; }
+  .loan-balances > div + div { border-left: 0; padding-left: 0; }
+  .gas-assumption { flex-wrap: wrap; }
+  .health-panel .panel-head { flex-wrap: wrap; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .borrowing-console *, .borrow-review * { animation: none !important; transition: none !important; }
+}
+
+.gas-details { border-top: 1px solid var(--line); margin-top: 16px; padding-top: 8px; }
+.gas-details summary { cursor: pointer; min-height: 44px; display: list-item; padding: 12px 0; font-size: 14px; color: var(--accent-strong); }
+
+/* Long guidance uses body size and stronger contrast; figures keep tabular numerals. */
+.borrowing-shell .sidebar-note > span { color: #354761; }
+.borrowing-console .collateral-hint, .borrowing-console .health-formula,
+.borrowing-console .ltv-control > p, .borrowing-console .repay-options > p,
+.borrowing-console .liquidation-control > p, .borrowing-console .quote-source,
+.borrowing-console .preview-heading p, .borrowing-console .borrowing-scenarios p,
+.borrowing-console .approval-step > p, .borrow-review .quote-source {
+  color: #354761; font-size: 16px;
+}
+.loan-form .amount-input button { min-height: 44px; }
+
+.collateral-asset h3 { font-size: 17px; }
+
+.collateral-asset h3 { font-size: 16px; }
+
+.borrowing-console .kpi-featured .kpi-value { white-space: nowrap; overflow-wrap: normal; }
+
+@media (max-width:370px) { .borrowing-console .kpi-value { font-size: 20px; white-space: nowrap; overflow-wrap: normal; } }
