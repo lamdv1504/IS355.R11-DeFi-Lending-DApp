@@ -56,6 +56,15 @@ interface ILendingPool {
         uint256 supplyIndexWad;        // Live cumulative supply index preview (WAD)
     }
 
+    struct LiquidationPreview {
+        bool liquidatable;             // True strictly when healthFactorWad < 1e18
+        uint256 healthFactorWad;       // Live Health Factor in WAD (type(uint256).max if totalDebt == 0)
+        uint256 totalDebtWad;          // Exact MyUSDT liquidator must approve & cover (principal + live interest)
+        uint256 collateralValueWad;    // Live collateral valuation from PriceOracle (WAD)
+        uint256 seizeValueWad;         // Estimated collateral value seized by liquidator (incl. 5% bonus for ERC-20)
+        bool isNFTCollateral;          // True if CollateralNFT, false if ERC-20 collateral
+    }
+
     // -------------------------------------------------------------------------
     // Standard Custom Errors (Parsed by Web3.py Q02/Q05 & Frontend L02/L03)
     // -------------------------------------------------------------------------
@@ -205,6 +214,9 @@ interface ILendingPool {
     function getTotalDebt(address borrower) external view returns (uint256);
 
     function getHealthFactor(address borrower) external view returns (uint256);
+
+    /// @notice Atomic preview of liquidation eligibility, debt to cover, and collateral seized for L03/Q02.
+    function getLiquidationPreview(address borrower) external view returns (LiquidationPreview memory);
 
     function getLenderEarnedInterest(uint256 positionId) external view returns (uint256);
 

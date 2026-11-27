@@ -141,6 +141,20 @@ def _fmt_erc20_allowance(d: Dict[str, Any]) -> str:
     )
 
 
+def _fmt_ownable_unauthorized(d: Dict[str, Any]) -> str:
+    return (
+        f"Ví {d['account']} không có quyền chủ sở hữu (onlyOwner) để cập nhật cấu hình "
+        "hoặc giá PriceOracle."
+    )
+
+
+def _fmt_invalid_multiplier_bps(d: Dict[str, Any]) -> str:
+    return (
+        f"Hệ số nhân giá Oracle ({d['providedBps']} BPS) vượt giới hạn tối đa cho phép "
+        f"({d['maxBps']} BPS)."
+    )
+
+
 # Canonical catalog covering all LendingPool (HI02/HI03/HI04/HI05) & H01/H02 custom errors
 CONTRACT_ERROR_CATALOG: Tuple[ContractErrorSpec, ...] = (
     # --- ILendingPool core errors ---
@@ -297,6 +311,25 @@ CONTRACT_ERROR_CATALOG: Tuple[ContractErrorSpec, ...] = (
         arg_names=(),
         http_status=403,
         default_message_vi="DebtToken đại diện nghĩa vụ nợ cá nhân, không thể chuyển nhượng sang ví khác.",
+    ),
+    # --- PriceOracle & Ownable access control errors (HI05) ---
+    ContractErrorSpec(
+        code="OwnableUnauthorizedAccount",
+        signature="OwnableUnauthorizedAccount(address)",
+        arg_types=("address",),
+        arg_names=("account",),
+        http_status=403,
+        default_message_vi="Ví không có quyền chủ sở hữu (onlyOwner) để cập nhật PriceOracle hoặc cấu hình hệ thống.",
+        formatter_vi=_fmt_ownable_unauthorized,
+    ),
+    ContractErrorSpec(
+        code="InvalidMultiplierBps",
+        signature="InvalidMultiplierBps(uint256,uint256)",
+        arg_types=("uint256", "uint256"),
+        arg_names=("providedBps", "maxBps"),
+        http_status=400,
+        default_message_vi="Hệ số nhân giá Oracle không hợp lệ (vượt giới hạn tối đa cho phép).",
+        formatter_vi=_fmt_invalid_multiplier_bps,
     ),
 )
 
