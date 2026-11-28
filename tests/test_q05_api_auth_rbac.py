@@ -1750,3 +1750,58 @@ def test_confirm_borrow_rejects_cross_chain_agreement_cid_binding(
     )
     assert rejected.status_code == 400, rejected.text
     assert "chain_id" in rejected.text
+
+
+def test_cors_allows_127_0_0_1_3000_and_settings_default(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from backend.config.settings import load_settings
+
+    monkeypatch.delenv("CORS_ORIGINS", raising=False)
+    loaded = load_settings()
+    assert "http://localhost:3000" in loaded.cors_origins
+    assert "http://127.0.0.1:3000" in loaded.cors_origins
+
+    app = create_app()
+    client = TestClient(app)
+    preflight = client.options(
+        "/health",
+        headers={
+            "Origin": "http://127.0.0.1:3000",
+            "Access-Control-Request-Method": "GET",
+        },
+    )
+    assert preflight.status_code == 200, preflight.text
+    assert preflight.headers.get("access-control-allow-origin") == "http://127.0.0.1:3000"
+
+    health = client.get("/health", headers={"Origin": "http://127.0.0.1:3000"})
+    assert health.status_code == 200
+    assert health.headers.get("access-control-allow-origin") == "http://127.0.0.1:3000"
+
+
+@pytest.mark.parametrize("bad_key", ["", "deadbeef", "not-valid-hex"])
+def test_missing_or_invalid_aes_key_returns_503_for_ipfs_dependencies(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    bad_key: str,
+) -> None:
+    monkeypatch.setenv("DOCUMENT_AES_KEY_HEX", bad_key)
+    monkeypatch.setenv("Q03_BINDING_STORE_PATH", str(tmp_path / "agreements.json"))
+    monkeypatch.setenv("Q04_METADATA_STORE_PATH", str(tmp_path / "credit_audit.json"))
+
+    # 1) get_agreement_generator must map EncryptionError -> HTTP 503.
+    app_agreement = create_app()
+    app_agreement.state.web3_service = _FakeWeb3Service()
+    resp_agreement = TestClient(app_agreement).get("/api/ipfs/documents")
+    assert resp_agreement.status_code == 503, resp_agreement.text
+    assert "encryption" in resp_agreement.json()["detail"].lower()
+
+    # 2) get_credit_audit_service must independently map EncryptionError -> HTTP 503.
+    app_credit = create_app()
+    app_credit.state.web3_service = _FakeWeb3Service()
+    app_credit.state.agreement_generator = SimpleNamespace(
+        binding_store_path=tmp_path / "agreements.json"
+    )
+    resp_credit = TestClient(app_credit).get("/api/ipfs/documents")
+    assert resp_credit.status_code == 503, resp_credit.text
+    assert "encryption" in resp_credit.json()["detail"].lower()

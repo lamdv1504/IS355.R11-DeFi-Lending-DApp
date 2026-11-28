@@ -12,6 +12,7 @@ from backend.config.settings import settings
 from backend.services.agreement_generator import AgreementGeneratorService
 from backend.services.credit_and_audit_ipfs import CreditAndAuditIPFSService
 from backend.services.web3_service import Web3Service
+from src.ipfs.encryption import EncryptionError
 from src.ipfs.rbac import AccessContext
 
 _index_locks: dict[str, threading.Lock] = {}
@@ -191,7 +192,7 @@ def get_agreement_generator(request: Request) -> AgreementGeneratorService:
             service = AgreementGeneratorService(
                 get_web3_service(request), binding_store_path=binding_path
             )
-        except ValueError as exc:
+        except (ValueError, EncryptionError) as exc:
             raise HTTPException(
                 status_code=503,
                 detail="IPFS document encryption is not configured correctly.",
@@ -232,7 +233,7 @@ def get_credit_audit_service(request: Request) -> CreditAndAuditIPFSService:
                 agreement_generator=get_agreement_generator(request),
                 metadata_store_path=metadata_path,
             )
-        except ValueError as exc:
+        except (ValueError, EncryptionError) as exc:
             raise HTTPException(
                 status_code=503,
                 detail="IPFS document encryption is not configured correctly.",
