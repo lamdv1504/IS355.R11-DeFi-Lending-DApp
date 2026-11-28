@@ -93,3 +93,10 @@ backend với cùng registry; tạo collateral cho borrower, tạo agreement, k�
 `borrow(..., cid)` bằng MetaMask, bind receipt sau `status == 1`, rồi thử lấy PDF
 với owner/admin và xác nhận Guest/Lender bị chặn đúng mã HTTP. Không dùng khóa
 ví người dùng trong backend.
+
+**Trạng thái kiểm chứng live (đã hoàn tất):** Đã chạy E2E thật trên Hardhat
+(`31337`) cùng **IPFS Kubo `v0.43.2`** (`enable_local_fallback=False`), xác minh
+CID mở trực tiếp trên Kubo Gateway chỉ trả ciphertext `AES-256-GCM`, bind
+`LoanTxBindingRecord` sau `borrow()` và đủ ma trận RBAC `401`/`403`/`200` — xem
+chi tiết CID, txHash và ảnh chụp Gateway tại
+[reports/Quan/q03_q04_ipfs_e2e_validation.md](../../reports/Quan/q03_q04_ipfs_e2e_validation.md).

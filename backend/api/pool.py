@@ -4,10 +4,14 @@ from __future__ import annotations
 
 from typing import Any
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Query, Request
 from web3.exceptions import ContractLogicError
 
-from backend.api.dependencies import get_web3_service, resolve_from_block
+from backend.api.dependencies import (
+    get_web3_service_for_network,
+    resolve_analytics_from_block,
+    resolve_from_block,
+)
 from backend.schemas.pool import (
     AccountBalancesResponse,
     AccountLoanResponse,
@@ -15,21 +19,42 @@ from backend.schemas.pool import (
     PoolResponse,
     RateAnalyticsResponse,
 )
+from backend.services.credit_and_audit_ipfs import build_monthly_rate_entries
 from backend.services.web3_service import Web3Service
+from src.documents.schemas import AuditRateModelInfo
 
 router = APIRouter(prefix="/api", tags=["pool"])
 
 
+def _block_snapshot(service: Web3Service, interest_rates: dict[str, Any]) -> tuple[int, int]:
+    getter = getattr(service, "get_latest_block_context", None)
+    if callable(getter):
+        ctx = getter()
+        return int(ctx["block_number"]), int(ctx["as_of_timestamp"])
+    block_number = int(getattr(getattr(service, "w3", None), "eth", None).block_number) if hasattr(getattr(getattr(service, "w3", None), "eth", None), "block_number") else 0
+    timestamp = int(interest_rates.get("timestamp", 0))
+    return block_number, timestamp
+
+
 @router.get("/pool", response_model=PoolResponse)
 def read_pool(
-    service: Web3Service = Depends(get_web3_service),
+    request: Request,
+    network: str | None = Query(
+        default=None,
+        description="Target network ('local' or 'sepolia'). Defaults to ACTIVE_NETWORK.",
+    ),
 ) -> dict[str, Any]:
+    service = get_web3_service_for_network(request, network)
+    interest_rates = service.get_interest_rate_snapshot()
+    block_number, as_of_timestamp = _block_snapshot(service, interest_rates)
     return {
         "network": service.network.name,
         "chain_id": service.chain_id,
+        "block_number": block_number,
+        "as_of_timestamp": as_of_timestamp,
         "pool": service.get_pool_info(),
         "available_liquidity": service.get_available_liquidity(),
-        "interest_rates": service.get_interest_rate_snapshot(),
+        "interest_rates": interest_rates,
     }
 
 
@@ -39,9 +64,11 @@ def read_pool(
 )
 def read_lending_positions(
     address: str,
+    request: Request,
     from_block: int | None = Query(default=None, ge=0),
-    service: Web3Service = Depends(get_web3_service),
+    network: str | None = Query(default=None),
 ) -> dict[str, Any]:
+    service = get_web3_service_for_network(request, network)
     wallet = service._checksum_address(address, "account")
     scan_from_block = resolve_from_block(service, from_block)
     pool = service.get_contract("LendingPool")
@@ -82,9 +109,15 @@ def read_lending_positions(
 @router.get("/accounts/{address}/loan", response_model=AccountLoanResponse)
 def read_loan(
     address: str,
-    service: Web3Service = Depends(get_web3_service),
+    request: Request,
+    network: str | None = Query(default=None),
 ) -> dict[str, Any]:
+    service = get_web3_service_for_network(request, network)
     wallet = service._checksum_address(address, "account")
+    liquidation_preview: dict[str, Any] | None = None
+    preview_fn = getattr(service, "get_liquidation_preview", None)
+    if callable(preview_fn):
+        liquidation_preview = preview_fn(wallet)
     return {
         "wallet_address": wallet,
         "loan_position": service.get_loan_position(wallet),
@@ -99,14 +132,17 @@ def read_loan(
             "accrued": service.calculate_accrued_interest(wallet),
             "rates": service.get_interest_rate_snapshot(),
         },
+        "liquidation_preview": liquidation_preview,
     }
 
 
 @router.get("/accounts/{address}/balances", response_model=AccountBalancesResponse)
 def read_balances(
     address: str,
-    service: Web3Service = Depends(get_web3_service),
+    request: Request,
+    network: str | None = Query(default=None),
 ) -> dict[str, Any]:
+    service = get_web3_service_for_network(request, network)
     wallet = service._checksum_address(address, "account")
     pool_address = service.registry.get("contracts", {}).get("LendingPool", {}).get("address")
     balances: dict[str, Any] = {
@@ -129,11 +165,32 @@ def read_balances(
 
 @router.get("/analytics/rates", response_model=RateAnalyticsResponse)
 def read_rate_analytics(
-    service: Web3Service = Depends(get_web3_service),
+    request: Request,
+    network: str | None = Query(
+        default=None,
+        description="Target network ('local' or 'sepolia'). Defaults to ACTIVE_NETWORK.",
+    ),
+    from_block: int | None = Query(default=None, ge=0),
+    seed_simulated_months: int = Query(default=6, ge=0, le=120),
 ) -> dict[str, Any]:
+    service = get_web3_service_for_network(request, network)
+    interest_rates = service.get_interest_rate_snapshot()
+    block_number, as_of_timestamp = _block_snapshot(service, interest_rates)
+    scan_from_block = resolve_analytics_from_block(service, from_block)
+    entries = build_monthly_rate_entries(
+        service,
+        from_block=scan_from_block,
+        to_block="latest",
+        seed_simulated_months=seed_simulated_months,
+        include_event_logs=scan_from_block is not None,
+    )
     return {
         "network": service.network.name,
         "chain_id": service.chain_id,
-        "interest_rates": service.get_interest_rate_snapshot(),
+        "block_number": block_number,
+        "as_of_timestamp": as_of_timestamp,
+        "interest_rates": interest_rates,
         "pool": service.get_pool_info(),
+        "rate_model": AuditRateModelInfo().model_dump(mode="json"),
+        "series": [entry.model_dump(mode="json") for entry in entries],
     }

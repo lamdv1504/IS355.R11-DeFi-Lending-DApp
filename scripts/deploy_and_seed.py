@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import os
 import sys
-from dataclasses import replace
 from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
@@ -204,13 +203,7 @@ def _create_local_audit_record(
             "DOCUMENT_AES_KEY_HEX không hợp lệ; cần khóa AES-256-GCM 32 bytes dạng hex."
         ) from exc
 
-    ipfs_config = replace(
-        IPFSConfig.from_env(),
-        provider="local_fallback",
-        pinata_jwt="",
-        pinata_api_key="",
-        pinata_secret_api_key="",
-    )
+    ipfs_config = IPFSConfig.from_env()
     gateway = AuthorizedIPFSGateway(IPFSClient(ipfs_config), encryptor)
     service = CreditAndAuditIPFSService(
         Web3Service(network_name="local", w3=w3, app_settings=settings),
@@ -233,6 +226,7 @@ def _create_local_audit_record(
     return {
         "json": result["json"],
         "csv": result["csv"],
+        "providerUsed": result["json"].get("provider_used", ipfs_config.provider),
         "simulatedPeriods": [row["period"] for row in simulated],
         "containsPii": result["document"].contains_pii,
     }

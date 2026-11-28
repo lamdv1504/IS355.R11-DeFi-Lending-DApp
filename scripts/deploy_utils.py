@@ -322,7 +322,10 @@ def registry_network(manifest: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def build_frontend_config(
-    manifest: Mapping[str, Any], abi_dir: Path | None = None
+    manifest: Mapping[str, Any],
+    abi_dir: Path | None = None,
+    *,
+    backend_config: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     contracts: dict[str, Any] = {}
     for name, record in manifest["contracts"].items():
@@ -333,8 +336,38 @@ def build_frontend_config(
             "txHash": record["txHash"],
         }
     network_name = str(manifest["network"])
+    active_network = "local" if network_name == "localhost" else network_name
+    networks: dict[str, Any] = {}
+    if backend_config:
+        for net_key in ("local", "sepolia"):
+            net_entry = backend_config.get(net_key)
+            if isinstance(net_entry, Mapping) and net_entry.get("contracts"):
+                networks[net_key] = {
+                    "chainId": int(
+                        net_entry.get(
+                            "chainId",
+                            CHAIN_SEPOLIA if net_key == "sepolia" else CHAIN_LOCAL,
+                        )
+                    ),
+                    "explorerUrl": net_entry.get(
+                        "explorerUrl",
+                        "https://sepolia.etherscan.io"
+                        if net_key == "sepolia"
+                        else "http://127.0.0.1:8545",
+                    ),
+                    "contracts": {
+                        cname: {
+                            "address": cdata.get("address", ""),
+                            "txHash": cdata.get("txHash", ""),
+                            "explorerUrl": cdata.get("explorerUrl"),
+                        }
+                        for cname, cdata in net_entry["contracts"].items()
+                        if isinstance(cdata, Mapping)
+                    },
+                }
+    networks[active_network] = registry_network(manifest)
     return {
-        "network": "local" if network_name == "localhost" else network_name,
+        "network": active_network,
         "chainId": int(manifest["chainId"]),
         "explorerUrl": manifest.get(
             "explorerUrl",
@@ -343,6 +376,7 @@ def build_frontend_config(
             else "http://127.0.0.1:8545",
         ),
         "contracts": contracts,
+        "networks": networks,
     }
 
 
@@ -390,7 +424,10 @@ def sync_manifests(
     backend_config[registry_name] = registry_network(manifest)
     write_json_atomic(deployment_path, manifest)
     write_json_atomic(backend_config_path, backend_config)
-    write_json_atomic(frontend_config_path, build_frontend_config(manifest, abi_dir))
+    write_json_atomic(
+        frontend_config_path,
+        build_frontend_config(manifest, abi_dir, backend_config=backend_config),
+    )
 
 
 def local_test_accounts(mnemonic: str | None = None) -> list[dict[str, Any]]:

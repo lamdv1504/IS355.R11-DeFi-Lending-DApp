@@ -109,7 +109,10 @@ the initial balance is nonzero.
 updates only the network deployed by the script. Every contract record has its
 address, artifact-relative `abiPath`, deployment `txHash`, and explorer URL.
 `deployments/{localhost,sepolia}.json` contains the fuller deployment receipt
-and binding records. The frontend file is intentionally self-contained:
+and binding records. The frontend file keeps top-level `network`, `chainId`, `explorerUrl`, and
+`contracts` (with canonical ABIs) for backward compatibility while also
+persisting **both** networks under `networks.local` and `networks.sepolia` so
+switching or redeploying one network never erases the other:
 
 ```json
 {
@@ -122,9 +125,19 @@ and binding records. The frontend file is intentionally self-contained:
       "txHash": "0x...",
       "abi": []
     }
+  },
+  "networks": {
+    "local": { "chainId": 31337, "explorerUrl": "http://127.0.0.1:8545", "contracts": {} },
+    "sepolia": { "chainId": 11155111, "explorerUrl": "https://sepolia.etherscan.io", "contracts": {} }
   }
 }
 ```
+
+Both `scripts/start_all.bat` and `scripts/start_all.sh` prefer the project
+`.venv` Python, opportunistically start `ipfs daemon` when Kubo is installed,
+and fall back to `local_fallback` only if Kubo is unavailable.
+`scripts/deploy_and_seed.py` honors `IPFSConfig.from_env()` directly so Kubo or
+Pinata credentials in `.env` are used for live pinning whenever configured.
 
 The exact structure applies to both local and Sepolia; the generated ABI is the
 canonical array from `deployments/abi/<Contract>.json`. Generated manifests

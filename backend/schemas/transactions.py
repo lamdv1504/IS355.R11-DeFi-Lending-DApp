@@ -15,6 +15,7 @@ class TransactionAction(str, Enum):
     APPROVE_COLLATERAL_NFT = "APPROVE_COLLATERAL_NFT"
     DEPOSIT_LENDER = "DEPOSIT_LENDER"
     WITHDRAW_LENDER = "WITHDRAW_LENDER"
+    TRANSFER_LENDING_POSITION_NFT = "TRANSFER_LENDING_POSITION_NFT"
     DEPOSIT_COLLATERAL = "DEPOSIT_COLLATERAL"
     WITHDRAW_COLLATERAL = "WITHDRAW_COLLATERAL"
     BORROW = "BORROW"
@@ -61,7 +62,7 @@ class TransactionPrepareRequest(APIModel):
             raise ValueError("args must be an object.")
         aliases = {
             "amount_wad": ("amount_wad", "amount"),
-            "position_id": ("position_id",),
+            "position_id": ("position_id", "positionId"),
             "borrower_address": ("borrower_address", "borrower"),
             "is_nft": ("is_nft",),
             "collateral_amount_or_token_id": (
@@ -69,8 +70,8 @@ class TransactionPrepareRequest(APIModel):
                 "amount_or_token_id",
             ),
             "agreement_cid": ("agreement_cid",),
-            "token_id": ("token_id",),
-            "recipient_address": ("recipient_address", "to"),
+            "token_id": ("token_id", "tokenId"),
+            "recipient_address": ("recipient_address", "to", "recipient"),
             "multiplier_bps": ("multiplier_bps", "new_multiplier_bps"),
         }
         for field_name, keys in aliases.items():
@@ -79,6 +80,10 @@ class TransactionPrepareRequest(APIModel):
                     if key in args:
                         data[field_name] = args[key]
                         break
+        for numeric_str_field in ("amount_wad", "collateral_amount_or_token_id"):
+            raw_val = data.get(numeric_str_field)
+            if isinstance(raw_val, int) and not isinstance(raw_val, bool):
+                data[numeric_str_field] = str(raw_val)
         return data
 
     @model_validator(mode="after")
@@ -99,6 +104,10 @@ class TransactionPrepareResponse(APIModel):
     gas_quote: dict[str, object]
     interest_quote: dict[str, object] | None = None
     signing: str
+    context: dict[str, Any]
+    availability: dict[str, Any]
+    allowance: dict[str, Any]
+    preview: dict[str, Any]
 
 
 class TransactionConfirmRequest(APIModel):

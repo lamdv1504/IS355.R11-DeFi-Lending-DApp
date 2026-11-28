@@ -107,8 +107,8 @@ class Web3Service:
             if sepolia_deployment_path is not None
             else self.project_root / "deployments" / "sepolia.json"
         )
-        self.registry = self._load_registry()
         self.chain_id = int(self.network.chain_id)
+        self.registry = self._load_registry()
         configured_chain_id = int(self.registry.get("chainId", self.chain_id))
         if configured_chain_id != self.chain_id:
             raise ContractConfigurationError(
@@ -476,6 +476,68 @@ class Web3Service:
         value = self.get_contract("CollateralNFT").functions.valuation(token_id).call()
         return _format_wad(int(value))
 
+    def get_collateral_nft_approval_status(
+        self, owner_address: str, spender_address: str, token_id: int
+    ) -> dict[str, Any]:
+        """Check whether spender is approved for a specific CollateralNFT tokenId."""
+        owner = self._checksum_address(owner_address, "owner")
+        spender = self._checksum_address(spender_address, "spender")
+        nft = self.get_contract("CollateralNFT")
+        approved_raw = nft.functions.getApproved(token_id).call()
+        approved_for_all = bool(nft.functions.isApprovedForAll(owner, spender).call())
+        approved_address = (
+            self.w3.to_checksum_address(approved_raw)
+            if isinstance(approved_raw, str) and self.w3.is_address(approved_raw)
+            else None
+        )
+        is_approved = approved_for_all or (
+            approved_address is not None and approved_address.lower() == spender.lower()
+        )
+        return {
+            "token_id": int(token_id),
+            "approved_address": approved_address,
+            "approved_for_all": approved_for_all,
+            "is_approved": is_approved,
+        }
+
+    def get_latest_block_context(self) -> dict[str, int]:
+        """Read latest block number and timestamp for snapshot freshness metadata."""
+        block_number: int | None = None
+        timestamp: int | None = None
+        get_block = getattr(self.w3.eth, "get_block", None)
+        if callable(get_block):
+            try:
+                latest = get_block("latest")
+                if latest is not None:
+                    raw_number = (
+                        latest.get("number")
+                        if isinstance(latest, Mapping)
+                        else getattr(latest, "number", None)
+                    )
+                    raw_ts = (
+                        latest.get("timestamp")
+                        if isinstance(latest, Mapping)
+                        else getattr(latest, "timestamp", None)
+                    )
+                    if raw_number is not None:
+                        block_number = int(raw_number)
+                    if raw_ts is not None:
+                        timestamp = int(raw_ts)
+            except Exception:
+                pass
+        if block_number is None:
+            raw_bn = getattr(self.w3.eth, "block_number", 0)
+            block_number = int(raw_bn) if raw_bn is not None else 0
+        if timestamp is None:
+            try:
+                timestamp = int(self.get_interest_rate_snapshot()["timestamp"])
+            except Exception:
+                timestamp = 0
+        return {
+            "block_number": block_number,
+            "as_of_timestamp": timestamp,
+        }
+
     def get_borrower_risk(self, borrower_address: str) -> dict[str, Any]:
         """Read collateral, debt, and on-chain Health Factor for a wallet."""
         borrower = self._checksum_address(borrower_address, "borrower")
@@ -490,6 +552,38 @@ class Web3Service:
             "collateral_value": _format_wad(collateral_wad),
             "total_debt": _format_wad(debt_wad),
             **constants.format_health_factor_for_api(health_factor_wad),
+        }
+
+    def get_liquidation_preview(self, borrower_address: str) -> dict[str, Any]:
+        """Wrap LendingPool.getLiquidationPreview(borrower) from HI05."""
+        borrower = self._checksum_address(borrower_address, "borrower")
+        raw = self.get_contract("LendingPool").functions.getLiquidationPreview(borrower).call()
+        fields = (
+            "liquidatable",
+            "healthFactorWad",
+            "totalDebtWad",
+            "collateralValueWad",
+            "seizeValueWad",
+            "isNFTCollateral",
+        )
+        preview = self._tuple_fields(raw, fields, "LendingPool.getLiquidationPreview")
+        debt_wad = int(preview["totalDebtWad"])
+        collateral_wad = int(preview["collateralValueWad"])
+        seize_wad = int(preview["seizeValueWad"])
+        hf_wad = (
+            constants.INFINITE_HEALTH_FACTOR
+            if debt_wad == 0
+            else int(preview["healthFactorWad"])
+        )
+        formatted_hf = constants.format_health_factor_for_api(hf_wad)
+        return {
+            "borrower": borrower,
+            "collateral_value": _format_wad(collateral_wad),
+            "total_debt": _format_wad(debt_wad),
+            "seize_value": _format_wad(seize_wad),
+            "is_nft_collateral": bool(preview["isNFTCollateral"]),
+            **formatted_hf,
+            "liquidatable": bool(preview["liquidatable"]),
         }
 
     def get_oracle_price(self) -> dict[str, Any]:

@@ -18,6 +18,7 @@ from backend.api.dependencies import (
     lock_for_index,
     require_matching_chain,
 )
+from backend.config import constants
 from backend.schemas.transactions import (
     TransactionAction,
     TransactionConfirmRequest,
@@ -32,6 +33,7 @@ from src.ipfs.rbac import AccessContext, Role
 router = APIRouter(prefix="/api/transactions", tags=["transactions"])
 _intent_lock = threading.Lock()
 _INTENT_TTL_SECONDS = 900
+ZERO_ADDRESS = "0x0000000000000000000000000000000000000000"
 
 
 def _required_amount(value: str | None, label: str = "amount_wad") -> int:
@@ -42,16 +44,52 @@ def _required_amount(value: str | None, label: str = "amount_wad") -> int:
     return int(value)
 
 
+def _required_non_negative_int(value: str | int | None, label: str) -> int:
+    if isinstance(value, bool):
+        raise HTTPException(status_code=422, detail=f"{label} must be a non-negative integer.")
+    if isinstance(value, int):
+        if value < 0:
+            raise HTTPException(status_code=422, detail=f"{label} must be a non-negative integer.")
+        return value
+    if value is None or not str(value).isdigit():
+        raise HTTPException(status_code=422, detail=f"{label} must be a non-negative integer.")
+    return int(value)
+
+
 def _checksum(service: Web3Service, address: str | None, label: str) -> str:
     if address is None:
         raise HTTPException(status_code=422, detail=f"{label} is required.")
     return service._checksum_address(address, label)
 
 
+def _format_ltv(ltv_bps: int) -> dict[str, Any]:
+    infinite = ltv_bps >= constants.INFINITE_HEALTH_FACTOR
+    return {
+        "bps": ltv_bps,
+        "percent": None if infinite else constants.apr_bps_to_percent(ltv_bps),
+        "is_infinite": infinite,
+    }
+
+
+def _block_snapshot(service: Web3Service) -> tuple[int, int]:
+    getter = getattr(service, "get_latest_block_context", None)
+    if callable(getter):
+        ctx = getter()
+        return int(ctx["block_number"]), int(ctx["as_of_timestamp"])
+    eth = getattr(getattr(service, "w3", None), "eth", None)
+    block_number = int(getattr(eth, "block_number", 0) or 0)
+    try:
+        timestamp = int(service.get_interest_rate_snapshot().get("timestamp", 0))
+    except Exception:
+        timestamp = 0
+    return block_number, timestamp
+
+
 def _transaction_spec(
     body: TransactionPrepareRequest,
     context: AccessContext,
     service: Web3Service,
+    sender: str,
 ) -> tuple[str, str, tuple[Any, ...], dict[str, Any]]:
     action = body.action
     pool_address = service.registry.get("contracts", {}).get("LendingPool", {}).get("address")
@@ -60,28 +98,65 @@ def _transaction_spec(
     extra: dict[str, Any] = {"agreement_cid": body.agreement_cid}
 
     if action == TransactionAction.APPROVE_MYUSDT:
-        return "MyUSDT", "approve", (pool_address, _required_amount(body.amount_wad)), extra
+        amount = _required_amount(body.amount_wad)
+        extra["amount_wad"] = amount
+        return "MyUSDT", "approve", (pool_address, amount), extra
     if action == TransactionAction.APPROVE_COLLATERAL_NFT:
         if body.token_id is None:
             raise HTTPException(status_code=422, detail="token_id is required.")
+        extra["token_id"] = body.token_id
         return "CollateralNFT", "approve", (pool_address, body.token_id), extra
     if action == TransactionAction.DEPOSIT_LENDER:
-        return "LendingPool", "depositLender", (_required_amount(body.amount_wad),), extra
+        amount = _required_amount(body.amount_wad)
+        extra["amount_wad"] = amount
+        return "LendingPool", "depositLender", (amount,), extra
     if action == TransactionAction.WITHDRAW_LENDER:
         if body.position_id is None:
             raise HTTPException(status_code=422, detail="position_id is required.")
+        amount = _required_amount(body.amount_wad)
+        extra["amount_wad"] = amount
+        extra["position_id"] = body.position_id
         return (
             "LendingPool",
             "withdrawLender",
-            (body.position_id, _required_amount(body.amount_wad)),
+            (body.position_id, amount),
+            extra,
+        )
+    if action == TransactionAction.TRANSFER_LENDING_POSITION_NFT:
+        raw_position_id = body.position_id if body.position_id is not None else body.token_id
+        position_id = _required_non_negative_int(raw_position_id, "position_id")
+        recipient = _checksum(service, body.recipient_address, "recipient_address")
+        if recipient.lower() == ZERO_ADDRESS:
+            raise HTTPException(
+                status_code=422,
+                detail="recipient_address must not be the zero address.",
+            )
+        extra["position_id"] = position_id
+        extra["recipient_address"] = recipient
+        return (
+            "LendingPositionNFT",
+            "safeTransferFrom",
+            (sender, recipient, position_id),
             extra,
         )
     if action == TransactionAction.DEPOSIT_COLLATERAL:
         if body.is_nft is None:
             raise HTTPException(status_code=422, detail="is_nft is required.")
-        amount_or_token_id = _required_amount(
-            body.collateral_amount_or_token_id, "collateral_amount_or_token_id"
-        )
+        if body.is_nft:
+            raw_token_id = (
+                body.collateral_amount_or_token_id
+                if body.collateral_amount_or_token_id is not None
+                else body.token_id
+            )
+            amount_or_token_id = _required_non_negative_int(
+                raw_token_id, "collateral_amount_or_token_id"
+            )
+        else:
+            amount_or_token_id = _required_amount(
+                body.collateral_amount_or_token_id, "collateral_amount_or_token_id"
+            )
+        extra["is_nft"] = body.is_nft
+        extra["collateral_amount_or_token_id"] = amount_or_token_id
         return (
             "LendingPool",
             "depositCollateral",
@@ -97,20 +172,27 @@ def _transaction_spec(
         extra["amount_wad"] = amount
         return "LendingPool", "borrow", (amount, body.agreement_cid), extra
     if action == TransactionAction.REPAY:
-        return "LendingPool", "repay", (_required_amount(body.amount_wad),), extra
+        amount = _required_amount(body.amount_wad)
+        extra["amount_wad"] = amount
+        return "LendingPool", "repay", (amount,), extra
     if action == TransactionAction.LIQUIDATE:
+        borrower = _checksum(service, body.borrower_address, "borrower")
+        extra["borrower_address"] = borrower
         return (
             "LendingPool",
             "liquidate",
-            (_checksum(service, body.borrower_address, "borrower"),),
+            (borrower,),
             extra,
         )
     if action == TransactionAction.FAUCET_MYUSDT:
-        recipient = _checksum(service, body.recipient_address, "recipient") if body.recipient_address else context.wallet_address
+        recipient = _checksum(service, body.recipient_address, "recipient") if body.recipient_address else sender
+        amount = _required_amount(body.amount_wad)
+        extra["amount_wad"] = amount
+        extra["recipient_address"] = recipient
         return (
             "MyUSDT",
             "faucet",
-            (recipient, _required_amount(body.amount_wad)),
+            (recipient, amount),
             extra,
         )
     if action == TransactionAction.MOCK_ORACLE_MULTIPLIER:
@@ -122,8 +204,204 @@ def _transaction_spec(
             raise HTTPException(status_code=403, detail="Only ADMIN may prepare mock Oracle updates.")
         if body.multiplier_bps is None:
             raise HTTPException(status_code=422, detail="multiplier_bps is required.")
+        extra["multiplier_bps"] = body.multiplier_bps
         return "PriceOracle", "setPriceMultiplierBps", (body.multiplier_bps,), extra
     raise HTTPException(status_code=422, detail="Unsupported transaction action.")
+
+
+def _build_prepare_allowance(
+    action: TransactionAction,
+    sender: str,
+    intent_data: dict[str, Any],
+    service: Web3Service,
+) -> dict[str, Any]:
+    contracts = service.registry.get("contracts", {})
+    pool_address = contracts.get("LendingPool", {}).get("address")
+    token_address = contracts.get("MyUSDT", {}).get("address")
+    nft_address = contracts.get("CollateralNFT", {}).get("address")
+
+    if action in (
+        TransactionAction.DEPOSIT_LENDER,
+        TransactionAction.REPAY,
+    ) or (action == TransactionAction.DEPOSIT_COLLATERAL and not intent_data.get("is_nft")):
+        required_wad = int(
+            intent_data.get(
+                "amount_wad", intent_data.get("collateral_amount_or_token_id", 0)
+            )
+        )
+        current_wad = (
+            int(service.get_myusdt_allowance(sender, pool_address)["wad"])
+            if pool_address
+            else 0
+        )
+        return {
+            "token_address": token_address,
+            "spender_address": pool_address,
+            "amount_wad": str(required_wad),
+            "current_allowance_wad": str(current_wad),
+            "approval_required": current_wad < required_wad,
+        }
+
+    if action == TransactionAction.LIQUIDATE:
+        borrower = str(intent_data["borrower_address"])
+        target_risk = service.get_borrower_risk(borrower)
+        required_wad = int(target_risk["total_debt"]["wad"])
+        current_wad = (
+            int(service.get_myusdt_allowance(sender, pool_address)["wad"])
+            if pool_address
+            else 0
+        )
+        return {
+            "token_address": token_address,
+            "spender_address": pool_address,
+            "amount_wad": str(required_wad),
+            "current_allowance_wad": str(current_wad),
+            "approval_required": required_wad > 0 and current_wad < required_wad,
+        }
+
+    if action == TransactionAction.DEPOSIT_COLLATERAL and intent_data.get("is_nft"):
+        token_id = int(intent_data["collateral_amount_or_token_id"])
+        is_approved = False
+        checker = getattr(service, "get_collateral_nft_approval_status", None)
+        if callable(checker) and pool_address:
+            try:
+                is_approved = bool(checker(sender, pool_address, token_id)["is_approved"])
+            except Exception:
+                is_approved = False
+        return {
+            "token_address": nft_address,
+            "spender_address": pool_address,
+            "token_id": token_id,
+            "amount_wad": None,
+            "current_allowance_wad": None,
+            "approval_required": not is_approved,
+        }
+
+    return {
+        "token_address": None,
+        "spender_address": None,
+        "amount_wad": None,
+        "current_allowance_wad": None,
+        "approval_required": False,
+    }
+
+
+def _build_prepare_preview(
+    action: TransactionAction,
+    sender: str,
+    intent_data: dict[str, Any],
+    service: Web3Service,
+) -> dict[str, Any]:
+    pool_info = service.get_pool_info()
+    total_supplied = int(pool_info["total_supplied"]["wad"])
+    total_borrowed = int(pool_info["total_borrowed"]["wad"])
+    current_util_bps = constants.calculate_utilization_bps(total_borrowed, total_supplied)
+    current_borrow_apr_bps = int(
+        pool_info.get(
+            "borrow_apr_bps", constants.calculate_borrow_apr_bps(current_util_bps)
+        )
+    )
+    current_supply_apr_bps = int(
+        pool_info.get(
+            "supply_apr_bps",
+            constants.calculate_supply_apr_bps(current_borrow_apr_bps, current_util_bps),
+        )
+    )
+
+    risk_wallet = (
+        str(intent_data["borrower_address"])
+        if action == TransactionAction.LIQUIDATE and intent_data.get("borrower_address")
+        else sender
+    )
+    risk = service.get_borrower_risk(risk_wallet)
+    current_collateral = int(risk["collateral_value"]["wad"])
+    current_debt = int(risk["total_debt"]["wad"])
+    current_ltv_bps = constants.calculate_ltv_bps(current_debt, current_collateral)
+    current_hf_wad = constants.calculate_health_factor(current_collateral, current_debt)
+
+    resulting_collateral = current_collateral
+    resulting_debt = current_debt
+    resulting_supplied = total_supplied
+    resulting_borrowed = total_borrowed
+    amount_wad: str | None = (
+        str(intent_data["amount_wad"]) if "amount_wad" in intent_data else None
+    )
+
+    if action == TransactionAction.BORROW:
+        borrow_amount = int(intent_data["amount_wad"])
+        resulting_debt = current_debt + borrow_amount
+        resulting_borrowed = total_borrowed + borrow_amount
+    elif action == TransactionAction.REPAY:
+        repay_amount = int(intent_data["amount_wad"])
+        repaid_effective = min(repay_amount, current_debt)
+        resulting_debt = current_debt - repaid_effective
+        resulting_borrowed = max(0, total_borrowed - repaid_effective)
+    elif action == TransactionAction.DEPOSIT_LENDER:
+        deposit_amount = int(intent_data["amount_wad"])
+        resulting_supplied = total_supplied + deposit_amount
+    elif action == TransactionAction.WITHDRAW_LENDER:
+        withdraw_amount = int(intent_data["amount_wad"])
+        resulting_supplied = max(0, total_supplied - withdraw_amount)
+    elif action == TransactionAction.DEPOSIT_COLLATERAL:
+        if intent_data.get("is_nft"):
+            token_id = int(intent_data["collateral_amount_or_token_id"])
+            valuation_fn = getattr(service, "get_collateral_nft_valuation", None)
+            added_val = 0
+            if callable(valuation_fn):
+                try:
+                    added_val = int(valuation_fn(token_id)["wad"])
+                except Exception:
+                    added_val = 0
+            amount_wad = str(added_val)
+            resulting_collateral = current_collateral + added_val
+        else:
+            added_val = int(intent_data["collateral_amount_or_token_id"])
+            amount_wad = str(added_val)
+            resulting_collateral = current_collateral + added_val
+    elif action == TransactionAction.WITHDRAW_COLLATERAL:
+        resulting_collateral = 0
+        resulting_debt = 0
+    elif action == TransactionAction.LIQUIDATE:
+        resulting_borrowed = max(0, total_borrowed - current_debt)
+        resulting_collateral = 0
+        resulting_debt = 0
+        amount_wad = str(current_debt)
+
+    resulting_util_bps = constants.calculate_utilization_bps(
+        resulting_borrowed, resulting_supplied
+    )
+    resulting_borrow_apr_bps = constants.calculate_borrow_apr_bps(resulting_util_bps)
+    resulting_supply_apr_bps = constants.calculate_supply_apr_bps(
+        resulting_borrow_apr_bps, resulting_util_bps
+    )
+    resulting_ltv_bps = constants.calculate_ltv_bps(resulting_debt, resulting_collateral)
+    resulting_hf_wad = constants.calculate_health_factor(
+        resulting_collateral, resulting_debt
+    )
+
+    preview: dict[str, Any] = {
+        "amount_wad": amount_wad,
+        "current_debt_wad": str(current_debt),
+        "resulting_debt_wad": str(resulting_debt),
+        "collateral_value_wad": str(current_collateral),
+        "resulting_collateral_value_wad": str(resulting_collateral),
+        "current_ltv_bps": current_ltv_bps,
+        "resulting_ltv_bps": resulting_ltv_bps,
+        "resulting_ltv": _format_ltv(resulting_ltv_bps),
+        "current_hf_wad": str(current_hf_wad),
+        "resulting_hf_wad": str(resulting_hf_wad),
+        "resulting_hf": constants.format_health_factor_for_api(resulting_hf_wad),
+        "current_borrow_apr_bps": current_borrow_apr_bps,
+        "resulting_borrow_apr_bps": resulting_borrow_apr_bps,
+        "current_supply_apr_bps": current_supply_apr_bps,
+        "resulting_supply_apr_bps": resulting_supply_apr_bps,
+        "rate_basis": "simple_apr_per_second",
+        "is_estimate": True,
+    }
+    if action == TransactionAction.TRANSFER_LENDING_POSITION_NFT:
+        preview["position_id"] = intent_data["position_id"]
+        preview["recipient_address"] = intent_data["recipient_address"]
+    return preview
 
 
 @router.post("/prepare", response_model=TransactionPrepareResponse)
@@ -148,7 +426,9 @@ def prepare_transaction(
     if not context.wallet_address or context.wallet_address.lower() != wallet_address.lower():
         raise HTTPException(status_code=403, detail="Transaction wallet must match the authenticated wallet.")
     sender = service._checksum_address(wallet_address, "wallet")
-    contract_name, function_name, args, intent_data = _transaction_spec(body, context, service)
+    contract_name, function_name, args, intent_data = _transaction_spec(
+        body, context, service, sender
+    )
     build_options: dict[str, Any] = {
         "from_address": sender,
         "eth_usd_price": body.eth_usd_price,
@@ -163,6 +443,9 @@ def prepare_transaction(
     quote = service.build_unsigned_transaction(
         contract_name, function_name, args, **build_options
     )
+    block_number, as_of_timestamp = _block_snapshot(service)
+    allowance = _build_prepare_allowance(body.action, sender, intent_data, service)
+    preview = _build_prepare_preview(body.action, sender, intent_data, service)
     intent_id = secrets.token_urlsafe(24)
     intent = {
         "wallet_address": sender,
@@ -187,6 +470,21 @@ def prepare_transaction(
         "gas_quote": quote["gas_quote"],
         "interest_quote": quote["interest_quote"],
         "signing": "client_wallet",
+        "context": {
+            "network": service.network.name,
+            "chain_id": service.chain_id,
+            "account": sender,
+            "action": body.action.value,
+            "block_number": block_number,
+            "as_of_timestamp": as_of_timestamp,
+        },
+        "availability": {
+            "ready": True,
+            "blocked_reason": None,
+            "missing_contracts": [],
+        },
+        "allowance": allowance,
+        "preview": preview,
     }
 
 
@@ -256,22 +554,47 @@ def confirm_transaction(
         tx_from = _value(transaction, "from")
         tx_to = _value(transaction, "to")
         tx_input = _value(transaction, "input", "data")
+        if isinstance(tx_input, (bytes, bytearray)):
+            tx_input_hex = service.w3.to_hex(tx_input)
+        elif tx_input is None:
+            tx_input_hex = ""
+        else:
+            tx_input_hex = str(tx_input)
+            if tx_input_hex and not tx_input_hex.startswith("0x"):
+                tx_input_hex = "0x" + tx_input_hex
         expected_from = expected.get("from")
         expected_to = expected.get("to")
-        expected_data = expected.get("data")
+        expected_data = str(expected.get("data", ""))
+        if expected_data and not expected_data.startswith("0x"):
+            expected_data = "0x" + expected_data
         tx_value = _value(transaction, "value")
         if (
             not tx_from
             or service.w3.to_checksum_address(tx_from) != service.w3.to_checksum_address(expected_from)
             or not tx_to
             or service.w3.to_checksum_address(tx_to) != service.w3.to_checksum_address(expected_to)
-            or str(tx_input).lower() != str(expected_data).lower()
+            or tx_input_hex.lower() != expected_data.lower()
             or tx_value is None
             or int(tx_value) != int(expected.get("value", 0))
         ):
             raise HTTPException(status_code=400, detail="Mined transaction does not match prepared intent.")
         tx_chain_id = _value(transaction, "chainId", "chain_id")
-        if tx_chain_id is None or int(tx_chain_id) != service.chain_id:
+        if isinstance(tx_chain_id, str) and tx_chain_id.startswith("0x"):
+            parsed_chain_id: int | None = int(tx_chain_id, 16)
+        elif tx_chain_id is not None:
+            parsed_chain_id = int(tx_chain_id)
+        else:
+            tx_v = _value(transaction, "v")
+            if isinstance(tx_v, str) and tx_v.startswith("0x"):
+                parsed_v = int(tx_v, 16)
+            elif tx_v is not None:
+                parsed_v = int(tx_v)
+            else:
+                parsed_v = None
+            parsed_chain_id = (
+                (parsed_v - 35) // 2 if parsed_v is not None and parsed_v >= 35 else None
+            )
+        if parsed_chain_id is None or parsed_chain_id != service.chain_id:
             raise HTTPException(status_code=400, detail="Transaction chainId does not match service network.")
 
         binding: dict[str, object] | None = None

@@ -38,12 +38,12 @@ is allowed in addition to configured CORS origins.
 |---|---|---|
 | `POST /api/auth/nonce` | Public | `{wallet_address, chain_id, domain?}` -> nonce and exact EIP-191 message |
 | `POST /api/auth/verify` | Public | `{wallet_address, chain_id, domain?, nonce, signature}` -> bearer session |
-| `GET /api/pool` | Public | Pool totals/liquidity and APR/APY rate snapshot |
-| `GET /api/analytics/rates` | Public | Current pool and interest-rate snapshot |
-| `GET /api/accounts/{address}/lending-positions` | Public on-chain data | Current LendingPositionNFT ownership and claimable values |
-| `GET /api/accounts/{address}/loan` | Public on-chain data | Loan position, risk, LTV, borrowing capacity, accrued interest |
-| `GET /api/accounts/{address}/balances` | Public on-chain data | MyUSDT/DebtToken balances, NFT counts, receipt, pool allowance |
-| `POST /api/transactions/prepare` | Verified wallet | Builds a non-custodial unsigned transaction and gas/interest quote |
+| `GET /api/pool?network=local\|sepolia` | Public | Pool totals/liquidity, APR/APY snapshot, `block_number`, and `as_of_timestamp` |
+| `GET /api/analytics/rates?network=...` | Public | Current pool/rate snapshot plus monthly `series` (`SIMULATED` + `ON_CHAIN`) for charts |
+| `GET /api/accounts/{address}/lending-positions` | Public on-chain data | Current LendingPositionNFT ownership and claimable values (optional `?network=`) |
+| `GET /api/accounts/{address}/loan` | Public on-chain data | Loan position, risk, LTV, borrowing capacity, accrued interest, and `liquidation_preview` |
+| `GET /api/accounts/{address}/balances` | Public on-chain data | MyUSDT/DebtToken balances, NFT counts, receipt, pool allowance (optional `?network=`) |
+| `POST /api/transactions/prepare` | Verified wallet | Builds unsigned tx (including `TRANSFER_LENDING_POSITION_NFT` and `DEPOSIT_COLLATERAL` with NFT `tokenId >= 0`), `gas_quote`, `interest_quote`, `context`, `availability`, `allowance`, and `preview` (`resulting_ltv`, `resulting_hf`) |
 | `POST /api/transactions/confirm` | Prepared-intent wallet | Checks mined transaction/receipt against the server-side prepare intent |
 | `POST /api/ipfs/create-agreement` | Verified borrower | Creates a private encrypted pre-borrow agreement |
 | `POST /api/ipfs/credit-report/{address}` | Owner/Admin | Generates an encrypted credit report |
@@ -58,6 +58,25 @@ document owner or Admin receives `200`. Public audit JSON/CSV are readable by
 Guest. `X-Content-SHA256` accompanies retrieved documents. Private IPFS CIDs
 resolve to AES-256-GCM ciphertext at the raw gateway; decryption is performed
 only after backend authorization.
+
+## Route synchronization with Excel plan (L01 canonical vs Excel Q05 draft)
+
+The implemented Q05 routes follow the team-agreed `docs/Lam/l01_api_contract.md`
+specification rather than the early draft path names in `Kế_hoạch_Blockchain.xlsx`:
+
+| Early Excel Q05 draft | Canonical L01 / Q05 route |
+|---|---|
+| `GET /api/pool-overview` | `GET /api/pool?network=local\|sepolia` |
+| `POST /api/tx/prepare-*` | `POST /api/transactions/prepare` (dispatched by `action`, including `TRANSFER_LENDING_POSITION_NFT`) + `POST /api/transactions/confirm` |
+| `POST /api/demo/fast-forward-time` | `POST /api/demo/time` |
+| Monthly rate history | `GET /api/analytics/rates?network=local\|sepolia&seed_simulated_months=6` (`series` array with `SIMULATED` and `ON_CHAIN` provenance) |
+| IPFS document endpoints | `POST /api/ipfs/create-agreement`, `POST /api/ipfs/credit-report/{address}`, `POST /api/ipfs/audit-logs`, `GET /api/ipfs/documents`, `GET /api/ipfs/documents/{cid}/retrieve` |
+
+Collateral & repayment rule note: `LendingPool.repay()` automatically releases
+collateral and settles `CollateralReceiptNFT` when remaining debt reaches `0`.
+`WITHDRAW_COLLATERAL` (`LendingPool.withdrawCollateral()`) is used only when
+`totalDebt == 0` while collateral is still locked (for example, after depositing
+collateral before borrowing).
 
 ## Unsigned transaction flow
 

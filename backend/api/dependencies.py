@@ -17,12 +17,60 @@ _index_locks: dict[str, threading.Lock] = {}
 _index_locks_guard = threading.Lock()
 
 
+def normalize_network_name(network: str) -> str:
+    target = network.strip().lower()
+    if target in ("local", "localhost", "hardhat"):
+        return "local"
+    if target == "sepolia":
+        return "sepolia"
+    raise HTTPException(
+        status_code=422,
+        detail=f"Unsupported network '{network}'. Expected 'local' or 'sepolia'.",
+    )
+
+
 def get_web3_service(request: Request) -> Web3Service:
     service = getattr(request.app.state, "web3_service", None)
     if service is None:
         service = Web3Service()
         request.app.state.web3_service = service
     return service
+
+
+def get_web3_service_for_network(
+    request: Request, network: str | None = None
+) -> Web3Service:
+    if network is None:
+        return get_web3_service(request)
+    target = normalize_network_name(network)
+    services_by_network = getattr(request.app.state, "web3_services", None)
+    if isinstance(services_by_network, dict) and target in services_by_network:
+        return services_by_network[target]
+    default_service = getattr(request.app.state, "web3_service", None)
+    if default_service is not None and default_service.network.name == target:
+        return default_service
+    service = Web3Service(network_name=target)
+    if not isinstance(services_by_network, dict):
+        services_by_network = {}
+        request.app.state.web3_services = services_by_network
+    services_by_network[target] = service
+    return service
+
+
+def resolve_analytics_from_block(
+    web3_service: Web3Service, requested_from_block: int | None
+) -> int | None:
+    if requested_from_block is not None:
+        if requested_from_block < 0:
+            raise HTTPException(status_code=422, detail="from_block must be non-negative.")
+        return requested_from_block
+    if web3_service.network.name != "sepolia":
+        return 0
+    pool_entry = web3_service.registry.get("contracts", {}).get("LendingPool", {})
+    deploy_block = pool_entry.get("blockNumber") if isinstance(pool_entry, dict) else None
+    if isinstance(deploy_block, int) and deploy_block >= 0:
+        return deploy_block
+    return None
 
 
 def get_agreement_generator(request: Request) -> AgreementGeneratorService:

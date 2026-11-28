@@ -26,6 +26,8 @@ from src.ipfs.rbac import AuthorizedIPFSGateway, DocumentType, DocumentVisibilit
 POOL = "0x0000000000000000000000000000000000000010"
 TOKEN = "0x0000000000000000000000000000000000000020"
 ORACLE = "0x0000000000000000000000000000000000000030"
+POSITION_NFT = "0x0000000000000000000000000000000000000040"
+COLLATERAL_NFT = "0x0000000000000000000000000000000000000050"
 
 
 class _FakeEvent:
@@ -121,10 +123,14 @@ class _FakeWeb3Service:
             "contracts": {
                 "LendingPool": {"address": POOL},
                 "MyUSDT": {"address": TOKEN},
-                "CollateralNFT": {"address": ORACLE},
+                "CollateralNFT": {"address": COLLATERAL_NFT},
+                "LendingPositionNFT": {"address": POSITION_NFT},
                 "PriceOracle": {"address": ORACLE},
             }
         }
+        self.last_build_call: tuple[str, str, tuple[Any, ...]] | None = None
+        self.myusdt_allowance_wad: int = 0
+        self.nft_approved: bool = False
         self.events: dict[str, list[dict[str, Any]]] = {
             "CollateralDeposited": [],
             "LoanBorrowed": [],
@@ -238,7 +244,37 @@ class _FakeWeb3Service:
     def get_myusdt_allowance(
         self, _owner: str, _spender: str
     ) -> dict[str, str]:
-        return {"wad": "0"}
+        return {"wad": str(self.myusdt_allowance_wad)}
+
+    def get_collateral_nft_valuation(self, _token_id: int) -> dict[str, str]:
+        return {"wad": str(1_000 * constants.WAD)}
+
+    def get_collateral_nft_approval_status(
+        self, _owner: str, _spender: str, token_id: int
+    ) -> dict[str, Any]:
+        return {
+            "token_id": token_id,
+            "approved_address": POOL if self.nft_approved else None,
+            "approved_for_all": False,
+            "is_approved": self.nft_approved,
+        }
+
+    def get_latest_block_context(self) -> dict[str, int]:
+        return {
+            "block_number": self.w3.eth.block_number,
+            "as_of_timestamp": self.w3.eth.timestamp,
+        }
+
+    def get_liquidation_preview(self, borrower: str) -> dict[str, Any]:
+        return {
+            "borrower": borrower,
+            "collateral_value": {"wad": str(1_000 * constants.WAD), "display": "1000.000000"},
+            "total_debt": {"wad": str(100 * constants.WAD), "display": "100.000000"},
+            "seize_value": {"wad": "0", "display": "0.000000"},
+            "is_nft_collateral": False,
+            **constants.format_health_factor_for_api(constants.WAD * 8),
+            "liquidatable": False,
+        }
 
     def get_active_collateral_receipt(self, _borrower: str) -> int:
         return 0
@@ -246,12 +282,13 @@ class _FakeWeb3Service:
     def build_unsigned_transaction(
         self,
         contract_name: str,
-        _function_name: str,
-        _args: tuple[Any, ...],
+        function_name: str,
+        args: tuple[Any, ...],
         *,
         from_address: str,
         **kwargs: Any,
     ) -> dict[str, Any]:
+        self.last_build_call = (contract_name, function_name, args)
         to_address = self.registry["contracts"][contract_name]["address"]
         tx = {
             "from": from_address,
@@ -676,3 +713,234 @@ def test_sepolia_history_requires_explicit_from_block(api_env: dict[str, Any]) -
         headers=headers,
     )
     assert missing_range.status_code == 422
+
+
+def test_prepare_transfer_lending_position_nft_builds_safe_transfer_from(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    lender = api_env["lender"]
+    recipient = api_env["owner"].address
+    headers = _login(client, lender)
+
+    prepared = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": lender.address,
+            "network": "local",
+            "chain_id": 31337,
+            "action": "TRANSFER_LENDING_POSITION_NFT",
+            "args": {"to": recipient, "position_id": 1},
+        },
+        headers=headers,
+    )
+    assert prepared.status_code == 200, prepared.text
+    body = prepared.json()
+    assert body["unsignedTransaction"]["to"].lower() == POSITION_NFT.lower()
+    assert api_env["web3"].last_build_call == (
+        "LendingPositionNFT",
+        "safeTransferFrom",
+        (Web3.to_checksum_address(lender.address), Web3.to_checksum_address(recipient), 1),
+    )
+    assert body["preview"]["position_id"] == 1
+    assert body["preview"]["recipient_address"] == Web3.to_checksum_address(recipient)
+
+    zero_recipient = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": lender.address,
+            "action": "TRANSFER_LENDING_POSITION_NFT",
+            "args": {"to": "0x0000000000000000000000000000000000000000", "position_id": 1},
+        },
+        headers=headers,
+    )
+    assert zero_recipient.status_code == 422
+
+
+def test_prepare_deposit_collateral_allows_nft_token_id_zero_and_blocks_erc20_zero(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+    headers = _login(client, owner)
+
+    nft_zero = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "action": "DEPOSIT_COLLATERAL",
+            "args": {"is_nft": True, "amount_or_token_id": 0},
+        },
+        headers=headers,
+    )
+    assert nft_zero.status_code == 200, nft_zero.text
+    body = nft_zero.json()
+    assert api_env["web3"].last_build_call == ("LendingPool", "depositCollateral", (0, True))
+    assert body["allowance"]["token_id"] == 0
+    assert body["allowance"]["approval_required"] is True
+
+    erc20_zero = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "action": "DEPOSIT_COLLATERAL",
+            "args": {"is_nft": False, "amount_or_token_id": "0"},
+        },
+        headers=headers,
+    )
+    assert erc20_zero.status_code == 422
+
+
+def test_pool_endpoint_supports_network_query_and_snapshot_metadata(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    local_resp = client.get("/api/pool?network=local")
+    assert local_resp.status_code == 200, local_resp.text
+    local_body = local_resp.json()
+    assert local_body["network"] == "local"
+    assert local_body["chain_id"] == 31337
+    assert local_body["block_number"] == 10
+    assert local_body["as_of_timestamp"] > 0
+
+    sepolia_fake = _FakeWeb3Service()
+    sepolia_fake.network = SimpleNamespace(name="sepolia")
+    sepolia_fake.chain_id = 11155111
+    sepolia_fake.w3.eth.block_number = 12224613
+    client.app.state.web3_services = {"local": api_env["web3"], "sepolia": sepolia_fake}
+
+    sep_resp = client.get("/api/pool?network=sepolia")
+    assert sep_resp.status_code == 200, sep_resp.text
+    sep_body = sep_resp.json()
+    assert sep_body["network"] == "sepolia"
+    assert sep_body["chain_id"] == 11155111
+    assert sep_body["block_number"] == 12224613
+
+    assert client.get("/api/pool?network=invalid").status_code == 422
+
+
+def test_analytics_rates_returns_monthly_simulated_and_onchain_series(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    resp = client.get("/api/analytics/rates?seed_simulated_months=6")
+    assert resp.status_code == 200, resp.text
+    body = resp.json()
+    assert body["network"] == "local"
+    assert body["block_number"] == 10
+    assert body["as_of_timestamp"] > 0
+    assert body["rate_model"]["base_borrow_apr_bps"] == constants.BASE_BORROW_APR_BPS
+    assert body["rate_model"]["utilization_slope_bps"] == constants.UTILIZATION_SLOPE_BPS
+    assert "APR" in body["rate_model"]["apr_vs_apy_note"]
+    series = body["series"]
+    assert isinstance(series, list) and len(series) >= 6
+    assert any(row["data_kind"] == "SIMULATED" for row in series)
+    assert any(row["data_kind"] == "ON_CHAIN" for row in series)
+    periods = [row["period"] for row in series]
+    assert periods == sorted(periods)
+    for row in series:
+        assert "borrow_apy_percent" in row
+        assert "supply_apy_percent" in row
+        assert "borrow_apr_percent" in row
+        assert "supply_apr_percent" in row
+        assert "utilization_percent" in row
+
+
+def test_prepare_response_includes_allowance_preview_context_and_loan_liquidation_preview(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+    headers = _login(client, owner)
+
+    deposit_prep = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "action": "DEPOSIT_LENDER",
+            "args": {"amount_wad": str(500 * constants.WAD)},
+        },
+        headers=headers,
+    )
+    assert deposit_prep.status_code == 200, deposit_prep.text
+    dep_body = deposit_prep.json()
+    assert dep_body["context"]["block_number"] == 10
+    assert dep_body["context"]["action"] == "DEPOSIT_LENDER"
+    assert dep_body["availability"]["ready"] is True
+    assert dep_body["allowance"]["approval_required"] is True
+    assert dep_body["allowance"]["token_address"] == TOKEN
+    assert dep_body["allowance"]["spender_address"] == POOL
+    assert dep_body["preview"]["is_estimate"] is True
+
+    api_env["web3"].myusdt_allowance_wad = 600 * constants.WAD
+    deposit_ok = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "action": "DEPOSIT_LENDER",
+            "args": {"amount_wad": str(500 * constants.WAD)},
+        },
+        headers=headers,
+    ).json()
+    assert deposit_ok["allowance"]["approval_required"] is False
+
+    borrow_prep = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "action": "BORROW",
+            "args": {"amount_wad": str(400 * constants.WAD), "agreement_cid": "bafy-test"},
+        },
+        headers=headers,
+    ).json()
+    # Current collateral=1000, current debt=100, borrow +400 => resulting debt=500, LTV=5000 BPS (50%), HF=1.6
+    assert borrow_prep["preview"]["resulting_debt_wad"] == str(500 * constants.WAD)
+    assert borrow_prep["preview"]["resulting_ltv_bps"] == 5_000
+    assert borrow_prep["preview"]["resulting_ltv"]["percent"] == 50.0
+    assert borrow_prep["preview"]["resulting_hf"]["health_factor"] == 1.6
+    assert borrow_prep["preview"]["resulting_hf"]["status"] == "SAFE"
+
+    loan_resp = client.get(f"/api/accounts/{owner.address}/loan")
+    assert loan_resp.status_code == 200
+    assert loan_resp.json()["liquidation_preview"]["liquidatable"] is False
+
+
+def test_confirm_transaction_accepts_bytes_hexbytes_tx_input(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+    headers = _login(client, owner)
+    prepared = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "action": "DEPOSIT_LENDER",
+            "args": {"amount_wad": str(100 * constants.WAD)},
+        },
+        headers=headers,
+    )
+    assert prepared.status_code == 200, prepared.text
+    tx_data = prepared.json()
+
+    tx_hash_bytes = bytes.fromhex("cd" * 32)
+    api_env["web3"].w3.eth.transaction = {
+        "from": owner.address,
+        "to": POOL,
+        "input": bytes.fromhex("1234"),
+        "v": 31337 * 2 + 35,
+        "value": 0,
+    }
+    api_env["web3"].w3.eth.receipt = {
+        "status": 1,
+        "blockNumber": 55,
+        "transactionHash": tx_hash_bytes,
+    }
+    confirmed = client.post(
+        "/api/transactions/confirm",
+        json={"intent_id": tx_data["intent_id"], "tx_hash": "0x" + tx_hash_bytes.hex()},
+        headers=headers,
+    )
+    assert confirmed.status_code == 200, confirmed.text
+    assert confirmed.json()["status"] == 1
+    assert confirmed.json()["block_number"] == 55

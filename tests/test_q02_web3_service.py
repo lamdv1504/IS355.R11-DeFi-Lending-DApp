@@ -115,10 +115,24 @@ class _FakeEth:
                 True,
             ),
             "valuation": 25 * constants.WAD,
+            "getApproved": "0x0000000000000000000000000000000000000002",
+            "isApprovedForAll": False,
+            "getLiquidationPreview": (
+                False,
+                constants.INFINITE_HEALTH_FACTOR,
+                0,
+                1_000 * constants.WAD,
+                0,
+                True,
+            ),
         }
         self.estimated_transaction: dict[str, Any] | None = None
         self.code = b"\x60\x00"
         self.nonce_requests: list[str] = []
+        self.block_number = 42
+
+    def get_block(self, _identifier: str) -> dict[str, int]:
+        return {"number": self.block_number, "timestamp": 1_700_000_123}
 
     def contract(self, address: str, abi: list[dict[str, Any]]) -> _FakeContract:
         assert abi
@@ -388,3 +402,73 @@ def test_unsigned_transaction_fields_are_validated(
 
     with pytest.raises(TransactionValidationError, match=message):
         service._validate_unsigned_transaction({**tx, **changes})
+
+
+def test_liquidation_preview_normalizes_safe_and_liquidatable_states(
+    web3_service: tuple[Web3Service, _FakeWeb3],
+) -> None:
+    service, fake_w3 = web3_service
+    borrower = "0x0000000000000000000000000000000000000001"
+
+    safe_preview = service.get_liquidation_preview(borrower)
+    assert safe_preview["liquidatable"] is False
+    assert safe_preview["is_infinite"] is True
+    assert safe_preview["status"] == "SAFE"
+    assert safe_preview["is_nft_collateral"] is True
+    assert safe_preview["seize_value"]["wad"] == "0"
+
+    fake_w3.eth.call_results["getLiquidationPreview"] = (
+        True,
+        900_000_000_000_000_000,
+        500 * constants.WAD,
+        562_500_000_000_000_000_000,
+        525 * constants.WAD,
+        False,
+    )
+    risky_preview = service.get_liquidation_preview(borrower)
+    assert risky_preview["liquidatable"] is True
+    assert risky_preview["is_infinite"] is False
+    assert risky_preview["status"] == "LIQUIDATABLE"
+    assert risky_preview["health_factor"] == 0.9
+    assert risky_preview["seize_value"]["wad"] == str(525 * constants.WAD)
+
+
+def test_collateral_nft_approval_and_latest_block_context(
+    web3_service: tuple[Web3Service, _FakeWeb3],
+) -> None:
+    service, _ = web3_service
+    owner = "0x0000000000000000000000000000000000000001"
+    pool = "0x0000000000000000000000000000000000000002"
+
+    approval = service.get_collateral_nft_approval_status(owner, pool, 0)
+    assert approval["token_id"] == 0
+    assert approval["is_approved"] is True
+
+    ctx = service.get_latest_block_context()
+    assert ctx == {"block_number": 42, "as_of_timestamp": 1_700_000_123}
+
+
+def test_real_lending_position_nft_abi_encodes_3_arg_safe_transfer_from() -> None:
+    abi_path = Path(__file__).resolve().parents[1] / "deployments" / "abi" / "LendingPositionNFT.json"
+    abi = json.loads(abi_path.read_text(encoding="utf-8"))["abi"]
+    w3 = Web3()
+    nft = w3.eth.contract(
+        address=Web3.to_checksum_address("0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"),
+        abi=abi,
+    )
+    sender = Web3.to_checksum_address("0x70997970C51812dc3A010C7d01b50e0d17dc79C8")
+    recipient = Web3.to_checksum_address("0x90F79bf6EB2c4f870365E785982E1f101E93b906")
+    tx = nft.functions.safeTransferFrom(sender, recipient, 1).build_transaction(
+        {"from": sender, "chainId": 31337, "gas": 100_000, "gasPrice": 1_000_000_000}
+    )
+    # Selector for safeTransferFrom(address,address,uint256) is 0x42842e0e
+    assert tx["data"].lower().startswith("0x42842e0e")
+
+
+def test_sepolia_web3_service_loads_sepolia_manifest_without_attribute_error() -> None:
+    fake_w3 = _FakeWeb3()
+    fake_w3.eth.chain_id = 11155111
+    service = Web3Service(network_name="sepolia", w3=fake_w3)
+    assert service.chain_id == 11155111
+    assert service.registry["contracts"]["LendingPool"]["address"].startswith("0x")
+    assert service.registry["contracts"]["PriceOracle"]["address"].startswith("0x")
