@@ -45,10 +45,19 @@ Truy vấn trực tiếp RPC Sepolia tại block `12228616` (`eth_getCode` + `et
 | `borrow` | `0xae4834106c6911370355a9018bdb78fc40bac5adc320c3a7d0ff80abef72bf8f` | `12224611` | `1,049,647` | `1` | https://sepolia.etherscan.io/tx/0xae4834106c6911370355a9018bdb78fc40bac5adc320c3a7d0ff80abef72bf8f |
 | `repay` | `0x7b01aff9caae11dedcd9908ee60e713c477b21047cc5b0741a9370cec588157d` | `12224613` | `432,537` | `1` | https://sepolia.etherscan.io/tx/0x7b01aff9caae11dedcd9908ee60e713c477b21047cc5b0741a9370cec588157d |
 
-### Danh sách URL cần chụp màn hình trình duyệt Etherscan (TC1)
+### Ảnh chụp màn hình trình duyệt Sepolia Etherscan (TC1 & TC4 — đã chụp đủ 7/7)
 
-*(Do `sepolia.etherscan.io` bật lớp bảo vệ chống bot Cloudflare đối với trình duyệt tự động headless, không tự động vượt qua challenge; người dùng mở trực tiếp các link dưới đây trên trình duyệt thường và lưu vào `reports/Quan/screenshots/`)*:
-- Ví Deployer (đủ 7 contract creation + smoke txs): https://sepolia.etherscan.io/address/0x3bEda0f07bf14749B907707b6D48135f2B1a73E7
-- `LendingPool`: https://sepolia.etherscan.io/address/0x2BC016744561Dca45a1398dF4309572ccB66a0c1
-- `PriceOracle`: https://sepolia.etherscan.io/address/0x85cdeb0BA90C69006D61f13F131BC03f16Da484a
-- 4 giao dịch smoke-test ở bảng trên (`depositLender`, `depositCollateral`, `borrow`, `repay`).
+1. **Hợp đồng `LendingPool` (`0x2BC016744561Dca45a1398dF4309572ccB66a0c1`):**
+   ![LendingPool Contract on Sepolia Etherscan](./screenshots/sepolia_01_lending_pool_contract.png)
+2. **Hợp đồng `PriceOracle` (`0x85cdeb0BA90C69006D61f13F131BC03f16Da484a`):**
+   ![PriceOracle Contract on Sepolia Etherscan](./screenshots/sepolia_02_price_oracle_contract.png)
+3. **Ví Deployer (`0x3bEda0f07bf14749B907707b6D48135f2B1a73E7` — đầy đủ 7 contract creation + bind + smoke txs):**
+   ![Deployer Address on Sepolia Etherscan](./screenshots/sepolia_03_deployer_all_7_contracts.png)
+4. **Giao dịch `depositLender` (`Success`, Block `12224588`, nạp `500 MyUSDT`, mint `LPOS #1`):**
+   ![depositLender Tx on Sepolia Etherscan](./screenshots/sepolia_04_tx_deposit_lender.png)
+5. **Giao dịch `depositCollateral` (`Success`, Block `12224591`, khóa `COLL #1`, mint `CRECEIPT #1`):**
+   ![depositCollateral Tx on Sepolia Etherscan](./screenshots/sepolia_05_tx_deposit_collateral_nft.png)
+6. **Giao dịch `borrow` (`Success`, Block `12224611`, vay `100 MyUSDT`, mint `100 DEBT`):**
+   ![borrow Tx on Sepolia Etherscan](./screenshots/sepolia_06_tx_borrow.png)
+7. **Giao dịch `repay` (`Success`, Block `12224613`, trả gốc + lãi `100.000005... MyUSDT`, burn `DEBT` & `CRECEIPT #1`, hoàn trả `COLL #1`):**
+   ![repay Tx on Sepolia Etherscan](./screenshots/sepolia_07_tx_repay.png)
