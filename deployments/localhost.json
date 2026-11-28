@@ -2,7 +2,7 @@
   "network": "localhost",
   "chainId": 31337,
   "explorerUrl": "http://127.0.0.1:8545",
-  "deployedAt": "2026-11-27T16:23:16.721683+00:00",
+  "deployedAt": "2026-11-28T07:42:09.920650+00:00",
   "contracts": {
     "MyUSDT": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
@@ -193,43 +193,46 @@
     },
     "initialLiquidityWad": "1000000000000000000000",
     "initialLiquidityTxHash": "0xd07e75862be3244b23d207a0d94e563f95b2b07cdc552e6c0b419571f037d6f5",
-    "seededAt": "2026-11-27T16:23:17.323174+00:00"
+    "seededAt": "2026-11-28T07:42:10.605865+00:00"
   },
   "auditLogs": {
     "json": {
-      "cid": "bafkreifwuo3ocztcmgbe75cx5ndaia7ioafribzkzol7thq5gacgtyekzm",
-      "gateway_url": "http://127.0.0.1:8080/ipfs/bafkreifwuo3ocztcmgbe75cx5ndaia7ioafribzkzol7thq5gacgtyekzm",
-      "sha256": "b6a3b6e1666261824ff457eb460403e8700b14072acb97f99e1d300469e08acb",
+      "cid": "bafkreiebh4wwlc4owodhuhgx7p5tt7jhe57ptwmawicqtanvhe27wg57nq",
+      "gateway_url": "http://127.0.0.1:8088/ipfs/bafkreiebh4wwlc4owodhuhgx7p5tt7jhe57ptwmawicqtanvhe27wg57nq",
+      "provider_used": "kubo",
+      "sha256": "813f2d658b8eb3867a1cd7fbfb39fd27277ef9d980b2050981b53935fb1bbf6c",
       "acl_metadata": {
-        "cid": "bafkreifwuo3ocztcmgbe75cx5ndaia7ioafribzkzol7thq5gacgtyekzm",
+        "cid": "bafkreiebh4wwlc4owodhuhgx7p5tt7jhe57ptwmawicqtanvhe27wg57nq",
         "document_type": "AUDIT_LOGS",
         "visibility": "PUBLIC",
         "owner_wallet": null,
         "encrypted": false,
         "content_type": "application/json",
         "filename": "audit_logs.json",
-        "plaintext_sha256": "b6a3b6e1666261824ff457eb460403e8700b14072acb97f99e1d300469e08acb",
+        "plaintext_sha256": "813f2d658b8eb3867a1cd7fbfb39fd27277ef9d980b2050981b53935fb1bbf6c",
         "ciphertext_sha256": null,
         "key_id": null
       }
     },
     "csv": {
-      "cid": "bafkreietgbvyfu3w7ghty2ahvp3ko4f3jykwwv7u324tucbj6jbpd4vyhu",
-      "gateway_url": "http://127.0.0.1:8080/ipfs/bafkreietgbvyfu3w7ghty2ahvp3ko4f3jykwwv7u324tucbj6jbpd4vyhu",
-      "sha256": "93306b82d376f98f3c6807abf6a770bb4e156b57f4deb93a0829f242f1f2b83d",
+      "cid": "bafkreiaqrsumm3rffawbca5kckl4y5nz7v6my4bz2rk7vy5auqvusyqywy",
+      "gateway_url": "http://127.0.0.1:8088/ipfs/bafkreiaqrsumm3rffawbca5kckl4y5nz7v6my4bz2rk7vy5auqvusyqywy",
+      "provider_used": "kubo",
+      "sha256": "108ca8c66e25282c1103aa1297cc75b9fd7ccc7039d455fae3a0a42b496218b6",
       "acl_metadata": {
-        "cid": "bafkreietgbvyfu3w7ghty2ahvp3ko4f3jykwwv7u324tucbj6jbpd4vyhu",
+        "cid": "bafkreiaqrsumm3rffawbca5kckl4y5nz7v6my4bz2rk7vy5auqvusyqywy",
         "document_type": "AUDIT_LOGS",
         "visibility": "PUBLIC",
         "owner_wallet": null,
         "encrypted": false,
         "content_type": "text/csv",
         "filename": "audit_logs.csv",
-        "plaintext_sha256": "93306b82d376f98f3c6807abf6a770bb4e156b57f4deb93a0829f242f1f2b83d",
+        "plaintext_sha256": "108ca8c66e25282c1103aa1297cc75b9fd7ccc7039d455fae3a0a42b496218b6",
         "ciphertext_sha256": null,
         "key_id": null
       }
     },
+    "providerUsed": "kubo",
     "simulatedPeriods": [
       "2026-06",
       "2026-07",

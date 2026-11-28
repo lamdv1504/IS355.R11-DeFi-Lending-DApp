@@ -299,6 +299,62 @@ def test_sync_manifests_updates_sepolia_backend_and_frontend_abis(tmp_path: Path
     assert backend["sepolia"]["contracts"]["PriceOracle"]["address"] == manifest["contracts"]["PriceOracle"]["address"]
     assert frontend["network"] == "sepolia"
     assert len(frontend["contracts"]["PriceOracle"]["abi"]) > 0
+    assert "local" in frontend["networks"]
+    assert "sepolia" in frontend["networks"]
+    assert frontend["networks"]["local"]["contracts"]["Keep"]["address"] == "local"
+    assert (
+        frontend["networks"]["sepolia"]["contracts"]["PriceOracle"]["address"]
+        == manifest["contracts"]["PriceOracle"]["address"]
+    )
+
+
+def test_create_local_audit_record_preserves_env_ipfs_provider_and_pinata(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    captured_configs: list[Any] = []
+
+    class _FakeIPFSClient:
+        def __init__(self, config: Any) -> None:
+            captured_configs.append(config)
+
+    class _FakeCreditService:
+        def __init__(self, *_args: Any, **_kwargs: Any) -> None:
+            pass
+
+        def generate_monthly_audit_logs(self, **_kwargs: Any) -> dict[str, Any]:
+            return {
+                "json": {"cid": "bafy-j", "provider_used": "pinata"},
+                "csv": {"cid": "bafy-c", "provider_used": "pinata"},
+                "entries": [{"period": "2026-10", "data_kind": "SIMULATED"}],
+                "document": SimpleNamespace(contains_pii=False),
+            }
+
+    monkeypatch.setenv("DOCUMENT_AES_KEY_HEX", "ab" * 32)
+    monkeypatch.setenv("IPFS_PROVIDER", "pinata")
+    monkeypatch.setenv("PINATA_JWT", "test-jwt-value")
+
+    with (
+        patch("src.ipfs.ipfs_client.IPFSClient", _FakeIPFSClient),
+        patch("backend.services.web3_service.Web3Service", return_value=SimpleNamespace()),
+        patch("backend.services.credit_and_audit_ipfs.CreditAndAuditIPFSService", _FakeCreditService),
+    ):
+        audit = deploy_and_seed._create_local_audit_record(
+            _FakeW3(),
+            project_root=tmp_path,
+            metadata_store_path=tmp_path / "index.json",
+        )
+
+    assert len(captured_configs) == 1
+    assert captured_configs[0].provider == "pinata"
+    assert captured_configs[0].pinata_jwt == "test-jwt-value"
+    assert audit["providerUsed"] == "pinata"
+
+
+def test_start_all_sh_prefers_venv_and_supports_ipfs_daemon() -> None:
+    content = (PROJECT_ROOT / "scripts" / "start_all.sh").read_text(encoding="utf-8")
+    assert ".venv/bin/python" in content
+    assert "ipfs daemon" in content
+    assert "IPFS_PROVIDER=\"local_fallback\"" in content
 
 
 @pytest.mark.parametrize(

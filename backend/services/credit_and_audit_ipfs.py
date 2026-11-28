@@ -45,6 +45,116 @@ class CreditAuditIntegrityError(RuntimeError):
     """Raised when a retrieved document does not match its stored content hash."""
 
 
+def build_monthly_rate_entries(
+    web3_service: Web3Service,
+    *,
+    from_block: int | None = 0,
+    to_block: int | str = "latest",
+    seed_simulated_months: int = 6,
+    include_event_logs: bool = True,
+) -> list[AuditLogEntry]:
+    """Build monthly ON_CHAIN + SIMULATED rate entries without mutating IPFS state."""
+    if (
+        isinstance(seed_simulated_months, bool)
+        or not isinstance(seed_simulated_months, int)
+        or seed_simulated_months < 0
+    ):
+        raise ValueError("seed_simulated_months must be a non-negative integer.")
+
+    entries_by_period: dict[str, AuditLogEntry] = {}
+    if include_event_logs and from_block is not None:
+        pool = web3_service.get_contract("LendingPool")
+        rate_events = CreditAndAuditIPFSService._get_event_logs(
+            pool,
+            "InterestRateUpdated",
+            from_block=from_block,
+            to_block=to_block,
+        )
+        events_by_month: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for event in rate_events:
+            timestamp = int(event["args"]["timestamp"])
+            period = datetime.fromtimestamp(timestamp, timezone.utc).strftime("%Y-%m")
+            events_by_month[period].append(event)
+
+        for period, month_events in events_by_month.items():
+            event = max(month_events, key=CreditAndAuditIPFSService._event_sort_key)
+            args = event["args"]
+            supplied = int(args["totalSuppliedWad"])
+            borrowed = int(args["totalBorrowedWad"])
+            available = max(0, supplied - borrowed)
+            borrow_apr = int(args["borrowAprBps"])
+            supply_apr = int(args["supplyAprBps"])
+            timestamp = int(args["timestamp"])
+            entries_by_period[period] = AuditLogEntry(
+                period=period,
+                recorded_at_utc=CreditAndAuditIPFSService._iso_timestamp(timestamp),
+                data_kind="ON_CHAIN",
+                total_supplied_wad=str(supplied),
+                total_supplied_display=constants.wad_to_decimal_str(supplied),
+                total_borrowed_wad=str(borrowed),
+                total_borrowed_display=constants.wad_to_decimal_str(borrowed),
+                available_liquidity_wad=str(available),
+                available_liquidity_display=constants.wad_to_decimal_str(available),
+                utilization_bps=int(args["utilizationBps"]),
+                utilization_percent=constants.apr_bps_to_percent(
+                    int(args["utilizationBps"])
+                ),
+                borrow_apr_bps=borrow_apr,
+                borrow_apr_percent=constants.apr_bps_to_percent(borrow_apr),
+                borrow_apy_percent=constants.apr_bps_to_apy_percent(borrow_apr),
+                supply_apr_bps=supply_apr,
+                supply_apr_percent=constants.apr_bps_to_percent(supply_apr),
+                supply_apy_percent=constants.apr_bps_to_apy_percent(supply_apr),
+                event_tx_hash=CreditAndAuditIPFSService._tx_hash(event),
+                notes="ON_CHAIN InterestRateUpdated snapshot; available liquidity derived as supplied minus borrowed.",
+            )
+
+    live_pool = web3_service.get_pool_info()
+    live_rates = web3_service.get_interest_rate_snapshot()
+    current_timestamp = int(live_rates["timestamp"])
+    current_period = datetime.fromtimestamp(
+        current_timestamp, timezone.utc
+    ).strftime("%Y-%m")
+    live_supplied = int(live_pool["total_supplied"]["wad"])
+    live_borrowed = int(live_pool["total_borrowed"]["wad"])
+    live_borrow_apr = int(live_rates["borrow_apr"]["bps"])
+    live_supply_apr = int(live_rates["supply_apr"]["bps"])
+    live_available = int(web3_service.get_available_liquidity()["wad"])
+    entries_by_period[current_period] = AuditLogEntry(
+        period=current_period,
+        recorded_at_utc=CreditAndAuditIPFSService._iso_timestamp(current_timestamp),
+        data_kind="ON_CHAIN",
+        total_supplied_wad=str(live_supplied),
+        total_supplied_display=constants.wad_to_decimal_str(live_supplied),
+        total_borrowed_wad=str(live_borrowed),
+        total_borrowed_display=constants.wad_to_decimal_str(live_borrowed),
+        available_liquidity_wad=str(live_available),
+        available_liquidity_display=constants.wad_to_decimal_str(live_available),
+        utilization_bps=int(live_rates["utilization"]["bps"]),
+        utilization_percent=float(live_rates["utilization"]["percent"]),
+        borrow_apr_bps=live_borrow_apr,
+        borrow_apr_percent=constants.apr_bps_to_percent(live_borrow_apr),
+        borrow_apy_percent=float(live_rates["borrow_apy_reference"]["percent"]),
+        supply_apr_bps=live_supply_apr,
+        supply_apr_percent=constants.apr_bps_to_percent(live_supply_apr),
+        supply_apy_percent=float(live_rates["supply_apy_reference"]["percent"]),
+        event_tx_hash=None,
+        notes="ON_CHAIN live Web3Service pool and interest-rate snapshot.",
+    )
+
+    simulated_entries = CreditAndAuditIPFSService._simulated_audit_entries(
+        seed_simulated_months
+    )
+    for entry in simulated_entries:
+        entries_by_period.setdefault(entry.period, entry)
+    entries = [entries_by_period[key] for key in sorted(entries_by_period)]
+    if not entries:
+        raise ValueError(
+            "No on-chain InterestRateUpdated events or simulated seed months are available."
+        )
+    return entries
+
+
 _CREDIT_EVENT_NAMES = (
     "CollateralDeposited",
     "LoanBorrowed",
@@ -247,6 +357,7 @@ class CreditAndAuditIPFSService:
         return {
             "cid": upload.cid,
             "gateway_url": upload.gateway_url,
+            "provider_used": upload.provider_used,
             "plaintext_sha256": acl.plaintext_sha256,
             "encrypted_ipfs_sha256": acl.ciphertext_sha256,
             "wallet_address": borrower,
@@ -263,104 +374,12 @@ class CreditAndAuditIPFSService:
         seed_simulated_months: int = 6,
     ) -> dict[str, Any]:
         """Aggregate monthly InterestRateUpdated events and upload public JSON and CSV."""
-        if (
-            isinstance(seed_simulated_months, bool)
-            or not isinstance(seed_simulated_months, int)
-            or seed_simulated_months < 0
-        ):
-            raise ValueError("seed_simulated_months must be a non-negative integer.")
-        pool = self.web3_service.get_contract("LendingPool")
-        rate_events = self._get_event_logs(
-            pool,
-            "InterestRateUpdated",
+        entries = build_monthly_rate_entries(
+            self.web3_service,
             from_block=from_block,
             to_block=to_block,
+            seed_simulated_months=seed_simulated_months,
         )
-        events_by_month: dict[str, list[dict[str, Any]]] = defaultdict(list)
-        for event in rate_events:
-            timestamp = int(event["args"]["timestamp"])
-            period = datetime.fromtimestamp(timestamp, timezone.utc).strftime("%Y-%m")
-            events_by_month[period].append(event)
-
-        entries_by_period: dict[str, AuditLogEntry] = {}
-        for period, month_events in events_by_month.items():
-            event = max(month_events, key=self._event_sort_key)
-            args = event["args"]
-            supplied = int(args["totalSuppliedWad"])
-            borrowed = int(args["totalBorrowedWad"])
-            available = max(0, supplied - borrowed)
-            borrow_apr = int(args["borrowAprBps"])
-            supply_apr = int(args["supplyAprBps"])
-            timestamp = int(args["timestamp"])
-            entries_by_period[period] = AuditLogEntry(
-                period=period,
-                recorded_at_utc=self._iso_timestamp(timestamp),
-                data_kind="ON_CHAIN",
-                total_supplied_wad=str(supplied),
-                total_supplied_display=constants.wad_to_decimal_str(supplied),
-                total_borrowed_wad=str(borrowed),
-                total_borrowed_display=constants.wad_to_decimal_str(borrowed),
-                available_liquidity_wad=str(available),
-                available_liquidity_display=constants.wad_to_decimal_str(available),
-                utilization_bps=int(args["utilizationBps"]),
-                utilization_percent=constants.apr_bps_to_percent(
-                    int(args["utilizationBps"])
-                ),
-                borrow_apr_bps=borrow_apr,
-                borrow_apr_percent=constants.apr_bps_to_percent(borrow_apr),
-                borrow_apy_percent=constants.apr_bps_to_apy_percent(borrow_apr),
-                supply_apr_bps=supply_apr,
-                supply_apr_percent=constants.apr_bps_to_percent(supply_apr),
-                supply_apy_percent=constants.apr_bps_to_apy_percent(supply_apr),
-                event_tx_hash=self._tx_hash(event),
-                notes="ON_CHAIN InterestRateUpdated snapshot; available liquidity derived as supplied minus borrowed.",
-            )
-
-        live_pool = self.web3_service.get_pool_info()
-        live_rates = self.web3_service.get_interest_rate_snapshot()
-        current_timestamp = int(live_rates["timestamp"])
-        current_period = datetime.fromtimestamp(
-            current_timestamp, timezone.utc
-        ).strftime("%Y-%m")
-        live_supplied = int(live_pool["total_supplied"]["wad"])
-        live_borrowed = int(live_pool["total_borrowed"]["wad"])
-        live_borrow_apr = int(live_rates["borrow_apr"]["bps"])
-        live_supply_apr = int(live_rates["supply_apr"]["bps"])
-        live_available = int(self.web3_service.get_available_liquidity()["wad"])
-        entries_by_period[current_period] = AuditLogEntry(
-            period=current_period,
-            recorded_at_utc=self._iso_timestamp(current_timestamp),
-            data_kind="ON_CHAIN",
-            total_supplied_wad=str(live_supplied),
-            total_supplied_display=constants.wad_to_decimal_str(live_supplied),
-            total_borrowed_wad=str(live_borrowed),
-            total_borrowed_display=constants.wad_to_decimal_str(live_borrowed),
-            available_liquidity_wad=str(live_available),
-            available_liquidity_display=constants.wad_to_decimal_str(live_available),
-            utilization_bps=int(live_rates["utilization"]["bps"]),
-            utilization_percent=float(live_rates["utilization"]["percent"]),
-            borrow_apr_bps=live_borrow_apr,
-            borrow_apr_percent=constants.apr_bps_to_percent(live_borrow_apr),
-            borrow_apy_percent=float(
-                live_rates["borrow_apy_reference"]["percent"]
-            ),
-            supply_apr_bps=live_supply_apr,
-            supply_apr_percent=constants.apr_bps_to_percent(live_supply_apr),
-            supply_apy_percent=float(
-                live_rates["supply_apy_reference"]["percent"]
-            ),
-            event_tx_hash=None,
-            notes="ON_CHAIN live Web3Service pool and interest-rate snapshot.",
-        )
-
-        simulated_entries = self._simulated_audit_entries(seed_simulated_months)
-        for entry in simulated_entries:
-            entries_by_period.setdefault(entry.period, entry)
-        entries = [entries_by_period[key] for key in sorted(entries_by_period)]
-        if not entries:
-            raise ValueError(
-                "No on-chain InterestRateUpdated events or simulated seed months are available."
-            )
 
         registry_contracts = self.web3_service.registry.get("contracts", {})
         pool_address = registry_contracts.get("LendingPool", {}).get("address") or None
@@ -402,12 +421,14 @@ class CreditAndAuditIPFSService:
             "json": {
                 "cid": json_upload.cid,
                 "gateway_url": json_upload.gateway_url,
+                "provider_used": json_upload.provider_used,
                 "sha256": json_acl.plaintext_sha256,
                 "acl_metadata": json_acl.to_dict(),
             },
             "csv": {
                 "cid": csv_upload.cid,
                 "gateway_url": csv_upload.gateway_url,
+                "provider_used": csv_upload.provider_used,
                 "sha256": csv_acl.plaintext_sha256,
                 "acl_metadata": csv_acl.to_dict(),
             },
@@ -452,8 +473,9 @@ class CreditAndAuditIPFSService:
             raise CreditAuditIntegrityError("Retrieved IPFS document SHA-256 verification failed.")
         return result
 
+    @classmethod
     def _get_event_logs(
-        self,
+        cls,
         pool: Any,
         event_name: str,
         *,
@@ -469,7 +491,7 @@ class CreditAndAuditIPFSService:
             to_block=to_block,
             argument_filters=dict(filters or {}),
         )
-        return [self._normalize_event_log(log) for log in logs]
+        return [cls._normalize_event_log(log) for log in logs]
 
     @staticmethod
     def _normalize_event_log(log: Any) -> dict[str, Any]:

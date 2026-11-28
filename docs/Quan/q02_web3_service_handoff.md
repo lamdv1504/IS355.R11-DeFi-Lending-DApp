@@ -19,11 +19,14 @@ infinite health factor for zero debt.
 
 - Pool: `get_pool_info()`, `get_available_liquidity()`,
   `get_interest_rate_snapshot()`.
-- Borrower: `get_borrower_risk(address)`, `get_max_borrowable(address)`,
-  `get_remaining_borrow_capacity(address)`, `get_available_to_borrow(address)`,
-  `get_current_ltv_bps(address)`, `calculate_accrued_interest(address)`,
+- Borrower: `get_borrower_risk(address)`, `get_liquidation_preview(address)`,
+  `get_max_borrowable(address)`, `get_remaining_borrow_capacity(address)`,
+  `get_available_to_borrow(address)`, `get_current_ltv_bps(address)`,
+  `calculate_accrued_interest(address)`,
   `preview_borrower_interest(address, extra_seconds)`,
   `get_loan_position(address)`.
+- Snapshot & NFT Approval: `get_latest_block_context()`,
+  `get_collateral_nft_approval_status(owner, spender, token_id)`.
 - Lender: `get_lender_position(position_id)`,
   `get_lender_earned_interest(position_id)`,
   `preview_lender_earned_interest(position_id, extra_seconds)`,
@@ -95,10 +98,13 @@ it fills a missing nonce from the connected RPC.
 
 ## Deployment and handoff status
 
-`PriceOracle` (`HI05`) is intentionally not registered with a live local
-address yet. Connect the real address as soon as Hiếu merges HI05; until then,
-`get_oracle_price()` correctly reports that PriceOracle has no deployment
-address. Do not substitute or deploy a mock oracle for this handoff.
+`PriceOracle` (`HI05`) is deployed and bound to `LendingPool` on both Local
+Hardhat (`31337`, via `scripts/deploy_and_seed.py`) and Ethereum Sepolia
+(`11155111`, recorded in `deployments/sepolia.json` and
+`backend/config/contracts.json`). Both `get_oracle_price()` and
+`get_liquidation_preview(borrower_address)` are live-ready against the deployed
+`HI05` ABI (`deployments/abi/LendingPool.json` and
+`deployments/abi/PriceOracle.json`).
 
 Focused offline test status is recorded after running:
 
@@ -108,29 +114,22 @@ pytest tests/test_q02_web3_service.py tests/test_hi01_constants.py
 
 For local integration after changes to the node or deployments:
 
-1. Start the Hardhat node in one terminal with `npm run node`.
-2. In another terminal, confirm RPC chain ID 31337 and deploy the project
-   contracts using the repository's deployment scripts in their prescribed
-   order: `npm run deploy:myusdt`, `npm run deploy:h02`, then
-   `npm run deploy:hi02`. On a fresh node, `deploy:h02` requires
-   `backend/config/contracts.json`'s `local.contracts.LendingPool.address` to
-   be empty; the checked-in local registry currently has an address, so
-   coordinate/reset that stale local deployment entry before deploying to a
-   restarted node. Run `npm run verify:h02` after H02 but before HI02; it
-   expects the pool to remain unregistered. Do not blindly rerun deployment
-   scripts against an already registered pool.
-3. Confirm `deployments/localhost.json` and
-   `backend/config/contracts.json` contain the addresses and ABI paths from
+1. Start the Hardhat node (`npx hardhat node --hostname 127.0.0.1 --port 8545`)
+   and run `python scripts/deploy_and_seed.py` (or `scripts\start_all.bat` /
+   `bash scripts/start_all.sh`) to deploy all 7 contracts (`MyUSDT`,
+   `CollateralNFT`, `CollateralReceiptNFT`, `DebtToken`,
+   `LendingPositionNFT`, `LendingPool`, `PriceOracle`) and sync all manifests.
+2. Confirm `deployments/localhost.json`, `backend/config/contracts.json`, and
+   `frontend/src/config/contracts.json` contain the addresses and ABI paths from
    that same node. Verify each registered address with `eth_getCode` and make
    sure it is not `0x`; a node restart invalidates old local addresses.
-4. Start the backend with `ACTIVE_NETWORK=local`; call the read views above
-   against known seeded wallets. Exercise borrower/lender positions after
-   their corresponding state-changing transactions and verify zero-debt,
-   liquidity, and WAD/BPS results.
-5. Request an unsigned transaction from the frontend and complete a local
+3. Start the backend with `ACTIVE_NETWORK=local`; call the read views above
+   (`get_pool_info`, `get_oracle_price`, `get_liquidation_preview`,
+   `get_borrower_risk`, etc.) against known seeded wallets. Exercise
+   borrower/lender positions after their corresponding state-changing
+   transactions and verify zero-debt, liquidity, and WAD/BPS results.
+4. Request an unsigned transaction from the frontend and complete a local
    MetaMask transaction, checking the wallet, chain ID, gas estimate, receipt,
    and refreshed state. Keep user signing entirely client-side.
-6. Repeat `get_oracle_price()` after HI05 is merged and its real deployment
-   address is registered.
 
-This handoff does not merge or modify `main`, and does not change `contracts/`.
+This handoff does not modify `contracts/`.
