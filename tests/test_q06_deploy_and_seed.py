@@ -403,3 +403,33 @@ def test_sepolia_deployment_requires_positive_deployer_balance() -> None:
             private_key=account.key.hex(),
             w3=provider,
         )
+
+
+def test_start_ipfs_node_scripts_and_env_example_allow_nextjs_3000_origins() -> None:
+    bat = (PROJECT_ROOT / "scripts" / "start_ipfs_node.bat").read_text(encoding="utf-8")
+    sh = (PROJECT_ROOT / "scripts" / "start_ipfs_node.sh").read_text(encoding="utf-8")
+    env_example = (PROJECT_ROOT / ".env.example").read_text(encoding="utf-8")
+
+    for content in (bat, sh):
+        assert "http://localhost:3000" in content
+        assert "http://127.0.0.1:3000" in content
+    assert "http://localhost:3000" in env_example
+    assert "http://127.0.0.1:3000" in env_example
+
+
+@pytest.mark.parametrize("bad_key", ["deadbeef", "not-valid-hex"])
+def test_create_local_audit_record_rejects_invalid_aes_key_with_configuration_error(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    bad_key: str,
+) -> None:
+    monkeypatch.setenv("DOCUMENT_AES_KEY_HEX", bad_key)
+    with pytest.raises(
+        deploy_utils.DeploymentConfigurationError,
+        match="DOCUMENT_AES_KEY_HEX không hợp lệ",
+    ):
+        deploy_and_seed._create_local_audit_record(
+            _FakeW3(),
+            project_root=tmp_path,
+            metadata_store_path=tmp_path / "index.json",
+        )

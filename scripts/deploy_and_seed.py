@@ -187,7 +187,7 @@ def _create_local_audit_record(
     from backend.services.credit_and_audit_ipfs import CreditAndAuditIPFSService
     from backend.services.web3_service import Web3Service
     from backend.config.settings import settings
-    from src.ipfs.encryption import DocumentEncryptor
+    from src.ipfs.encryption import DocumentEncryptor, EncryptionError
     from src.ipfs.ipfs_client import IPFSClient, IPFSConfig
     from src.ipfs.rbac import AuthorizedIPFSGateway
 
@@ -198,7 +198,7 @@ def _create_local_audit_record(
         )
     try:
         encryptor = DocumentEncryptor.from_hex_key(raw_key)
-    except ValueError as exc:
+    except (ValueError, EncryptionError) as exc:
         raise DeploymentConfigurationError(
             "DOCUMENT_AES_KEY_HEX không hợp lệ; cần khóa AES-256-GCM 32 bytes dạng hex."
         ) from exc

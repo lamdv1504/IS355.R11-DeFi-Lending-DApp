@@ -16,7 +16,7 @@ if [ ! -f "${IPFS_PATH:-$HOME/.ipfs}/config" ]; then
 fi
 
 echo "[H03] Configuring local CORS headers for DApp Frontend/Backend..."
-ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://localhost:5173", "http://127.0.0.1:5173", "http://127.0.0.1:8000"]'
+ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin '["http://localhost:3000", "http://127.0.0.1:3000", "http://localhost:5173", "http://127.0.0.1:5173", "http://127.0.0.1:8000"]'
 ipfs config --json API.HTTPHeaders.Access-Control-Allow-Methods '["PUT", "POST", "GET"]'
 
 echo "[H03] Starting IPFS Kubo daemon (API :5001, Gateway :8080)..."

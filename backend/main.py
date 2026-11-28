@@ -31,7 +31,11 @@ def create_app() -> FastAPI:
         ),
         version="0.5.0",
     )
-    cors_origins = list(dict.fromkeys([*settings.cors_origins, "http://localhost:3000"]))
+    cors_origins = list(
+        dict.fromkeys(
+            [*settings.cors_origins, "http://localhost:3000", "http://127.0.0.1:3000"]
+        )
+    )
     application.add_middleware(
         CORSMiddleware,
         allow_origins=cors_origins,
