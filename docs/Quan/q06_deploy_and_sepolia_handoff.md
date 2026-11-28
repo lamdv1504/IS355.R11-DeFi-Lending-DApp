@@ -144,6 +144,80 @@ network's backend registry, Sepolia missing-env/key guards, and the positive
 deployer-balance prerequisite. They do not broadcast transactions to Hardhat
 or Sepolia.
 
+## Q06 acceptance evidence
+
+### Local reset (executed)
+
+A fresh Hardhat node (`31337`) was started, then the seven contracts were
+deployed and bound, local wallets/liquidity/NFTs were seeded, and Q04 wrote the
+first simulated Audit Logs record to the local IPFS fallback. The full
+start-RPC, deploy, seed, and audit-log command completed successfully in
+**10.94 seconds** (target: at most 30 seconds). The generated manifest records
+the addresses and deployment transaction hashes:
+
+| Contract | Local address | Deployment txHash |
+|---|---|---|
+| MyUSDT | `0x5FbDB2315678afecb367f032d93F642f64180aa3` | `0x9705d97b58fe7114bcebab75253c7f2ada0e153c40a391332528f12b8b52476e` |
+| CollateralNFT | `0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512` | `0xef35d6837cc652c7819423fef163f0daa9267a9046bf7126e88a06b37669cc16` |
+| CollateralReceiptNFT | `0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0` | `0x7bc31ab744f678da18fedd6ee964032b0cc6cb96a33ddb6718ec6b0f0b886fec` |
+| DebtToken | `0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9` | `0xd01d0019604bf3681834509ead0d3f35dd6a241cef02301ad29f3f6b4f8d4ab7` |
+| LendingPositionNFT | `0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9` | `0x900afe56eb54d707ef87619aa92119e27f47f827ae5d4d289fc414e726aa0992` |
+| LendingPool | `0x5FC8d32690cc91D4c39d9d3abcBD16989F875707` | `0x3c67cbbe9380a302a9321e733bec77bdcbb867c31bc6fd3ae53dc311e6847485` |
+| PriceOracle | `0x8A791620dd6260079BF849Dc5567aDC3F2FdC318` | `0x61554ac9216f1e59018268efd39601b9e6a5409106571363cdc916fbdfb4fc8e` |
+
+These are ephemeral localhost addresses and hashes, **not Sepolia evidence**.
+The Lender A seed deposited `1,000 MyUSDT`
+(`0xd07e75862be3244b23d207a0d94e563f95b2b07cdc552e6c0b419571f037d6f5`);
+the JSON audit record CID is
+`bafkreifwuo3ocztcmgbe75cx5ndaia7ioafribzkzol7thq5gacgtyekzm`.
+
+### Sepolia deployment and smoke test (executed)
+
+The deployment and smoke test completed on chain ID `11155111`. All seven
+contract addresses, deployment transaction hashes, and explorer URLs are
+recorded in `deployments/sepolia.json` and synchronized to both application
+registries:
+
+| Contract | Sepolia address | Deployment txHash | Etherscan |
+|---|---|---|---|
+| MyUSDT | `0xAaB07940F52BB7C105D17681f896E648b8A39881` | `0x9f44c3e3b087ce4c77305efdfcdc7f786ab1f6d0d97f335cb5f1f5cd82f0ec8e` | [contract](https://sepolia.etherscan.io/address/0xAaB07940F52BB7C105D17681f896E648b8A39881) · [deploy tx](https://sepolia.etherscan.io/tx/0x9f44c3e3b087ce4c77305efdfcdc7f786ab1f6d0d97f335cb5f1f5cd82f0ec8e) |
+| CollateralNFT | `0x19D6c92fd592f5B077189D4300a8737532506500` | `0xa1343649a5ecfca3647a3a6cc9f291d1de0ee67c1b382e7c9ea4da8e3654fc3c` | [contract](https://sepolia.etherscan.io/address/0x19D6c92fd592f5B077189D4300a8737532506500) · [deploy tx](https://sepolia.etherscan.io/tx/0xa1343649a5ecfca3647a3a6cc9f291d1de0ee67c1b382e7c9ea4da8e3654fc3c) |
+| CollateralReceiptNFT | `0x37daF2FA967b3A72024Ad7ED0BBCe889ab63f858` | `0xf3621c54c7fff81621fe1a01a767caca0734fe8134375e570add4039ed921940` | [contract](https://sepolia.etherscan.io/address/0x37daF2FA967b3A72024Ad7ED0BBCe889ab63f858) · [deploy tx](https://sepolia.etherscan.io/tx/0xf3621c54c7fff81621fe1a01a767caca0734fe8134375e570add4039ed921940) |
+| DebtToken | `0x5893DE5fe88057dBdE28672C9d85Dcf2FdAaBc92` | `0x711a426c32af6ac9dbc02dd7787766d882e1510ee2ddc10bd57c8241f9e64768` | [contract](https://sepolia.etherscan.io/address/0x5893DE5fe88057dBdE28672C9d85Dcf2FdAaBc92) · [deploy tx](https://sepolia.etherscan.io/tx/0x711a426c32af6ac9dbc02dd7787766d882e1510ee2ddc10bd57c8241f9e64768) |
+| LendingPositionNFT | `0x288bD02c150b2eEC0FCB82331791AB2dcC37C79F` | `0xa7247f8f3dea94dc3f5e3b66f5bbd893b81fd4f409d287af627bc0b6a83d87a4` | [contract](https://sepolia.etherscan.io/address/0x288bD02c150b2eEC0FCB82331791AB2dcC37C79F) · [deploy tx](https://sepolia.etherscan.io/tx/0xa7247f8f3dea94dc3f5e3b66f5bbd893b81fd4f409d287af627bc0b6a83d87a4) |
+| LendingPool | `0x2BC016744561Dca45a1398dF4309572ccB66a0c1` | `0x59dcb57103917c5357ccb7910dd8e0f34f5d4ab6e0232ecad00128306987dd19` | [contract](https://sepolia.etherscan.io/address/0x2BC016744561Dca45a1398dF4309572ccB66a0c1) · [deploy tx](https://sepolia.etherscan.io/tx/0x59dcb57103917c5357ccb7910dd8e0f34f5d4ab6e0232ecad00128306987dd19) |
+| PriceOracle | `0x85cdeb0BA90C69006D61f13F131BC03f16Da484a` | `0x8a4fb3fc4f38d8e178a6a727f73af188391410cd9b93d5dc106aa2acd28dfb4f` | [contract](https://sepolia.etherscan.io/address/0x85cdeb0BA90C69006D61f13F131BC03f16Da484a) · [deploy tx](https://sepolia.etherscan.io/tx/0x8a4fb3fc4f38d8e178a6a727f73af188391410cd9b93d5dc106aa2acd28dfb4f) |
+
+The verified smoke sequence deposited `500 MyUSDT`, deposited a valued NFT
+collateral, borrowed `100 MyUSDT`, then repaid the full debt; the final on-chain
+borrower debt is `0`. Key operation receipts:
+
+| Action | txHash | Etherscan |
+|---|---|---|
+| depositLender | `0xca79806161e128a215c9a323e9d8f647cfa2b863e12c7010d156493ddbee6474` | [view tx](https://sepolia.etherscan.io/tx/0xca79806161e128a215c9a323e9d8f647cfa2b863e12c7010d156493ddbee6474) |
+| depositCollateral | `0xe4c9bb82a72c2cf01290edf03eb8c9c8ffb9427a9556e782af07b1689d1f5196` | [view tx](https://sepolia.etherscan.io/tx/0xe4c9bb82a72c2cf01290edf03eb8c9c8ffb9427a9556e782af07b1689d1f5196) |
+| borrow | `0xae4834106c6911370355a9018bdb78fc40bac5adc320c3a7d0ff80abef72bf8f` | [view tx](https://sepolia.etherscan.io/tx/0xae4834106c6911370355a9018bdb78fc40bac5adc320c3a7d0ff80abef72bf8f) |
+| repay | `0x7b01aff9caae11dedcd9908ee60e713c477b21047cc5b0741a9370cec588157d` | [view tx](https://sepolia.etherscan.io/tx/0x7b01aff9caae11dedcd9908ee60e713c477b21047cc5b0741a9370cec588157d) |
+
+One initial borrow transaction failed (`0xbd583320635a63711dbaeebcf8fe107226f92624933b24b9aa13df092041dcac`);
+the subsequent borrow receipt above succeeded and the loan was fully repaid.
+The failed receipt and retry setup transactions are retained in the manifest
+for an auditable record. The first deployment invocation stopped during
+transaction construction after six deployments; those confirmed contracts
+were recovered from receipts and completed without deploying duplicate
+contracts. The shared helper now retries bounded transient RPC/estimation
+errors before signing or broadcasting.
+
+The deployed addresses and receipts are synchronized to
+`backend/config/contracts.json` (`sepolia`) and
+`frontend/src/config/contracts.json`. TC1 Sepolia deployment and smoke-test
+evidence is now **achieved**; localhost evidence remains separately labeled.
+
+The local machine has no Kubo CLI or API daemon, so the executed local reset
+used Q04's configured local fallback. `start_all.bat` now prefers the project
+virtualenv Python and starts Kubo opportunistically when its CLI is installed;
+if Kubo is unavailable, the local fallback remains available.
+
 For an actual local integration check, start Hardhat and run `start_all.bat`
 or `start_all.sh`, then verify:
 

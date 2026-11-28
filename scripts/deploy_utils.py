@@ -5,12 +5,19 @@ from __future__ import annotations
 import json
 import os
 import tempfile
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from eth_account import Account
 from web3 import Web3
+from web3.exceptions import (
+    ContractLogicError,
+    ProviderConnectionError,
+    TooManyRequests,
+    Web3RPCError,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 CHAIN_LOCAL = 31337
@@ -47,6 +54,31 @@ class DeploymentError(RuntimeError):
 
 class DeploymentConfigurationError(DeploymentError):
     """Raised for missing, unsafe, or mismatched deployment configuration."""
+
+
+def _build_transaction_with_retry(
+    builder: Any,
+    transaction: Mapping[str, Any],
+    operation: str,
+) -> dict[str, Any]:
+    retryable_errors = (
+        ContractLogicError,
+        ProviderConnectionError,
+        TooManyRequests,
+        Web3RPCError,
+    )
+    delays = (1, 2, 4, 8)
+    for attempt in range(len(delays) + 1):
+        try:
+            return builder(dict(transaction))
+        except retryable_errors as exc:
+            if attempt == len(delays):
+                raise DeploymentError(
+                    f"{operation} transaction estimation failed after "
+                    f"{attempt + 1} attempts ({type(exc).__name__})."
+                ) from exc
+            time.sleep(delays[attempt])
+    raise AssertionError("Transaction build retry loop terminated unexpectedly.")
 
 
 def load_artifact(contract_name: str, abi_dir: Path | None = None) -> dict[str, Any]:
@@ -102,13 +134,15 @@ def deploy_contract(
     constructor_args: Sequence[Any] = (),
 ) -> tuple[Any, Any]:
     factory = w3.eth.contract(abi=artifact["abi"], bytecode=artifact["bytecode"])
-    transaction = factory.constructor(*constructor_args).build_transaction(
+    transaction = _build_transaction_with_retry(
+        factory.constructor(*constructor_args).build_transaction,
         {
             "from": account.address,
             "chainId": int(w3.eth.chain_id),
             "nonce": int(w3.eth.get_transaction_count(account.address, "pending")),
             "gasPrice": int(w3.eth.gas_price),
-        }
+        },
+        f"Deploy {artifact.get('contractName', 'contract')}",
     )
     tx_hash = _sign_and_send(w3, account, transaction)
     receipt = _wait_receipt(w3, tx_hash)
@@ -130,18 +164,20 @@ def transact(
 ) -> Any:
     try:
         function = getattr(contract.functions, function_name)(*args)
-        transaction = function.build_transaction(
-            {
-                "from": account.address,
-                "chainId": int(w3.eth.chain_id),
-                "nonce": int(w3.eth.get_transaction_count(account.address, "pending")),
-                "gasPrice": int(w3.eth.gas_price),
-            }
-        )
-    except Exception as exc:
+    except (AttributeError, TypeError) as exc:
         raise DeploymentError(
-            f"Không tạo được giao dịch {function_name}({', '.join(map(str, args))})."
+            f"Không tạo được lời gọi {function_name} với tham số hợp lệ."
         ) from exc
+    transaction = _build_transaction_with_retry(
+        function.build_transaction,
+        {
+            "from": account.address,
+            "chainId": int(w3.eth.chain_id),
+            "nonce": int(w3.eth.get_transaction_count(account.address, "pending")),
+            "gasPrice": int(w3.eth.gas_price),
+        },
+        f"Build {function_name}",
+    )
     return _wait_receipt(w3, _sign_and_send(w3, account, transaction))
 
 

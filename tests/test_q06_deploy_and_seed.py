@@ -12,6 +12,7 @@ from unittest.mock import patch
 import pytest
 from eth_account import Account
 from web3 import Web3
+from web3.exceptions import ContractCustomError
 
 from scripts import deploy_and_seed, deploy_sepolia, deploy_utils
 
@@ -43,6 +44,28 @@ def _receipt(index: int, address: str | None = None) -> dict[str, Any]:
         "blockNumber": index,
         "contractAddress": address,
     }
+
+
+def test_transaction_estimation_retries_rpc_lag_before_signing() -> None:
+    attempts = 0
+
+    def build(_transaction: dict[str, Any]) -> dict[str, Any]:
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise ContractCustomError("temporary stale RPC state")
+        return {"gas": 120_000}
+
+    with patch("scripts.deploy_utils.time.sleep") as sleep:
+        transaction = deploy_utils._build_transaction_with_retry(
+            build,
+            {"from": "0x0000000000000000000000000000000000000001"},
+            "Build depositLender",
+        )
+
+    assert transaction["gas"] == 120_000
+    assert attempts == 2
+    sleep.assert_called_once_with(1)
 
 
 def test_deploy_bundle_uses_expected_order_and_binds_pool_and_oracle() -> None:

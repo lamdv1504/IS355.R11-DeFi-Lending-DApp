@@ -40,6 +40,7 @@ build/
 # Local IPFS & runtime logs
 ipfs_storage/temp/
 ipfs_storage/local_repo/
+backend/data/credit_audit_ipfs_index.json
 *.log
 
 # OS & IDE
