@@ -500,6 +500,71 @@ class Web3Service:
             "is_approved": is_approved,
         }
 
+    def get_owned_collateral_nfts(
+        self, owner_address: str, *, from_block: int = 0
+    ) -> list[dict[str, Any]]:
+        """List CollateralNFT token IDs currently owned by a wallet with valuations and approvals."""
+        owner = self._checksum_address(owner_address, "owner")
+        nft = self.get_contract("CollateralNFT")
+        events = getattr(nft, "events", None)
+        transfer_event = getattr(events, "Transfer", None)
+        if not callable(transfer_event):
+            return []
+        logs = transfer_event().get_logs(
+            from_block=from_block,
+            to_block="latest",
+            argument_filters={"to": owner},
+        )
+        pool_address = (
+            self.registry.get("contracts", {}).get("LendingPool", {}).get("address")
+        )
+        seen: set[int] = set()
+        owned: list[dict[str, Any]] = []
+        for log in logs:
+            args = log.get("args", {})
+            raw_token_id = args.get("tokenId")
+            if raw_token_id is None:
+                continue
+            token_id = int(raw_token_id)
+            if token_id in seen:
+                continue
+            seen.add(token_id)
+            try:
+                current_owner = self.get_collateral_nft_owner(token_id)
+            except Exception:
+                continue
+            if current_owner.lower() != owner.lower():
+                continue
+            valuation = self.get_collateral_nft_valuation(token_id)
+            is_approved = False
+            if pool_address:
+                try:
+                    is_approved = bool(
+                        self.get_collateral_nft_approval_status(
+                            owner, pool_address, token_id
+                        )["is_approved"]
+                    )
+                except Exception:
+                    is_approved = False
+            token_uri: str | None = None
+            try:
+                raw_uri = nft.functions.tokenURI(token_id).call()
+                if isinstance(raw_uri, str):
+                    token_uri = raw_uri
+            except Exception:
+                token_uri = None
+            owned.append(
+                {
+                    "token_id": token_id,
+                    "owner": current_owner,
+                    "valuation": valuation,
+                    "is_approved": is_approved,
+                    "token_uri": token_uri,
+                }
+            )
+        owned.sort(key=lambda item: int(item["token_id"]))
+        return owned
+
     def get_latest_block_context(self) -> dict[str, int]:
         """Read latest block number and timestamp for snapshot freshness metadata."""
         block_number: int | None = None
@@ -670,6 +735,7 @@ class Web3Service:
         principal_wad: int | None = None,
         apr_bps: int | None = None,
         duration_seconds: int | None = None,
+        skip_gas_estimation: bool = False,
     ) -> dict[str, Any]:
         """Build a MetaMask-ready transaction and a pre-signing gas/interest quote."""
         sender = self._checksum_address(from_address, "wallet")
@@ -677,6 +743,9 @@ class Web3Service:
             raise TransactionValidationError("value_wei must be a non-negative integer.")
         if not 0 <= gas_buffer_bps <= constants.BPS:
             raise ValueError("gas_buffer_bps must be between 0 and BPS.")
+        usd_price = None if eth_usd_price is None else Decimal(str(eth_usd_price))
+        if usd_price is not None and (not usd_price.is_finite() or usd_price < 0):
+            raise ValueError("eth_usd_price must be a finite non-negative value.")
         configured_chain_id = int(self.w3.eth.chain_id)
         if configured_chain_id != self.chain_id:
             raise TransactionValidationError(
@@ -688,12 +757,15 @@ class Web3Service:
         function = getattr(contract.functions, function_name)(*args)
         gas_price = int(self.w3.eth.gas_price)
         try:
+            # Supply a placeholder gas value so web3.py encodes calldata without
+            # invoking an implicit estimate_gas() inside fill_transaction_defaults.
             built = function.build_transaction(
                 {
                     "from": sender,
                     "chainId": self.chain_id,
                     "value": value_wei,
                     "gasPrice": gas_price,
+                    "gas": 0,
                 }
             )
             if not built.get("to"):
@@ -706,46 +778,64 @@ class Web3Service:
         unsigned = self._validate_unsigned_transaction(
             built, expected_to=contract_address, expected_from=sender
         )
-        gas_estimate = int(
-            self.w3.eth.estimate_gas(
-                {
-                    "from": sender,
-                    "to": contract_address,
-                    "data": unsigned["data"],
-                    "value": value_wei,
-                }
-            )
-        )
-        gas_limit = (
-            gas_estimate * (constants.BPS + gas_buffer_bps) + constants.BPS - 1
-        ) // constants.BPS
-        estimated_fee_wei = gas_estimate * gas_price
-        max_fee_wei = gas_limit * gas_price
-        unsigned["gas"] = gas_limit
         unsigned["gasPrice"] = gas_price
 
-        usd_price = None if eth_usd_price is None else Decimal(str(eth_usd_price))
-        if usd_price is not None and (not usd_price.is_finite() or usd_price < 0):
-            raise ValueError("eth_usd_price must be a finite non-negative value.")
-        gas_quote = {
-            "estimated_gas": gas_estimate,
-            "gas_limit": gas_limit,
-            "gas_price_wei": str(gas_price),
-            "estimated_fee_wei": str(estimated_fee_wei),
-            "estimated_fee_eth": str(Decimal(estimated_fee_wei) / Decimal(constants.WAD)),
-            "max_fee_wei": str(max_fee_wei),
-            "max_fee_eth": str(Decimal(max_fee_wei) / Decimal(constants.WAD)),
-            "eth_usd_price": None if usd_price is None else str(usd_price),
-            "estimated_fee_usd": (
-                None
-                if usd_price is None
-                else str(
-                    (Decimal(estimated_fee_wei) / Decimal(constants.WAD) * usd_price).quantize(
-                        Decimal("0.01")
-                    )
+        if skip_gas_estimation:
+            # Do not emit a fake gas=0 limit when on-chain approval is still pending.
+            unsigned.pop("gas", None)
+            gas_quote: dict[str, Any] = {
+                "estimated_gas": None,
+                "gas_limit": None,
+                "gas_price_wei": str(gas_price),
+                "estimated_fee_wei": None,
+                "estimated_fee_eth": None,
+                "max_fee_wei": None,
+                "max_fee_eth": None,
+                "eth_usd_price": None if usd_price is None else str(usd_price),
+                "estimated_fee_usd": None,
+                "estimation_status": "PENDING_APPROVAL",
+                "estimation_skipped_reason": (
+                    "Token or NFT approval is required before on-chain gas estimation."
+                ),
+            }
+        else:
+            gas_estimate = int(
+                self.w3.eth.estimate_gas(
+                    {
+                        "from": sender,
+                        "to": contract_address,
+                        "data": unsigned["data"],
+                        "value": value_wei,
+                    }
                 )
-            ),
-        }
+            )
+            gas_limit = (
+                gas_estimate * (constants.BPS + gas_buffer_bps) + constants.BPS - 1
+            ) // constants.BPS
+            estimated_fee_wei = gas_estimate * gas_price
+            max_fee_wei = gas_limit * gas_price
+            unsigned["gas"] = gas_limit
+            gas_quote = {
+                "estimated_gas": gas_estimate,
+                "gas_limit": gas_limit,
+                "gas_price_wei": str(gas_price),
+                "estimated_fee_wei": str(estimated_fee_wei),
+                "estimated_fee_eth": str(Decimal(estimated_fee_wei) / Decimal(constants.WAD)),
+                "max_fee_wei": str(max_fee_wei),
+                "max_fee_eth": str(Decimal(max_fee_wei) / Decimal(constants.WAD)),
+                "eth_usd_price": None if usd_price is None else str(usd_price),
+                "estimated_fee_usd": (
+                    None
+                    if usd_price is None
+                    else str(
+                        (
+                            Decimal(estimated_fee_wei) / Decimal(constants.WAD) * usd_price
+                        ).quantize(Decimal("0.01"))
+                    )
+                ),
+                "estimation_status": "ESTIMATED",
+                "estimation_skipped_reason": None,
+            }
 
         interest_fields = (principal_wad, apr_bps, duration_seconds)
         if any(field is not None for field in interest_fields) and not all(

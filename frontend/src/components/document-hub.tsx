@@ -6,7 +6,7 @@ import { ArrowDownToLine, ArrowUpRight, Check, Copy, FileJson, FileKey2, FileTex
 import { AppShell } from "@/components/app-shell";
 import { DEFAULT_CONNECTION, HubConnectionPanel } from "@/components/hub-connection";
 import { apiRequest, assertHash, auditEntries, creditReportView, DOCUMENT_LABELS, downloadDocument, errorMessage, HubError, listDocuments, normalizeCid, parseMetadata, retrieveDocument, retrieveSample, type DocumentMetadata, type DocumentType, type HubConnection, type RetrievedDocument } from "@/lib/ipfs-hub";
-import { parseAmount, shortAddress } from "@/lib/lending-demo";
+import { parseAmount, shortAddress } from "@/lib/wad";
 import samples from "@/data/l04-samples.json";
 
 const sampleDocuments = samples.documents.map(parseMetadata);

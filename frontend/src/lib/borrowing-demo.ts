@@ -1,7 +1,7 @@
-import { formatUnits, parseUnits } from "ethers";
-import { amountLabel, parseAmount, rates, WAD } from "./lending-demo.ts";
+import { amountLabel, formatUnitsDecimal, parseAmount, parseUnitsDecimal, rates, WAD } from "./wad.ts";
 
 export const BORROW_STORAGE_KEY = "defi-borrowing-l03-v1";
+export const DEFAULT_COLLATERAL_NFT_ID = "2";
 export const BORROW_WALLETS = [
   { id: "borrower", name: "Ví người vay", address: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC" },
   { id: "liquidator", name: "Ví thanh lý", address: "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65" },
@@ -32,6 +32,7 @@ export interface BorrowState {
   poolCashWad: string;
   priceBps: number;
   wallets: Record<BorrowActor, { balanceWad: string; allowanceWad: string }>;
+  nftTokenId?: string;
   nftOwner: BorrowActor | "pool";
   nftApproved: boolean;
   loan: BorrowLoan;
@@ -63,6 +64,7 @@ export function createBorrowDemo(nowMs = Date.now(), empty = false): BorrowState
       borrower: { balanceWad: ((empty ? 1000n : 1500n) * WAD).toString(), allowanceWad: "0" },
       liquidator: { balanceWad: (2000n * WAD).toString(), allowanceWad: "0" },
     },
+    nftTokenId: DEFAULT_COLLATERAL_NFT_ID,
     nftOwner: empty ? "borrower" : "pool", nftApproved: false,
     loan: { active: !empty, kind: "nft", collateralUnitsWad: "0", principalWad: principal.toString(),
       interestWad: "0", indexSnapshotWad: WAD.toString(), receiptId: empty ? null : "1",
@@ -122,7 +124,7 @@ export function actionPayment(state: BorrowState, action: TransactionAction): bi
   return 0n;
 }
 export const actionLabel: Record<TransactionAction["kind"], string> = {
-  approve: "Cấp quyền chi MyUSDT", "approve-nft": "Cấp quyền NFT #7",
+  approve: "Cấp quyền chi MyUSDT", "approve-nft": "Cấp quyền CollateralNFT",
   deposit: "Khóa tài sản thế chấp", borrow: "Vay MyUSDT", repay: "Trả nợ MyUSDT",
   withdraw: "Rút tài sản thế chấp", liquidate: "Thanh lý khoản vay",
 };
@@ -169,14 +171,16 @@ export function applyBorrowAction(original: BorrowState, action: BorrowAction, n
     if (action.kind === "approve") {
       wallets[action.actor].allowanceWad = parseAmount(action.amount).toString();
     } else if (action.kind === "approve-nft") {
-      if (nftOwner !== "borrower") throw new Error("Ví người vay không sở hữu NFT #7.");
+      const tokenId = state.nftTokenId ?? DEFAULT_COLLATERAL_NFT_ID;
+      if (nftOwner !== "borrower") throw new Error("Ví người vay không sở hữu CollateralNFT #" + tokenId + ".");
       nftApproved = true;
     } else if (action.kind === "deposit") {
       if (loan.active) throw new Error("Đã có tài sản khóa. Tất toán hoặc rút trước khi tạo vị thế mới.");
       let units = 0n;
       if (action.asset === "nft") {
-        if (nftOwner !== "borrower") throw new Error("NFT #7 không thuộc ví người vay.");
-        if (!nftApproved) throw new Error("Cần cấp quyền NFT #7 trước khi khóa.");
+        const tokenId = state.nftTokenId ?? DEFAULT_COLLATERAL_NFT_ID;
+        if (nftOwner !== "borrower") throw new Error("CollateralNFT #" + tokenId + " không thuộc ví người vay.");
+        if (!nftApproved) throw new Error("Cần cấp quyền CollateralNFT #" + tokenId + " trước khi khóa.");
         nftOwner = "pool"; nftApproved = false;
       } else {
         units = parseAmount(action.amount);
@@ -238,13 +242,13 @@ const SIMULATED_GAS: Record<TransactionAction["kind"], number> = {
 export function gasIllustration(kind: TransactionAction["kind"], gwei = "2") {
   const input = gwei.trim().replace(",", ".");
   if (!/^\d{1,5}(\.\d{1,9})?$/.test(input)) throw new Error("Giá gas cần là số dương, tối đa 9 chữ số thập phân.");
-  const gasPriceWei = parseUnits(input, 9);
+  const gasPriceWei = parseUnitsDecimal(input, 9);
   if (gasPriceWei <= 0n || gasPriceWei > 10000n * 10n ** 9n) throw new Error("Giá gas mô phỏng phải lớn hơn 0 và không quá 10.000 gwei.");
   const units = SIMULATED_GAS[kind];
   const gasLimit = Math.ceil(units * 1.2);
   const feeWei = BigInt(units) * gasPriceWei;
   return { kind: "SIMULATED" as const, units, gasLimit, gasPriceWei: gasPriceWei.toString(), feeWei: feeWei.toString(),
-    feeEth: formatUnits(feeWei, 18), maximumEth: formatUnits(BigInt(gasLimit) * gasPriceWei, 18) };
+    feeEth: formatUnitsDecimal(feeWei, 18), maximumEth: formatUnitsDecimal(BigInt(gasLimit) * gasPriceWei, 18) };
 }
 export function restoreBorrowDemo(raw: string, nowMs = Date.now()): BorrowState {
   const data: unknown = JSON.parse(raw);
@@ -257,6 +261,7 @@ export function restoreBorrowDemo(raw: string, nowMs = Date.now()): BorrowState 
       s.indexAt > Math.floor(nowMs / 1000) + s.offsetSeconds || !uint(s.borrowIndexWad) || BigInt(s.borrowIndexWad) < WAD ||
       !uint(s.poolSuppliedWad) || !uint(s.poolBorrowedWad) || !uint(s.poolCashWad) ||
       !Number.isInteger(s.priceBps) || s.priceBps < 1 || s.priceBps > 10000 ||
+      (s.nftTokenId !== undefined && !uint(s.nftTokenId)) ||
       (!uint(s.nextReceiptId) || BigInt(s.nextReceiptId) < 1n) || !Number.isSafeInteger(s.sequence) || s.sequence < 0 || !s.loan || !s.wallets) fail();
   for (const who of ["borrower", "liquidator"] as const) {
     if (!s.wallets[who] || !uint(s.wallets[who].balanceWad) || !uint(s.wallets[who].allowanceWad)) fail();

@@ -10,12 +10,13 @@ from web3.exceptions import ContractLogicError
 from backend.api.dependencies import (
     get_web3_service_for_network,
     resolve_analytics_from_block,
-    resolve_from_block,
+    resolve_contract_from_block,
 )
 from backend.schemas.pool import (
     AccountBalancesResponse,
     AccountLoanResponse,
     AccountPositionsResponse,
+    AccountSnapshotResponse,
     PoolResponse,
     RateAnalyticsResponse,
 )
@@ -70,7 +71,8 @@ def read_lending_positions(
 ) -> dict[str, Any]:
     service = get_web3_service_for_network(request, network)
     wallet = service._checksum_address(address, "account")
-    scan_from_block = resolve_from_block(service, from_block)
+    scan_from_block = resolve_contract_from_block(service, "LendingPool", from_block)
+    block_number, as_of_timestamp = _block_snapshot(service, {})
     pool = service.get_contract("LendingPool")
     logs = pool.events.LenderDeposited().get_logs(
         from_block=scan_from_block,
@@ -103,7 +105,47 @@ def read_lending_positions(
                 "max_withdrawable": service.get_max_withdrawable(position_id),
             }
         )
-    return {"wallet_address": wallet, "positions": positions}
+    return {
+        "network": service.network.name,
+        "chain_id": service.chain_id,
+        "block_number": block_number,
+        "as_of_timestamp": as_of_timestamp,
+        "wallet_address": wallet,
+        "positions": positions,
+    }
+
+
+def _read_wallet_balances(
+    service: Web3Service, wallet: str, *, from_block: int | None = None
+) -> dict[str, Any]:
+    pool_address = service.registry.get("contracts", {}).get("LendingPool", {}).get("address")
+    collateral_nft_balance = int(
+        service.get_contract("CollateralNFT").functions.balanceOf(wallet).call()
+    )
+    collateral_nfts: list[dict[str, Any]] = []
+    if collateral_nft_balance > 0:
+        lister = getattr(service, "get_owned_collateral_nfts", None)
+        if callable(lister):
+            nft_from_block = resolve_contract_from_block(
+                service, "CollateralNFT", from_block
+            )
+            collateral_nfts = lister(wallet, from_block=nft_from_block)
+    balances: dict[str, Any] = {
+        "myusdt": service.get_myusdt_balance(wallet),
+        "debt_token": service.get_debt_token_balance(wallet),
+        "lending_position_nft_balance": int(
+            service.get_contract("LendingPositionNFT").functions.balanceOf(wallet).call()
+        ),
+        "collateral_nft_balance": collateral_nft_balance,
+        "collateral_nft_token_ids": [int(item["token_id"]) for item in collateral_nfts],
+        "collateral_nfts": collateral_nfts,
+        "active_collateral_receipt_id": service.get_active_collateral_receipt(wallet),
+    }
+    if pool_address:
+        balances["myusdt_allowance_to_pool"] = service.get_myusdt_allowance(
+            wallet, pool_address
+        )
+    return balances
 
 
 @router.get("/accounts/{address}/loan", response_model=AccountLoanResponse)
@@ -114,11 +156,17 @@ def read_loan(
 ) -> dict[str, Any]:
     service = get_web3_service_for_network(request, network)
     wallet = service._checksum_address(address, "account")
+    interest_rates = service.get_interest_rate_snapshot()
+    block_number, as_of_timestamp = _block_snapshot(service, interest_rates)
     liquidation_preview: dict[str, Any] | None = None
     preview_fn = getattr(service, "get_liquidation_preview", None)
     if callable(preview_fn):
         liquidation_preview = preview_fn(wallet)
     return {
+        "network": service.network.name,
+        "chain_id": service.chain_id,
+        "block_number": block_number,
+        "as_of_timestamp": as_of_timestamp,
         "wallet_address": wallet,
         "loan_position": service.get_loan_position(wallet),
         "risk": service.get_borrower_risk(wallet),
@@ -130,7 +178,7 @@ def read_loan(
         },
         "interest": {
             "accrued": service.calculate_accrued_interest(wallet),
-            "rates": service.get_interest_rate_snapshot(),
+            "rates": interest_rates,
         },
         "liquidation_preview": liquidation_preview,
     }
@@ -140,27 +188,47 @@ def read_loan(
 def read_balances(
     address: str,
     request: Request,
+    from_block: int | None = Query(default=None, ge=0),
     network: str | None = Query(default=None),
 ) -> dict[str, Any]:
     service = get_web3_service_for_network(request, network)
     wallet = service._checksum_address(address, "account")
-    pool_address = service.registry.get("contracts", {}).get("LendingPool", {}).get("address")
-    balances: dict[str, Any] = {
-        "myusdt": service.get_myusdt_balance(wallet),
-        "debt_token": service.get_debt_token_balance(wallet),
-        "lending_position_nft_balance": int(
-            service.get_contract("LendingPositionNFT").functions.balanceOf(wallet).call()
-        ),
-        "collateral_nft_balance": int(
-            service.get_contract("CollateralNFT").functions.balanceOf(wallet).call()
-        ),
-        "active_collateral_receipt_id": service.get_active_collateral_receipt(wallet),
+    block_number, as_of_timestamp = _block_snapshot(service, {})
+    return {
+        "network": service.network.name,
+        "chain_id": service.chain_id,
+        "block_number": block_number,
+        "as_of_timestamp": as_of_timestamp,
+        "wallet_address": wallet,
+        "balances": _read_wallet_balances(service, wallet, from_block=from_block),
     }
-    if pool_address:
-        balances["myusdt_allowance_to_pool"] = service.get_myusdt_allowance(
-            wallet, pool_address
-        )
-    return {"wallet_address": wallet, "balances": balances}
+
+
+@router.get("/accounts/{address}/snapshot", response_model=AccountSnapshotResponse)
+def read_account_snapshot(
+    address: str,
+    request: Request,
+    from_block: int | None = Query(default=None, ge=0),
+    network: str | None = Query(default=None),
+) -> dict[str, Any]:
+    service = get_web3_service_for_network(request, network)
+    wallet = service._checksum_address(address, "account")
+    interest_rates = service.get_interest_rate_snapshot()
+    block_number, as_of_timestamp = _block_snapshot(service, interest_rates)
+    return {
+        "network": service.network.name,
+        "chain_id": service.chain_id,
+        "block_number": block_number,
+        "as_of_timestamp": as_of_timestamp,
+        "wallet_address": wallet,
+        "balances": _read_wallet_balances(service, wallet, from_block=from_block),
+        "loan_position": service.get_loan_position(wallet),
+        "risk": service.get_borrower_risk(wallet),
+        "interest": {
+            "accrued": service.calculate_accrued_interest(wallet),
+            "rates": interest_rates,
+        },
+    }
 
 
 @router.get("/analytics/rates", response_model=RateAnalyticsResponse)

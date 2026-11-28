@@ -167,7 +167,7 @@ interface ILendingPool {
     /// @notice Borrower locks either ERC-20 collateral or a `CollateralNFT` and receives a `CollateralReceiptNFT`.
     function depositCollateral(uint256 amountOrTokenId, bool isNFT) external returns (uint256 receiptId);
 
-    /// @notice Borrower withdraws unlocked collateral when remaining debt satisfies LTV <= 70% (or debt == 0).
+    /// @notice Borrower withdraws all locked collateral once total debt (principal + accrued interest) is 0.
     function withdrawCollateral() external;
 
     /// @notice Borrower draws MyUSDT up to 70% LTV, stores IPFS agreement CID, and mints DebtToken.

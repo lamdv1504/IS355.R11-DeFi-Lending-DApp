@@ -113,6 +113,8 @@ class TransactionPrepareResponse(APIModel):
 class TransactionConfirmRequest(APIModel):
     intent_id: str = Field(min_length=1)
     tx_hash: str = Field(pattern=r"^0x[0-9a-fA-F]{64}$")
+    network: str | None = Field(default=None, min_length=1, max_length=32)
+    chain_id: int | None = Field(default=None, gt=0)
 
 
 class TransactionConfirmResponse(APIModel):

@@ -12,11 +12,13 @@ from eth_account import Account
 from eth_account.messages import encode_defunct
 from fastapi.testclient import TestClient
 from web3 import Web3
+from web3.exceptions import ContractLogicError
 
 from backend.main import create_app
 from backend.security.auth import AuthenticationError, WalletAuthManager
 from backend.services.agreement_generator import AgreementGeneratorService
 from backend.services.credit_and_audit_ipfs import CreditAndAuditIPFSService
+from backend.services.web3_service import Web3Service
 from backend.config import constants
 from src.ipfs.encryption import DocumentEncryptor
 from src.ipfs.ipfs_client import IPFSClient, IPFSConfig
@@ -129,6 +131,8 @@ class _FakeWeb3Service:
             }
         }
         self.last_build_call: tuple[str, str, tuple[Any, ...]] | None = None
+        self.last_build_kwargs: dict[str, Any] = {}
+        self.fail_estimate_gas_when_called: bool = False
         self.myusdt_allowance_wad: int = 0
         self.nft_approved: bool = False
         self.events: dict[str, list[dict[str, Any]]] = {
@@ -289,18 +293,41 @@ class _FakeWeb3Service:
         **kwargs: Any,
     ) -> dict[str, Any]:
         self.last_build_call = (contract_name, function_name, args)
+        self.last_build_kwargs = dict(kwargs)
         to_address = self.registry["contracts"][contract_name]["address"]
-        tx = {
+        skip_gas = bool(kwargs.get("skip_gas_estimation", False))
+        if not skip_gas and self.fail_estimate_gas_when_called:
+            raise ContractLogicError("execution reverted: ERC20InsufficientAllowance")
+        tx: dict[str, Any] = {
             "from": from_address,
             "to": to_address,
             "data": "0x1234",
             "value": 0,
             "chainId": self.chain_id,
-            "gas": 100_000,
         }
+        if skip_gas:
+            gas_quote: dict[str, Any] = {
+                "estimated_gas": None,
+                "gas_limit": None,
+                "gas_price_wei": "1",
+                "estimated_fee_wei": None,
+                "estimation_status": "PENDING_APPROVAL",
+                "estimation_skipped_reason": (
+                    "Token or NFT approval is required before on-chain gas estimation."
+                ),
+            }
+        else:
+            tx["gas"] = 100_000
+            gas_quote = {
+                "estimated_gas": 80_000,
+                "gas_limit": 100_000,
+                "gas_price_wei": "1",
+                "estimation_status": "ESTIMATED",
+                "estimation_skipped_reason": None,
+            }
         return {
             "transaction": tx,
-            "gas_quote": {"estimated_gas": 80_000, "gas_price_wei": "1"},
+            "gas_quote": gas_quote,
             "interest_quote": (
                 {"apr": {"rate_basis": "simple_apr"}, "apy_reference_percent": 7.2501}
                 if "principal_wad" in kwargs
@@ -944,3 +971,782 @@ def test_confirm_transaction_accepts_bytes_hexbytes_tx_input(
     assert confirmed.status_code == 200, confirmed.text
     assert confirmed.json()["status"] == 1
     assert confirmed.json()["block_number"] == 55
+
+
+def test_prepare_checks_allowance_before_gas_estimation_for_erc20_and_nft(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+    headers = _login(client, owner)
+    web3 = api_env["web3"]
+    web3.fail_estimate_gas_when_called = True
+
+    # ERC-20 actions (DEPOSIT_LENDER, REPAY, LIQUIDATE) and CollateralNFT deposit
+    # must NOT fail with estimate_gas revert when allowance/approval is still missing.
+    cases = [
+        ("DEPOSIT_LENDER", {"amount_wad": str(500 * constants.WAD)}),
+        ("REPAY", {"amount_wad": str(50 * constants.WAD)}),
+        ("LIQUIDATE", {"borrower_address": api_env["lender"].address}),
+        ("DEPOSIT_COLLATERAL", {"is_nft": True, "amount_or_token_id": 2}),
+    ]
+    for action, args in cases:
+        resp = client.post(
+            "/api/transactions/prepare",
+            json={"account": owner.address, "action": action, "args": args},
+            headers=headers,
+        )
+        assert resp.status_code == 200, f"{action}: {resp.text}"
+        body = resp.json()
+        assert body["allowance"]["approval_required"] is True, action
+        assert body["gas_quote"]["estimation_status"] == "PENDING_APPROVAL", action
+        assert body["gas_quote"]["estimated_gas"] is None, action
+        assert "gas" not in body["unsignedTransaction"], action
+        assert web3.last_build_kwargs.get("skip_gas_estimation") is True, action
+
+    # Once approved, gas estimation runs normally and returns an estimated gas quote.
+    web3.myusdt_allowance_wad = 1_000 * constants.WAD
+    web3.nft_approved = True
+    web3.fail_estimate_gas_when_called = False
+
+    approved_resp = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "action": "DEPOSIT_COLLATERAL",
+            "args": {"is_nft": True, "amount_or_token_id": 2},
+        },
+        headers=headers,
+    )
+    assert approved_resp.status_code == 200, approved_resp.text
+    approved_body = approved_resp.json()
+    assert approved_body["allowance"]["approval_required"] is False
+    assert approved_body["gas_quote"]["estimation_status"] == "ESTIMATED"
+    assert approved_body["gas_quote"]["estimated_gas"] == 80_000
+    assert approved_body["unsignedTransaction"]["gas"] == 100_000
+    assert web3.last_build_kwargs.get("skip_gas_estimation") is None
+
+
+def test_prepare_with_real_web3_service_handles_unapproved_and_decodes_real_reverts() -> None:
+    owner = Account.create()
+
+    class _MiniCall:
+        def __init__(self, eth: "_MiniEth", fn_name: str) -> None:
+            self.eth = eth
+            self.fn_name = fn_name
+
+        def call(self) -> Any:
+            return self.eth.call_results[self.fn_name]
+
+        def build_transaction(self, tx: dict[str, Any]) -> dict[str, Any]:
+            assert "gas" in tx, "build_transaction must pass placeholder gas to avoid premature estimate_gas"
+            return {**tx, "data": "0xabcdef01"}
+
+    class _MiniFunctions:
+        def __init__(self, eth: "_MiniEth") -> None:
+            self.eth = eth
+
+        def __getattr__(self, name: str) -> Any:
+            return lambda *_args: _MiniCall(self.eth, name)
+
+    class _MiniEth:
+        chain_id = 31337
+        gas_price = 1_000_000_000
+        block_number = 77
+
+        def __init__(self) -> None:
+            self.estimate_calls = 0
+            self.estimate_error: Exception | None = ContractLogicError(
+                "execution reverted: ERC20InsufficientAllowance"
+            )
+            self.call_results: dict[str, Any] = {
+                "allowance": 0,
+                "getPoolInfo": (
+                    1_000 * constants.WAD,
+                    200 * constants.WAD,
+                    0,
+                    constants.WAD,
+                    constants.WAD,
+                    700,
+                    140,
+                    2_000,
+                    1_700_000_000,
+                ),
+                "getCollateralValue": 1_000 * constants.WAD,
+                "getTotalDebt": 100 * constants.WAD,
+                "getHealthFactor": 8 * constants.WAD,
+                "getInterestRateSnapshot": (
+                    1_700_000_000,
+                    2_000,
+                    700,
+                    140,
+                    725,
+                    140,
+                    constants.WAD,
+                    constants.WAD,
+                ),
+            }
+
+        def get_block(self, _identifier: str) -> dict[str, int]:
+            return {"number": self.block_number, "timestamp": 1_700_000_100}
+
+        def get_code(self, _address: str) -> bytes:
+            return b"\x60\x00"
+
+        def contract(self, address: str, abi: list[dict[str, Any]]) -> Any:
+            assert abi
+            return SimpleNamespace(address=address, functions=_MiniFunctions(self))
+
+        def estimate_gas(self, _tx: dict[str, Any]) -> int:
+            self.estimate_calls += 1
+            if self.estimate_error is not None:
+                raise self.estimate_error
+            return 21_000
+
+    class _MiniW3:
+        def __init__(self) -> None:
+            self.eth = _MiniEth()
+
+        is_address = staticmethod(Web3.is_address)
+        to_checksum_address = staticmethod(Web3.to_checksum_address)
+
+    mini_w3 = _MiniW3()
+    real_service = Web3Service(network_name="local", w3=mini_w3)
+    real_service.registry["contracts"]["LendingPool"]["address"] = POOL
+    real_service.registry["contracts"]["MyUSDT"]["address"] = TOKEN
+
+    manager = WalletAuthManager(
+        "test-only-signing-secret-that-is-at-least-32-bytes",
+        domain="localhost",
+        allowed_chain_ids=(31337,),
+    )
+    app = create_app()
+    app.state.auth_manager = manager
+    app.state.web3_service = real_service
+    client = TestClient(app)
+    headers = _login(client, owner)
+
+    # 1) Allowance = 0: must return 200 without calling estimate_gas.
+    unapproved = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "action": "DEPOSIT_LENDER",
+            "args": {"amount_wad": str(100 * constants.WAD)},
+        },
+        headers=headers,
+    )
+    assert unapproved.status_code == 200, unapproved.text
+    assert mini_w3.eth.estimate_calls == 0
+    assert unapproved.json()["allowance"]["approval_required"] is True
+    assert unapproved.json()["gas_quote"]["estimation_status"] == "PENDING_APPROVAL"
+    assert "gas" not in unapproved.json()["unsignedTransaction"]
+
+    # 2) Allowance sufficient + successful estimate_gas -> 200 with real gas quote.
+    mini_w3.eth.call_results["allowance"] = 500 * constants.WAD
+    mini_w3.eth.estimate_error = None
+    approved = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "action": "DEPOSIT_LENDER",
+            "args": {"amount_wad": str(100 * constants.WAD)},
+        },
+        headers=headers,
+    )
+    assert approved.status_code == 200, approved.text
+    assert mini_w3.eth.estimate_calls == 1
+    assert approved.json()["allowance"]["approval_required"] is False
+    assert approved.json()["gas_quote"]["estimation_status"] == "ESTIMATED"
+    assert approved.json()["unsignedTransaction"]["gas"] == 25_200
+
+    # 3) Real business revert (ExceedsMaxLTV) must decode to HTTP 400 (not 503).
+    mini_w3.eth.estimate_error = ContractLogicError("execution reverted: ExceedsMaxLTV")
+    reverted = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "action": "BORROW",
+            "args": {"amount_wad": str(900 * constants.WAD), "agreement_cid": "bafy-test"},
+        },
+        headers=headers,
+    )
+    assert reverted.status_code == 400, reverted.text
+    assert reverted.json()["code"] == "ExceedsMaxLTV"
+
+
+def test_prepare_and_confirm_support_dynamic_network_switching_without_restart(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+    admin = api_env["admin"]
+
+    sepolia_fake = _FakeWeb3Service()
+    sepolia_fake.network = SimpleNamespace(name="sepolia")
+    sepolia_fake.chain_id = 11155111
+    sepolia_fake.w3.eth.chain_id = 11155111
+    sepolia_fake.w3.eth.block_number = 12224699
+    sepolia_fake.myusdt_allowance_wad = 1_000 * constants.WAD
+
+    manager = WalletAuthManager(
+        "test-only-signing-secret-that-is-at-least-32-bytes",
+        domain="localhost",
+        allowed_chain_ids=(31337, 11155111),
+        admin_wallets=(admin.address,),
+        lender_wallets=(api_env["lender"].address,),
+    )
+    client.app.state.auth_manager = manager
+    client.app.state.web3_services = {
+        "local": api_env["web3"],
+        "sepolia": sepolia_fake,
+    }
+
+    local_headers = _login(client, owner, chain_id=31337)
+    sepolia_headers = _login(client, owner, chain_id=11155111)
+    sepolia_admin_headers = _login(client, admin, chain_id=11155111)
+
+    # 1) Explicit body network="sepolia" + chain_id=11155111 succeeds even when default is local.
+    prep_body = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "network": "sepolia",
+            "chain_id": 11155111,
+            "action": "DEPOSIT_LENDER",
+            "args": {"amount_wad": str(100 * constants.WAD)},
+        },
+        headers=sepolia_headers,
+    )
+    assert prep_body.status_code == 200, prep_body.text
+    tx_sep = prep_body.json()
+    assert tx_sep["context"]["network"] == "sepolia"
+    assert tx_sep["context"]["chain_id"] == 11155111
+    assert tx_sep["context"]["block_number"] == 12224699
+    assert tx_sep["unsignedTransaction"]["chainId"] == 11155111
+
+    # 2) Query ?network=sepolia, chain_id-only, and session-derived network all route to Sepolia.
+    prep_query = client.post(
+        "/api/transactions/prepare?network=sepolia",
+        json={
+            "account": owner.address,
+            "action": "DEPOSIT_LENDER",
+            "args": {"amount_wad": str(100 * constants.WAD)},
+        },
+        headers=sepolia_headers,
+    )
+    assert prep_query.status_code == 200, prep_query.text
+    assert prep_query.json()["context"]["network"] == "sepolia"
+
+    prep_chain = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "chain_id": 11155111,
+            "action": "DEPOSIT_LENDER",
+            "args": {"amount_wad": str(100 * constants.WAD)},
+        },
+        headers=sepolia_headers,
+    )
+    assert prep_chain.status_code == 200, prep_chain.text
+    assert prep_chain.json()["context"]["network"] == "sepolia"
+
+    prep_session = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "action": "DEPOSIT_LENDER",
+            "args": {"amount_wad": str(100 * constants.WAD)},
+        },
+        headers=sepolia_headers,
+    )
+    assert prep_session.status_code == 200, prep_session.text
+    assert prep_session.json()["context"]["network"] == "sepolia"
+
+    # 3) Cross-network mismatches, invalid networks, and Sepolia mock-oracle stay strictly blocked.
+    assert (
+        client.post(
+            "/api/transactions/prepare",
+            json={
+                "account": owner.address,
+                "network": "sepolia",
+                "action": "DEPOSIT_LENDER",
+                "args": {"amount_wad": str(100 * constants.WAD)},
+            },
+            headers=local_headers,
+        ).status_code
+        == 403
+    )
+    assert (
+        client.post(
+            "/api/transactions/prepare",
+            json={
+                "account": owner.address,
+                "network": "local",
+                "action": "DEPOSIT_LENDER",
+                "args": {"amount_wad": str(100 * constants.WAD)},
+            },
+            headers=sepolia_headers,
+        ).status_code
+        == 403
+    )
+    assert (
+        client.post(
+            "/api/transactions/prepare?network=local",
+            json={
+                "account": owner.address,
+                "network": "sepolia",
+                "action": "DEPOSIT_LENDER",
+                "args": {"amount_wad": str(100 * constants.WAD)},
+            },
+            headers=sepolia_headers,
+        ).status_code
+        == 403
+    )
+    assert (
+        client.post(
+            "/api/transactions/prepare",
+            json={
+                "account": owner.address,
+                "network": "sepolia",
+                "chain_id": 31337,
+                "action": "DEPOSIT_LENDER",
+                "args": {"amount_wad": str(100 * constants.WAD)},
+            },
+            headers=sepolia_headers,
+        ).status_code
+        == 403
+    )
+    assert (
+        client.post(
+            "/api/transactions/prepare",
+            json={
+                "account": owner.address,
+                "network": "mainnet",
+                "action": "DEPOSIT_LENDER",
+                "args": {"amount_wad": str(100 * constants.WAD)},
+            },
+            headers=sepolia_headers,
+        ).status_code
+        == 422
+    )
+    assert (
+        client.post(
+            "/api/transactions/prepare",
+            json={
+                "account": owner.address,
+                "chain_id": 999,
+                "action": "DEPOSIT_LENDER",
+                "args": {"amount_wad": str(100 * constants.WAD)},
+            },
+            headers=sepolia_headers,
+        ).status_code
+        == 403
+    )
+    assert (
+        client.post(
+            "/api/transactions/prepare",
+            json={
+                "wallet_address": admin.address,
+                "network": "sepolia",
+                "action": "MOCK_ORACLE_MULTIPLIER",
+                "multiplier_bps": 6_000,
+            },
+            headers=sepolia_admin_headers,
+        ).status_code
+        == 403
+    )
+
+    # 4) Confirm verifies against the Sepolia Web3Service; wrong-network attempts return 403
+    #    without consuming the prepared intent.
+    tx_hash_bytes = bytes.fromhex("ef" * 32)
+    tx_hash_hex = "0x" + tx_hash_bytes.hex()
+    sepolia_fake.w3.eth.transaction = {
+        "from": owner.address,
+        "to": POOL,
+        "input": tx_sep["unsignedTransaction"]["data"],
+        "chainId": 11155111,
+        "value": 0,
+    }
+    sepolia_fake.w3.eth.receipt = {
+        "status": 1,
+        "blockNumber": 12224705,
+        "transactionHash": tx_hash_bytes,
+    }
+
+    assert (
+        client.post(
+            "/api/transactions/confirm",
+            json={"intent_id": tx_sep["intent_id"], "tx_hash": tx_hash_hex},
+            headers=local_headers,
+        ).status_code
+        == 403
+    )
+    assert (
+        client.post(
+            "/api/transactions/confirm?network=local",
+            json={"intent_id": tx_sep["intent_id"], "tx_hash": tx_hash_hex},
+            headers=sepolia_headers,
+        ).status_code
+        == 403
+    )
+    assert (
+        client.post(
+            "/api/transactions/confirm",
+            json={
+                "intent_id": tx_sep["intent_id"],
+                "tx_hash": tx_hash_hex,
+                "chain_id": 31337,
+            },
+            headers=sepolia_headers,
+        ).status_code
+        == 403
+    )
+
+    confirmed = client.post(
+        "/api/transactions/confirm",
+        json={"intent_id": tx_sep["intent_id"], "tx_hash": tx_hash_hex},
+        headers=sepolia_headers,
+    )
+    assert confirmed.status_code == 200, confirmed.text
+    assert confirmed.json()["status"] == 1
+    assert confirmed.json()["block_number"] == 12224705
+
+
+def test_account_snapshot_returns_unified_balances_loan_and_block_metadata(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+
+    local_snap = client.get(f"/api/accounts/{owner.address}/snapshot")
+    assert local_snap.status_code == 200, local_snap.text
+    body = local_snap.json()
+    assert body["network"] == "local"
+    assert body["chain_id"] == 31337
+    assert body["block_number"] == 10
+    assert body["as_of_timestamp"] > 0
+    assert body["balances"]["myusdt"]["wad"] == "0"
+    assert body["risk"]["collateral_value"]["wad"] == str(1_000 * constants.WAD)
+    assert body["interest"]["accrued"]["wad"] == "0"
+
+    bal = client.get(f"/api/accounts/{owner.address}/balances").json()
+    loan = client.get(f"/api/accounts/{owner.address}/loan").json()
+    assert bal["block_number"] == loan["block_number"] == 10
+
+    sepolia_fake = _FakeWeb3Service()
+    sepolia_fake.network = SimpleNamespace(name="sepolia")
+    sepolia_fake.chain_id = 11155111
+    sepolia_fake.w3.eth.block_number = 12224888
+    client.app.state.web3_services = {"local": api_env["web3"], "sepolia": sepolia_fake}
+
+    sep_snap = client.get(f"/api/accounts/{owner.address}/snapshot?network=sepolia")
+    assert sep_snap.status_code == 200, sep_snap.text
+    assert sep_snap.json()["network"] == "sepolia"
+    assert sep_snap.json()["block_number"] == 12224888
+
+
+def test_demo_time_rejects_sepolia_admin_session_even_when_backend_active_network_is_local(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    admin = api_env["admin"]
+
+    sepolia_fake = _FakeWeb3Service()
+    sepolia_fake.network = SimpleNamespace(name="sepolia")
+    sepolia_fake.chain_id = 11155111
+    sepolia_fake.w3.eth.chain_id = 11155111
+
+    manager = WalletAuthManager(
+        "test-only-signing-secret-that-is-at-least-32-bytes",
+        domain="localhost",
+        allowed_chain_ids=(31337, 11155111),
+        admin_wallets=(admin.address,),
+    )
+    client.app.state.auth_manager = manager
+    client.app.state.web3_services = {"local": api_env["web3"], "sepolia": sepolia_fake}
+
+    local_admin_headers = _login(client, admin, chain_id=31337)
+    sepolia_admin_headers = _login(client, admin, chain_id=11155111)
+
+    # Local admin on local network succeeds.
+    ok_local = client.post("/api/demo/time", json={"seconds": 60}, headers=local_admin_headers)
+    assert ok_local.status_code == 200, ok_local.text
+
+    # Local admin explicitly requesting Sepolia is blocked.
+    assert (
+        client.post(
+            "/api/demo/time?network=sepolia",
+            json={"seconds": 60},
+            headers=local_admin_headers,
+        ).status_code
+        == 403
+    )
+
+    # Sepolia admin session is ALWAYS blocked from local time-travel, regardless of network param.
+    assert (
+        client.post("/api/demo/time", json={"seconds": 60}, headers=sepolia_admin_headers).status_code
+        == 403
+    )
+    assert (
+        client.post(
+            "/api/demo/time?network=local",
+            json={"seconds": 60},
+            headers=sepolia_admin_headers,
+        ).status_code
+        == 403
+    )
+    assert (
+        client.post(
+            "/api/demo/time",
+            json={"seconds": 60, "network": "sepolia", "chain_id": 11155111},
+            headers=sepolia_admin_headers,
+        ).status_code
+        == 403
+    )
+
+
+def test_ipfs_write_routes_support_dynamic_sepolia_network_without_restart(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+    admin = api_env["admin"]
+
+    sepolia_fake = _FakeWeb3Service()
+    sepolia_fake.network = SimpleNamespace(name="sepolia")
+    sepolia_fake.chain_id = 11155111
+    sepolia_fake.w3.eth.chain_id = 11155111
+    sepolia_fake.w3.eth.block_number = 12224699
+    sepolia_fake.events["InterestRateUpdated"][0]["blockNumber"] = 12224550
+
+    manager = WalletAuthManager(
+        "test-only-signing-secret-that-is-at-least-32-bytes",
+        domain="localhost",
+        allowed_chain_ids=(31337, 11155111),
+        admin_wallets=(admin.address,),
+        lender_wallets=(api_env["lender"].address,),
+    )
+    client.app.state.auth_manager = manager
+    client.app.state.web3_services = {"local": api_env["web3"], "sepolia": sepolia_fake}
+
+    local_headers = _login(client, owner, chain_id=31337)
+    sepolia_headers = _login(client, owner, chain_id=11155111)
+    sepolia_admin_headers = _login(client, admin, chain_id=11155111)
+
+    # 1) Pre-borrow agreement on Sepolia succeeds without restarting backend (default is local).
+    created = client.post(
+        "/api/ipfs/create-agreement",
+        json={
+            "principal_wad": str(100 * constants.WAD),
+            "asset_description": "Sepolia CollateralNFT #2",
+            "network": "sepolia",
+        },
+        headers=sepolia_headers,
+    )
+    assert created.status_code == 200, created.text
+    agreement_cid = created.json()["cid"]
+
+    # Retrieve works immediately from the shared agreement index + gateway.
+    pdf_resp = client.get(f"/api/ipfs/documents/{agreement_cid}/retrieve", headers=sepolia_headers)
+    assert pdf_resp.status_code == 200
+    assert pdf_resp.content.startswith(b"%PDF-")
+
+    # Cross-network mismatch (local session requesting sepolia) is still blocked with 403.
+    assert (
+        client.post(
+            "/api/ipfs/create-agreement?network=sepolia",
+            json={
+                "principal_wad": str(100 * constants.WAD),
+                "asset_description": "Cross-network attempt",
+            },
+            headers=local_headers,
+        ).status_code
+        == 403
+    )
+
+    # 2) Sepolia credit-report still requires explicit from_block, and succeeds when provided.
+    assert (
+        client.post(
+            f"/api/ipfs/credit-report/{owner.address}?network=sepolia",
+            json={},
+            headers=sepolia_headers,
+        ).status_code
+        == 422
+    )
+    credit = client.post(
+        f"/api/ipfs/credit-report/{owner.address}",
+        json={"from_block": 12224519, "network": "sepolia"},
+        headers=sepolia_headers,
+    )
+    assert credit.status_code == 200, credit.text
+
+    # 3) Sepolia admin audit-logs succeeds when from_block is provided.
+    audit = client.post(
+        "/api/ipfs/audit-logs?network=sepolia",
+        json={"from_block": 12224519, "seed_simulated_months": 2},
+        headers=sepolia_admin_headers,
+    )
+    assert audit.status_code == 200, audit.text
+
+
+def test_balances_list_owned_collateral_nfts_and_lending_positions_defaults_sepolia_deploy_block(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+    web3 = api_env["web3"]
+
+    # Mock wallet owning CollateralNFT #2.
+    class _NFTBalanceFunctions:
+        def balanceOf(self, _wallet: str) -> Any:
+            return SimpleNamespace(call=lambda: 1)
+
+    orig_get_contract = web3.get_contract
+    web3.get_contract = (  # type: ignore[method-assign]
+        lambda name: SimpleNamespace(functions=_NFTBalanceFunctions())
+        if name == "CollateralNFT"
+        else orig_get_contract(name)
+    )
+    web3.get_owned_collateral_nfts = (  # type: ignore[attr-defined]
+        lambda wallet, *, from_block=0: [
+            {
+                "token_id": 2,
+                "owner": Web3.to_checksum_address(wallet),
+                "valuation": {"wad": str(1_000 * constants.WAD), "display": "1000.000000"},
+                "is_approved": False,
+                "token_uri": "ipfs://bafy-sample-2",
+            }
+        ]
+    )
+
+    bal_resp = client.get(f"/api/accounts/{owner.address}/balances")
+    assert bal_resp.status_code == 200, bal_resp.text
+    bal = bal_resp.json()["balances"]
+    assert bal["collateral_nft_balance"] == 1
+    assert bal["collateral_nft_token_ids"] == [2]
+    assert len(bal["collateral_nfts"]) == 1
+    assert bal["collateral_nfts"][0]["valuation"]["wad"] == str(1_000 * constants.WAD)
+
+    snap_resp = client.get(f"/api/accounts/{owner.address}/snapshot")
+    assert snap_resp.status_code == 200, snap_resp.text
+    assert snap_resp.json()["balances"]["collateral_nft_token_ids"] == [2]
+
+    # Sepolia lending-positions automatically uses LendingPool deploy blockNumber without 422.
+    sepolia_fake = _FakeWeb3Service()
+    sepolia_fake.network = SimpleNamespace(name="sepolia")
+    sepolia_fake.chain_id = 11155111
+    sepolia_fake.w3.eth.block_number = 12224600
+    sepolia_fake.registry["contracts"]["LendingPool"]["blockNumber"] = 12224519
+    sepolia_fake.events["LenderDeposited"] = [
+        {"blockNumber": 12224588, "args": {"positionId": 1}},
+    ]
+    sepolia_fake.get_lending_position_owner = lambda _pid: Web3.to_checksum_address(owner.address)  # type: ignore[attr-defined]
+    sepolia_fake.get_lender_position = lambda pid: {  # type: ignore[attr-defined]
+        "position_id": pid,
+        "principal": {"wad": str(1_000 * constants.WAD)},
+        "active": True,
+    }
+    sepolia_fake.get_lender_earned_interest = lambda _pid: {"wad": "0"}  # type: ignore[attr-defined]
+    sepolia_fake.get_lender_claimable_balance = lambda _pid: {"wad": str(1_000 * constants.WAD)}  # type: ignore[attr-defined]
+    client.app.state.web3_services = {"local": web3, "sepolia": sepolia_fake}
+
+    sep_pos = client.get(f"/api/accounts/{owner.address}/lending-positions?network=sepolia")
+    assert sep_pos.status_code == 200, sep_pos.text
+    sep_body = sep_pos.json()
+    assert sep_body["network"] == "sepolia"
+    assert sep_body["chain_id"] == 11155111
+    assert sep_body["block_number"] == 12224600
+    assert len(sep_body["positions"]) == 1
+    assert sep_body["positions"][0]["position_id"] == 1
+
+    # When Sepolia deploy blockNumber is missing, omitting from_block still returns 422.
+    del sepolia_fake.registry["contracts"]["LendingPool"]["blockNumber"]
+    assert (
+        client.get(f"/api/accounts/{owner.address}/lending-positions?network=sepolia").status_code
+        == 422
+    )
+
+
+def test_confirm_borrow_rejects_cross_chain_agreement_cid_binding(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+
+    sepolia_fake = _FakeWeb3Service()
+    sepolia_fake.network = SimpleNamespace(name="sepolia")
+    sepolia_fake.chain_id = 11155111
+    sepolia_fake.w3.eth.chain_id = 11155111
+
+    manager = WalletAuthManager(
+        "test-only-signing-secret-that-is-at-least-32-bytes",
+        domain="localhost",
+        allowed_chain_ids=(31337, 11155111),
+    )
+    client.app.state.auth_manager = manager
+    client.app.state.web3_services = {"local": api_env["web3"], "sepolia": sepolia_fake}
+
+    local_headers = _login(client, owner, chain_id=31337)
+    sepolia_headers = _login(client, owner, chain_id=11155111)
+
+    # Agreement created on local (31337) cannot be bound to a Sepolia (11155111) borrow receipt.
+    local_agreement = client.post(
+        "/api/ipfs/create-agreement",
+        json={
+            "principal_wad": str(100 * constants.WAD),
+            "asset_description": "Local-only agreement",
+        },
+        headers=local_headers,
+    )
+    assert local_agreement.status_code == 200, local_agreement.text
+    local_cid = local_agreement.json()["cid"]
+
+    sep_borrow = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "network": "sepolia",
+            "chain_id": 11155111,
+            "action": "BORROW",
+            "args": {
+                "amount_wad": str(100 * constants.WAD),
+                "agreement_cid": local_cid,
+            },
+        },
+        headers=sepolia_headers,
+    )
+    assert sep_borrow.status_code == 200, sep_borrow.text
+    tx_data = sep_borrow.json()
+
+    tx_hash_bytes = bytes.fromhex("99" * 32)
+    sepolia_fake.w3.eth.transaction = {
+        "from": owner.address,
+        "to": POOL,
+        "input": tx_data["unsignedTransaction"]["data"],
+        "chainId": 11155111,
+        "value": 0,
+    }
+    sepolia_fake.w3.eth.receipt = {
+        "status": 1,
+        "blockNumber": 12224900,
+        "transactionHash": tx_hash_bytes,
+    }
+    sepolia_fake.borrow_receipt_events = [
+        {
+            "address": POOL,
+            "args": {
+                "borrower": owner.address,
+                "amountWad": 100 * constants.WAD,
+                "agreementCid": local_cid,
+            },
+        }
+    ]
+
+    rejected = client.post(
+        "/api/transactions/confirm",
+        json={"intent_id": tx_data["intent_id"], "tx_hash": "0x" + tx_hash_bytes.hex()},
+        headers=sepolia_headers,
+    )
+    assert rejected.status_code == 400, rejected.text
+    assert "chain_id" in rejected.text

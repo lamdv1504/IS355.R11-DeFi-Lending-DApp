@@ -178,7 +178,7 @@ def run_verification(mode: str = "local_fallback", generate_samples: bool = Fals
         (samples_dir / "loan_agreement_sample.pdf").write_bytes(loan_pdf_bytes)
         (samples_dir / "credit_report_sample.json").write_bytes(credit_json_bytes)
         (samples_dir / "audit_logs_sample.json").write_bytes(audit_json_bytes)
-        (samples_dir / "audit_logs_sample.csv").write_text(audit_csv_text, encoding="utf-8")
+        (samples_dir / "audit_logs_sample.csv").write_bytes(audit_csv_text.encode("utf-8"))
         (samples_dir / "collateral_proof_sample.png").write_bytes(proof_png_bytes)
         assert loan_env is not None and credit_env is not None and proof_env is not None
         (samples_dir / "loan_agreement_sample.encrypted.json").write_bytes(loan_env.to_json_bytes())

@@ -1,7 +1,26 @@
 {
   "task": "H03",
-  "verification_status": "LOCAL_CONTENT_ADDRESSED_VERIFIED_LIVE_PIN_PENDING_KUBO_OR_PINATA",
-  "note": "CIDs are deterministic spec-compliant IPFS CIDv1 (raw-leaves). If provider_used is 'local_store', start IPFS Kubo (`scripts/start_ipfs_node.bat`) or configure PINATA_JWT in `.env` and re-run `python scripts/verify_h03_ipfs.py --mode live` to pin to a live gateway.",
+  "verification_status": "LOCAL_SAMPLES_VERIFIED_LIVE_KUBO_E2E_CONFIRMED_IN_Q03_Q04",
+  "note": "Offline sample artifacts in this directory were generated deterministically with spec-compliant IPFS CIDv1 (raw-leaves, provider_used='local_store'). Live IPFS Kubo v0.43.2 pinning (provider='kubo', enable_local_fallback=false, 4/4 recursive pins + Gateway screenshots) has been verified end-to-end in reports/Quan/q03_q04_ipfs_e2e_validation.md. Re-run `python scripts/verify_h03_ipfs.py --mode live` whenever Kubo/Pinata is active locally to re-pin these 4 static samples as well.",
+  "live_kubo_e2e_proof": {
+    "report_path": "reports/Quan/q03_q04_ipfs_e2e_validation.md",
+    "verified_at_utc": "2026-11-28T07:42:06Z",
+    "provider": "kubo",
+    "kubo_version": "v0.43.2",
+    "peer_id": "12D3KooWFjaQAjmQAVzaBx2cNB6Gv65GwZTnuT6VkJ6siE5C1xEP",
+    "enable_local_fallback": false,
+    "recursive_pins_verified": 4,
+    "pinned_cids": {
+      "loan_agreement_pdf_encrypted": "bafkreifuusixoxgfab5n3ug33xg4ohy6joe7cgo7flqht3zr7r3rzohcri",
+      "credit_report_json_encrypted": "bafkreihnv6iem7rj7xfdrd7ucdquq7wty74tlamn4ux6xsghcnlpylbzje",
+      "audit_logs_json_public": "bafkreiev3cjq3fzisl2uayrhgzw6a2wjsvqjkof56khblscrqmnhkf57wq",
+      "audit_logs_csv_public": "bafkreigdzv5qbfkoujrumqrlhydpcaakkchcbsu5qifnk4pqbzukfn46ca"
+    },
+    "gateway_screenshots": [
+      "reports/Quan/screenshots/ipfs_01_audit_logs_gateway.png",
+      "reports/Quan/screenshots/ipfs_02_private_ciphertext_gateway.png"
+    ]
+  },
   "documents": [
     {
       "document_type": "LOAN_AGREEMENT",

@@ -9,6 +9,8 @@ from backend.schemas.common import APIModel
 
 class DemoTimeRequest(APIModel):
     seconds: int = Field(gt=0, le=31_536_000)
+    network: str | None = Field(default=None, min_length=1, max_length=32)
+    chain_id: int | None = Field(default=None, gt=0)
 
 
 class DemoTimeResponse(APIModel):

@@ -16,6 +16,21 @@ export interface RetrievedDocument {
   sourceSha256: string; downloadSha256: string; verification: "browser" | "backend";
   json?: Record<string, unknown>;
 }
+export interface RateAnalyticsSnapshot {
+  network: string;
+  chainId: number;
+  blockNumber: number;
+  asOfTimestamp: number;
+  series: AuditEntry[];
+}
+export interface WalletSnapshotResult {
+  walletAddress: string;
+  network: string | null;
+  chainId: number | null;
+  blockNumber: number | null;
+  asOfTimestamp: number | null;
+  rows: ReturnType<typeof walletChartData>;
+}
 export const DOCUMENT_LABELS: Record<DocumentType, string> = {
   LOAN_AGREEMENT: "Thỏa thuận vay", CREDIT_REPORT: "Báo cáo tín dụng", AUDIT_LOGS: "Nhật ký lãi suất",
 };
@@ -180,6 +195,92 @@ export function walletChartData(values: { myusdt: string; collateral: string; de
     if (!/^\d{1,78}$/.test(values[key])) throw new Error("Số dư WAD không hợp lệ.");
     return { key, name: labels[key], wad: values[key], amount: Number(BigInt(values[key]) / 10n ** 12n) / 1e6 };
   });
+}
+export async function fetchRateAnalytics(
+  connection: HubConnection,
+  seedSimulatedMonths = 6,
+  signal?: AbortSignal,
+  fetcher: Fetcher = fetch
+): Promise<RateAnalyticsSnapshot> {
+  const months = Math.max(0, Math.min(120, Math.trunc(seedSimulatedMonths)));
+  const response = await apiRequest(
+    connection,
+    "/api/analytics/rates?seed_simulated_months=" + months,
+    { signal },
+    fetcher
+  );
+  const body = (await response.json()) as Record<string, unknown>;
+  const series = auditEntries({ entries: body.series });
+  return {
+    network: typeof body.network === "string" ? body.network : "local",
+    chainId: Number(body.chain_id ?? 0),
+    blockNumber: Number(body.block_number ?? 0),
+    asOfTimestamp: Number(body.as_of_timestamp ?? 0),
+    series,
+  };
+}
+export async function fetchWalletSnapshot(
+  connection: HubConnection,
+  address: string,
+  signal?: AbortSignal,
+  fetcher: Fetcher = fetch
+): Promise<WalletSnapshotResult> {
+  const trimmed = address.trim();
+  if (!/^0x[0-9a-fA-F]{40}$/.test(trimmed)) {
+    throw new Error("Nhập địa chỉ ví gồm 0x và 40 ký tự hex.");
+  }
+  try {
+    const response = await apiRequest(
+      connection,
+      "/api/accounts/" + trimmed + "/snapshot",
+      { signal },
+      fetcher
+    );
+    const body = (await response.json()) as {
+      wallet_address?: string;
+      network?: string;
+      chain_id?: number;
+      block_number?: number;
+      as_of_timestamp?: number;
+      balances?: { myusdt?: { wad?: string }; debt_token?: { wad?: string } };
+      risk?: { collateral_value?: { wad?: string } };
+      interest?: { accrued?: { wad?: string } };
+    };
+    return {
+      walletAddress: body.wallet_address || trimmed,
+      network: typeof body.network === "string" ? body.network : null,
+      chainId: typeof body.chain_id === "number" ? body.chain_id : null,
+      blockNumber: typeof body.block_number === "number" ? body.block_number : null,
+      asOfTimestamp: typeof body.as_of_timestamp === "number" ? body.as_of_timestamp : null,
+      rows: walletChartData({
+        myusdt: body.balances?.myusdt?.wad as string,
+        collateral: body.risk?.collateral_value?.wad as string,
+        debt: body.balances?.debt_token?.wad as string,
+        interest: body.interest?.accrued?.wad as string,
+      }),
+    };
+  } catch (error) {
+    if (!(error instanceof HubError && error.status === 404)) throw error;
+    const [balanceResponse, loanResponse] = await Promise.all([
+      apiRequest(connection, "/api/accounts/" + trimmed + "/balances", { signal }, fetcher),
+      apiRequest(connection, "/api/accounts/" + trimmed + "/loan", { signal }, fetcher),
+    ]);
+    const balanceBody = await balanceResponse.json();
+    const loanBody = await loanResponse.json();
+    return {
+      walletAddress: loanBody.wallet_address || trimmed,
+      network: typeof loanBody.network === "string" ? loanBody.network : null,
+      chainId: typeof loanBody.chain_id === "number" ? loanBody.chain_id : null,
+      blockNumber: typeof loanBody.block_number === "number" ? loanBody.block_number : null,
+      asOfTimestamp: typeof loanBody.as_of_timestamp === "number" ? loanBody.as_of_timestamp : null,
+      rows: walletChartData({
+        myusdt: balanceBody.balances?.myusdt?.wad,
+        collateral: loanBody.risk?.collateral_value?.wad,
+        debt: balanceBody.balances?.debt_token?.wad,
+        interest: loanBody.interest?.accrued?.wad,
+      }),
+    };
+  }
 }
 export function safeFilename(value: string) { return value.replace(/[^\p{L}\p{N}._-]+/gu, "_").slice(0, 100) || "ipfs-document"; }
 export function downloadDocument(doc: RetrievedDocument) {
