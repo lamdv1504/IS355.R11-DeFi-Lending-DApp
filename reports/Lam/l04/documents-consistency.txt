@@ -1,0 +1,416 @@
+consistency  C:\Users\ASUS\Documents\GitHub\IS355.R11-DeFi-Lending-DApp\frontend\out\documents\index.html
+
+1440x900  3 screens  46 FAIL  21 WARN
+  FAIL hero-fill       main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATED Đổi nguồn dữ liệu"
+       the next section shows on the first screen: it starts at 277px on a 900px screen (the hero ends at 237px)  [1440-01-hero-fill.jpg]
+       fix: let the hero fill the first screen alone (min-height: 100svh, less above it): nothing of the next section on load
+  FAIL flush           div.hub-document-list > article.hub-document-row:nth-of-type(3) > div.hub-doc-actions > button.text-button  "Xem hồ sơ"
+       its button sits -639px above the rule on top of section.panel.hub-preview  [1440-17-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  FAIL nav             (the first screen)
+       no nav bar across the top of the first screen (a header with the brand, the section links and the main action)
+       fix: make the nav one bar from the content's left edge to its right edge, with every link and action inside it
+  FAIL text-only       main#main-content > section.panel.hub-audit  "Nhật ký lãi suất hàng tháng"
+       the closing section is only text: no picture, icon, mock or effect in it  [1440-21-text-only.jpg]
+       fix: give the section a visual: a photograph that fits, the real icons, or a UI fragment on a ground
+  FAIL button-styles   (one screen)
+       4 button styles on one screen: label and disc, fill #122b50 ("DeFi Lending"); pill, fill #edf3fd ("Hồ sơ IPFS"); pill, outline #e0e5ed ("Tạo & lưu IPFS"); pill, fill #245bd6 ("Tra cứu hồ sơ"); the odd ones out: "Tạo & lưu IPFS", "Tra cứu hồ sơ"  [1440-02-button-styles.jpg]
+       fix: one primary and one secondary button: one shape, one height per size, one label size
+  FAIL button-styles   (the page)
+       4 button styles on the page: label and disc, fill #122b50 x1 ("DeFi Lending"); pill, fill #edf3fd x1 ("Hồ sơ IPFS"); pill, outline #e0e5ed x1 ("Tạo & lưu IPFS"); pill, fill #245bd6 x1 ("Tra cứu hồ sơ")  [1440-03-button-styles.jpg]
+       fix: one primary and one secondary button: one shape, one height per size, one label size
+  FAIL cta             main#main-content > section.panel.hub-audit  "Nhật ký lãi suất hàng tháng"
+       the last section before the footer ends with no button  [1440-22-cta.jpg]
+       fix: add the action: a button in the hero, one on every priced item, one in the closing section
+  FAIL copy-headline   main#main-content > div.page-heading.hub-heading > div > h1  "Hồ sơ IPFS."
+       "Hồ sơ IPFS." does not name what is sold (defi lending documents, defi, lending, documents, from flags)  [1440-04-copy-headline.jpg]
+       fix: put the category noun in the h1 (and who it is for, or where), in 2 to 8 words
+  FAIL copy-headings   h2#library-title  "Bộ hồ sơ minh họa"
+       "Bộ hồ sơ minh họa" names no product, part, place or section (2 headings like it; at most one brand line per page) (and 1 more like it: "Chi tiết hồ sơ")  [1440-05-copy-headings.jpg]
+       fix: name the thing in every heading: the product, a part, the place or a section noun
+  FAIL section-gaps    main#main-content > div.hub-document-grid > section.panel.hub-preview / main#main-content > section.panel.hub-audit
+       191px between these sections, +198% against the median 64px  [1440-18-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  FAIL forms           main#main-content > form.panel.cid-search  "Tra cứu CID Tra cứu hồ sơ Nhật ký công k"
+       the form sends nothing when submitted: its submit handler sends no request and opens no mail  [1440-06-forms.jpg]
+       fix: give the form an action that sends the request (an endpoint, or a mailto) and confirm it on the page
+  WARN flush           main#main-content > form.panel.cid-search > label  "Tra cứu CID"
+       its first line sits 26px under the top edge of form.panel.cid-search, where the ground changes  [1440-07-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  WARN flush           p#cid-help  "Nhật ký công khai có thể đọc tự do. Hồ s"
+       its last line sits 28px above the lower edge of form.panel.cid-search, where the ground changes to section.panel.hub-library  [1440-08-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  WARN flush           section.panel.hub-library > div.hub-section-heading > div > p.eyebrow  "DANH MỤC HỒ SƠ"
+       its first line sits 26px under the top edge of section.panel.hub-library, where the ground changes  [1440-09-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  WARN flush           section.panel.hub-audit > div.hub-section-heading > div > p.eyebrow  "AUDIT LOGS · KHÔNG CHỨA PII"
+       its first line sits 26px under the top edge of section.panel.hub-audit, where the ground changes  [1440-19-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  WARN flush           main#main-content > section.panel.hub-audit > p.hub-note  "APY ghép lãi hằng ngày chỉ để tham khảo;"
+       its last line sits 28px above the lower edge of section.panel.hub-audit, where the ground changes to the footer  [1440-23-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  WARN copy-buttons    div.app-shell.hub-shell > aside.sidebar > nav.main-nav > a:nth-of-type(3)  "Hồ sơ IPFS"
+       "Hồ sơ IPFS" does not start with a verb (book, buy, try, start, get, see...) (and 2 more like it: "Tạo & lưu IPFS", "Tra cứu hồ sơ")  [1440-10-copy-buttons.jpg]
+       fix: label buttons with a verb and what the visitor gets ("Book a room", "Start free trial")
+  WARN copy-actions    (the page)
+       the main action "Tra c?u h? s? IPFS" does not read word for word the same in the nav or hero and the closing section
+       fix: few actions, one wording: at most 2 in the hero, the main action word for word in nav, hero and close
+  WARN off-grid        h2#preview-title  "Chi tiết hồ sơ"
+       the section's heading starts at 907px, 619px off the page margin (288px), and no other section starts there  [1440-11-off-grid.jpg]
+       fix: move it onto the page margin, or the column edge its section uses
+  WARN section-gaps    main#main-content > div.page-heading.hub-heading / main#main-content > div.hub-connection
+       43px between these sections, -33% against the median 64px  [1440-12-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN section-gaps    main#main-content > div.hub-document-grid > section.panel.hub-library / main#main-content > div.hub-document-grid > section.panel.hub-preview
+       the sections overlap by 613px  [1440-25-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN label-centre    div.app-shell.hub-shell > aside.sidebar > a.brand  "DeFi Lending"
+       its label sits 39px off-centre (0px of room at the left, 39px at the right) (and 1 more like it: "Hồ sơ IPFS")  [1440-13-label-centre.jpg]
+       fix: centre the label in its button, or fill the empty side with an icon
+  WARN stranded-action main#main-content > div.page-heading.hub-heading > button.button.secondary  "Tạo & lưu IPFS"
+       stands 551px across from the nearest text of its block ("Hồ sơ IPFS.")  [1440-14-stranded-action.jpg]
+       fix: put the button under or beside the text it belongs to
+  WARN copy-length     main#main-content > section.panel.hub-audit  "Nhật ký lãi suất hàng tháng"
+       1 section over 90 words a screen outside the UI mocks ("Nhật ký lãi suất hàng th" 92); 42 words a screen across the page (252 words in 6 screens): a tech page says it in about 80 or fewer  [1440-24-copy-length.jpg]
+       fix: cut every section to its heading, one line and the product UI: the UI says the rest; no second paragraph, no list of feature sentences
+  WARN button-contrast div.app-shell.hub-shell > aside.sidebar > nav.main-nav > a:nth-of-type(3)  "Hồ sơ IPFS"
+       the button "Hồ sơ IPFS" (#edf3fd) stands only 1.11:1 off the ground around it: it reads as part of the ground, or as switched off  [1440-15-button-contrast.jpg]
+       fix: give the button a fill that stands at least 1.5:1 off what is around it, or an outline in the ink
+  WARN one-screen      main#main-content > div.hub-document-grid > section.panel.hub-library  "Bộ hồ sơ minh họa"
+       2 sections are shorter than the screen, so the next one's heading or picture shows with them: "Bộ hồ sơ minh họa" is 690px of the 900px under the nav, and "Chi tiết hồ sơ" shows below it ("Chi tiết hồ sơ")  [1440-20-one-screen.jpg]
+       fix: give each section the screen (min-height: 100svh less the nav, its content centred), or join two short ones into one
+  WARN moment-none     (the page)
+       a software page (--type) deals no moment: every kind carries one, two on a long page (moments.md)
+       fix: deal one (moments.mjs pick --page software) and mount it in its own section
+  WARN skip-link       div.app-shell.hub-shell:nth-of-type(2) > a.skip-link  "Đến nội dung chính"
+       the first Tab stop is "Đến nội dung chính", not a skip link: a keyboard user tabs through the whole nav on every visit
+       fix: add the starter's skip link as the header's first child: <a class="skip-link" href="#top">Skip to content</a>
+  WARN share-meta      head
+       the head lacks og:title, og:description, og:image, twitter:card, theme-color: a shared link shows no picture or title of its own
+       fix: copy the head block of starter.html: og tags, twitter:card, the icon and theme-color (references/system.md, Head)
+  WARN form-fields     main#main-content > form.panel.cid-search
+       the form has no status line (role="status"): sending, sent and errors are never read out  [1440-16-form-fields.jpg]
+       fix: give each field its type, autocomplete and inputmode, never block paste or disable the button before a submit, and add the status line (references/system.md, Forms)
+  FAIL hero-screen     main#main-content > div.page-heading.hub-heading  "HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ"
+       the hero ends at 237px on a 900px screen, 663px above the fold: it ends at the fold, 1px either way (SR-1)  [1440-rhythm-01-hero-screen.jpg]
+       fix: make the hero exactly one screen (height: 100svh, its content fitted inside), never taller or shorter
+  FAIL hero-screen     main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       635px of the next section shows on the first screen (from 265px on a 900px screen): nothing below the hero shows at load (SR-1)  [1440-rhythm-02-hero-screen.jpg]
+       fix: end the hero at the fold so nothing of the next section shows at load (hero height: 100svh)
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Hồ sơ IPFS & quyền truy cậpSIMUL"
+       the section is 46px tall (0.1 screens), 854px short of one screen (900px): every section after the hero is one screen or two, 2px either way (SR-2)  [1440-rhythm-03-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       the section is 64px tall (0.1 screens), 836px short of one screen (900px): every section after the hero is one screen or two, 2px either way (SR-2)  [1440-rhythm-04-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  main#main-content > form.panel.cid-search  "Tra cứu CIDTra cứu hồ sơNhật ký công kha"
+       the section is 175px tall (0.2 screens), 725px short of one screen (900px): every section after the hero is one screen or two, 2px either way (and 2 more like it: "AUDIT LOGS · KHÔNG CHỨA ", "DANH MỤC HỒ SƠBộ hồ sơ m") (SR-2)  [1440-rhythm-05-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  main#main-content > div.hub-document-grid  "DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ"
+       the section starts at 531px, 369px above the screen grid (1 x 900px): sections start on whole screens (SR-2)  [1440-rhythm-06-section-height.jpg]
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  main#main-content > section.panel.hub-audit  "AUDIT LOGS · KHÔNG CHỨA PIINhật ký lãi s"
+       the section starts at 1245px, 345px below the screen grid (1 x 900px): sections start on whole screens (SR-2)  [1440-rhythm-07-section-height.jpg]
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  main#main-content > form.panel.cid-search  "Tra cứu CIDTra cứu hồ sơNhật ký công kha"
+       the section starts at 333px, 333px below the screen grid (0 x 900px): sections start on whole screens (and 3 more like it: "Mẫu cục bộ · SIMULATEDĐổ", "HỒ SƠ & CHỨNG CỨHồ sơ IP", "IS355 · Hồ sơ IPFS & quy") (SR-2)  [1440-rhythm-08-section-height.jpg]
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Hồ sơ IPFS & quyền truy cậpSIMUL"
+       the section's content does not fit it: its lowest content ends 43px below its top, past -26px (the section less 72px of bottom padding) (SR-2)  [1440-rhythm-09-section-height.jpg]
+       fix: fit the content above the section's bottom padding (--padb), or make it two screens (.g2) in two groups
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       the section's content does not fit it: its lowest content ends 44px below its top, past -8px (the section less 72px of bottom padding) (and 3 more like it: "Tra cứu CIDTra cứu hồ sơ", "AUDIT LOGS · KHÔNG CHỨA ", "DANH MỤC HỒ SƠBộ hồ sơ m") (SR-2)  [1440-rhythm-10-section-height.jpg]
+       fix: fit the content above the section's bottom padding (--padb), or make it two screens (.g2) in two groups
+  FAIL section-air     main#main-content > div.hub-connection / main#main-content > form.panel.cid-search
+       50px of air between the content of these two sections: 128-480px (64-600px WARN) (every gap out of the band at 1440px, top to bottom: 50px after "Mẫu cục bộ · SIMULAT", 78px after "Tra cứu CIDTra cứu h", 87px after "DANH MỤC HỒ SƠBộ hồ ") (SR-3)  [1440-rhythm-11-section-air.jpg]
+       fix: keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)
+  WARN section-air     main#main-content > form.panel.cid-search / main#main-content > div.hub-document-grid
+       78px of air between the content of these two sections: 128-480px (64-600px WARN) (SR-3)  [1440-rhythm-28-section-air.jpg]
+       fix: keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)
+  WARN section-air     main#main-content > div.hub-document-grid / main#main-content > section.panel.hub-audit
+       87px of air between the content of these two sections: 128-480px (64-600px WARN) (SR-3)  [1440-rhythm-29-section-air.jpg]
+       fix: keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)
+  FAIL one-section     main#main-content > div.hub-document-grid  "DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ"
+       the screen at scroll 900px (stride 1) shows 321px of section 4 and the content of 2 sections, over 24px each beside section 5: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)  [1440-rhythm-12-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     main#main-content > div.hub-document-grid  "DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ"
+       the screen at scroll 1002px (the top of section 5) shows 219px of section 4 and the content of 2 sections, over 24px each beside section 5: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)  [1440-rhythm-13-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     h2#audit-title  "Nhật ký lãi suất hàng tháng"
+       the screen at scroll 531px (the top of section 4) shows 186px of section 5 and the heading of section 5 whole and the content of 2 sections, over 24px each beside section 4: a screen shows one section (another may peek 8px, 24px WARN) (and 3 more like it: scroll 0px, scroll 120px, scroll 265px) (SR-4)  [1440-rhythm-14-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     main#main-content > div.page-heading.hub-heading  "HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ"
+       a <div> sits directly in <main>: every part of <main> is a <section> (SR-4)  [1440-rhythm-15-one-section.jpg]
+       fix: put every block of <main> in a <section>, and give a band its own section instead of a ground inside one
+  FAIL one-section     main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       a <div> sits directly in <main>: every part of <main> is a <section> (SR-4)  [1440-rhythm-16-one-section.jpg]
+       fix: put every block of <main> in a <section>, and give a band its own section instead of a ground inside one
+  FAIL one-section     main#main-content > form.panel.cid-search  "Tra cứu CIDTra cứu hồ sơNhật ký công kha"
+       a <form> sits directly in <main>: every part of <main> is a <section> (and 2 more like it: "DANH MỤC HỒ SƠBộ hồ sơ m", "IS355 · Hồ sơ IPFS & quy") (SR-4)  [1440-rhythm-17-one-section.jpg]
+       fix: put every block of <main> in a <section>, and give a band its own section instead of a ground inside one
+  FAIL one-heading     h2#preview-title  "Chi tiết hồ sơ"
+       the section holds 2 h2 headings: one per section, first in its .wrap (SR-5)  [1440-rhythm-18-one-heading.jpg]
+       fix: give each section one h2, first in its .wrap, and the hero only its h1
+  FAIL one-heading     h2#audit-title  "Nhật ký lãi suất hàng tháng"
+       headings of two sections show whole on one screen at 3 of 21 scroll positions (14.3%; at scroll 450, 500, 550px), here with "Bộ hồ sơ minh họa": at most 3% on a desktop (SR-5)  [1440-rhythm-19-one-heading.jpg]
+       fix: make the sections one screen tall so their headings sit a screen apart and two never share one
+  FAIL container-edges div.app-shell.hub-shell > div.workspace > header.topbar  "Ứng dụng /Hồ sơ IPFSMẫu · SIMULATED"
+       the nav's content runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)  [1440-rhythm-20-container-edges.jpg]
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges main#main-content > div.page-heading.hub-heading  "HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ"
+       the content of section 1 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)  [1440-rhythm-21-container-edges.jpg]
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       the content of section 2 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (and 4 more like it: "Tra cứu CIDTra cứu hồ sơ", "DANH MỤC HỒ SƠBộ hồ sơ m", "AUDIT LOGS · KHÔNG CHỨA ") (SR-6)  [1440-rhythm-22-container-edges.jpg]
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges div.app-shell.hub-shell  "Đến nội dung chínhDeFi LendingKHÔNG GIAN"
+       a <div> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)  [1440-rhythm-23-container-edges.jpg]
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges main#main-content > div.page-heading.hub-heading  "HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ"
+       the section needs exactly one in-flow child .wrap (it has 2 in-flow children, 0 .wrap) (and 5 more like it: "Mẫu cục bộ · SIMULATEDĐổ", "Tra cứu CIDTra cứu hồ sơ", "DANH MỤC HỒ SƠBộ hồ sơ m") (SR-6)  [1440-rhythm-24-container-edges.jpg]
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges h2#preview-title  "Chi tiết hồ sơ"
+       the h2 starts 619px right of the container's left: every h1 and h2 starts on it, 2px either way (SR-6)  [1440-rhythm-25-container-edges.jpg]
+       fix: start the text on the container's left, or on the one split line every split shares
+  FAIL container-edges h2#library-title  "Bộ hồ sơ minh họa"
+       the h2 starts 25px right of the container's left: every h1 and h2 starts on it, 2px either way (and 2 more like it: x 312, "Nhật ký lãi suất hàng th") (SR-6)  [1440-rhythm-26-container-edges.jpg]
+       fix: start the text on the container's left, or on the one split line every split shares
+  FAIL container-edges main#main-content > div.hub-document-grid > section.panel.hub-library  "DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ"
+       a box over half the container wide runs 288-858px, not on the container's lines at 288-1400px (SR-6)  [1440-rhythm-27-container-edges.jpg]
+       fix: run the picture or box from the container's left line to its right line, or put it in a row or a split
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Hồ sơ IPFS & quyền truy cậpSIMUL"
+       with every answer and tab open, the section's content does not fit it: its lowest content ends 43px below its top, past -26px (the section less 72px of bottom padding) (SR-2)  [1440-rhythm-30-section-height.jpg]
+       fix: show answers and panels open and size the section for its open content, or make it two screens (.g2)
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệuK"
+       with every answer and tab open, the section's content does not fit it: its lowest content ends 337px below its top, past 290px (the section less 72px of bottom padding) (SR-2)  [1440-rhythm-31-section-height.jpg]
+       fix: show answers and panels open and size the section for its open content, or make it two screens (.g2)
+  FAIL section-height  main#main-content > section.panel.hub-create  "Tạo hồ sơ và lưu IPFSBackend sinh file t"
+       with every answer and tab open, the section's content does not fit it: its lowest content ends 386px below its top, past 342px (the section less 72px of bottom padding) (and 3 more like it: "Tra cứu CIDTra cứu hồ sơ", "AUDIT LOGS · KHÔNG CHỨA ", "DANH MỤC HỒ SƠBộ hồ sơ m") (SR-2)  [1440-rhythm-32-section-height.jpg]
+       fix: show answers and panels open and size the section for its open content, or make it two screens (.g2)
+  FAIL section-height  main#main-content > div.hub-document-grid  "DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ"
+       with every answer and tab open, the section starts at 1288px, 388px below the screen grid (1 x 900px): sections start on whole screens (SR-2)  [1440-rhythm-33-section-height.jpg]
+       fix: size each section for its content with every answer and tab open, so the tops below stay on whole screens
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệuK"
+       with every answer and tab open, the section starts at 265px, 265px below the screen grid (0 x 900px): sections start on whole screens (SR-2)  [1440-rhythm-34-section-height.jpg]
+       fix: size each section for its content with every answer and tab open, so the tops below stay on whole screens
+  FAIL section-height  main#main-content > section.panel.hub-create  "Tạo hồ sơ và lưu IPFSBackend sinh file t"
+       with every answer and tab open, the section starts at 651px, 249px above the screen grid (1 x 900px): sections start on whole screens (and 4 more like it: "AUDIT LOGS · KHÔNG CHỨA ", "Tra cứu CIDTra cứu hồ sơ", "HỒ SƠ & CHỨNG CỨHồ sơ IP") (SR-2)  [1440-rhythm-35-section-height.jpg]
+       fix: size each section for its content with every answer and tab open, so the tops below stay on whole screens
+  FAIL section-height  main
+       opening every answer and tab changes the number of sections from 6 to 7: nothing in a section may change its height after load (SR-2)
+       fix: show every answer and panel open from the start (no accordion, no tabs that resize), so nothing changes a section's height after load
+  FAIL section-height  main#main-content > div.page-heading.hub-heading > button.button.secondary  "Tạo & lưu IPFS"
+       opening "Tạo & lưu IPFS" changes the page's height from 1902 to 2341px: nothing in a section may change its height after load (and 1 more like it: "Đổi nguồn dữ liệu") (SR-2)  [1440-rhythm-36-section-height.jpg]
+       fix: show every answer and panel open from the start (no accordion, no tabs that resize), so nothing changes a section's height after load
+
+390x844  6 screens  43 FAIL  8 WARN
+  FAIL hero-fill       main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATED Đổi nguồn dữ liệu"
+       the next section shows on the first screen: it starts at 323px on a 844px screen (the hero ends at 302px)  [390-01-hero-fill.jpg]
+       fix: let the hero fill the first screen alone (min-height: 100svh, less above it): nothing of the next section on load
+  FAIL no-visual       main#main-content > div.hub-document-grid > section.panel.hub-library  "Bộ hồ sơ minh họa"
+       no picture, effect or mock in this section; a feature section needs a visual  [390-05-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual       main#main-content > section.panel.hub-audit  "Nhật ký lãi suất hàng tháng"
+       no picture, effect or mock in this section; a feature section needs a visual  [390-10-no-visual.jpg]
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL cta             main#main-content > section.panel.hub-audit  "Nhật ký lãi suất hàng tháng"
+       the last section before the footer ends with no button  [390-11-cta.jpg]
+       fix: add the action: a button in the hero, one on every priced item, one in the closing section
+  FAIL section-gaps    main#main-content > div.page-heading.hub-heading / main#main-content > div.hub-connection
+       21px between these sections, -68% against the median 66px  [390-02-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN flush           main#main-content > div.page-heading.hub-heading > button.button.secondary  "Tạo & lưu IPFS"
+       div.page-heading.hub-heading and div.hub-connection run together: 21px between their content, on one ground  [390-03-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  WARN button-styles   div.hub-document-grid > section.panel.hub-library > div.hub-filters > button:nth-of-type(1)  "Tất cả"
+       the selected tab "Tất cả" is drawn as a filled pill in #122b50, a fill none of the page's buttons use (#245bd6): it reads as one more button style  [390-04-button-styles.jpg]
+       fix: draw the selected tab as a line under its word, or in the primary button's fill
+  WARN heading-scale   article.hub-document-row:nth-of-type(1) > div.hub-doc-top > div > h3  "Thỏa thuận vay"
+       the h3s (16px) are only 1.06x smaller than the h2s (17px): one level a clear step (1.3x or more) below the other  [390-06-heading-scale.jpg]
+       fix: size headings by level: the h1 largest, one size per level, each level below the one above
+  WARN section-gaps    main#main-content > div.hub-document-grid > section.panel.hub-library / main#main-content > div.hub-document-grid > section.panel.hub-preview
+       84px between these sections, +28% against the median 66px  [390-07-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN section-gaps    main#main-content > div.hub-document-grid > section.panel.hub-preview / main#main-content > section.panel.hub-audit
+       102px between these sections, +56% against the median 66px  [390-08-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN orphan          section.panel.hub-audit > div.hub-section-heading > div > p.eyebrow  "AUDIT LOGS · KHÔNG CHỨA PII"
+       its last line holds only "PII"  [390-09-orphan.jpg]
+       fix: rebalance the text (text-wrap: pretty, or a shorter line) so the last line holds more than one short word
+  FAIL hero-screen     main#main-content > div.page-heading.hub-heading  "HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ"
+       the hero ends at 302px on a 844px screen, 542px above the fold: it ends at the fold, 1px either way (SR-1)  [390-rhythm-01-hero-screen.jpg]
+       fix: make the hero exactly one screen (height: 100svh, its content fitted inside), never taller or shorter
+  FAIL hero-screen     main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       522px of the next section shows on the first screen (from 322px on a 844px screen): nothing below the hero shows at load (SR-1)  [390-rhythm-02-hero-screen.jpg]
+       fix: end the hero at the fold so nothing of the next section shows at load (hero height: 100svh)
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Hồ sơ IPFS & quyền truy cậpSIMUL"
+       the section is 76px tall (0.1 screens), 768px short of one screen (844px): every section after the hero is one screen or two, 2px either way (SR-2)  [390-rhythm-03-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       the section is 90px tall (0.1 screens), 754px short of one screen (844px): every section after the hero is one screen or two, 2px either way (SR-2)  [390-rhythm-04-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  main#main-content > form.panel.cid-search  "Tra cứu CIDTra cứu hồ sơNhật ký công kha"
+       the section is 256px tall (0.3 screens), 588px short of one screen (844px): every section after the hero is one screen or two, 2px either way (and 2 more like it: "DANH MỤC HỒ SƠBộ hồ sơ m", "AUDIT LOGS · KHÔNG CHỨA ") (SR-2)  [390-rhythm-05-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  main#main-content > form.panel.cid-search  "Tra cứu CIDTra cứu hồ sơNhật ký công kha"
+       the section starts at 416px, 416px below the screen grid (0 x 844px): sections start on whole screens (SR-2)  [390-rhythm-06-section-height.jpg]
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  main#main-content > section.panel.hub-audit  "AUDIT LOGS · KHÔNG CHỨA PIINhật ký lãi s"
+       the section starts at 2049px, 361px below the screen grid (2 x 844px): sections start on whole screens (SR-2)  [390-rhythm-07-section-height.jpg]
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       the section starts at 322px, 322px below the screen grid (0 x 844px): sections start on whole screens (and 3 more like it: "IS355 · Hồ sơ IPFS & quy", "DANH MỤC HỒ SƠBộ hồ sơ m", "HỒ SƠ & CHỨNG CỨHồ sơ IP") (SR-2)  [390-rhythm-08-section-height.jpg]
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Hồ sơ IPFS & quyền truy cậpSIMUL"
+       the section's content does not fit it: its lowest content ends 72px below its top, past 28px (the section less 48px of bottom padding) (SR-2)  [390-rhythm-09-section-height.jpg]
+       fix: fit the content above the section's bottom padding (--padb), or make it two screens (.g2) in two groups
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       the section's content does not fit it: its lowest content ends 70px below its top, past 42px (the section less 48px of bottom padding) (and 2 more like it: "Tra cứu CIDTra cứu hồ sơ", "AUDIT LOGS · KHÔNG CHỨA ") (SR-2)  [390-rhythm-10-section-height.jpg]
+       fix: fit the content above the section's bottom padding (--padb), or make it two screens (.g2) in two groups
+  FAIL section-air     main#main-content > div.hub-connection / main#main-content > form.panel.cid-search
+       46px of air between the content of these two sections: 112-420px (56-560px WARN) (every gap out of the band at 390px, top to bottom: 46px after "Mẫu cục bộ · SIMULAT", 69px after "Tra cứu CIDTra cứu h", 100px after "DANH MỤC HỒ SƠBộ hồ ") (SR-3)  [390-rhythm-11-section-air.jpg]
+       fix: keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)
+  WARN section-air     main#main-content > form.panel.cid-search / main#main-content > div.hub-document-grid
+       69px of air between the content of these two sections: 112-420px (56-560px WARN) (SR-3)  [390-rhythm-31-section-air.jpg]
+       fix: keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)
+  WARN section-air     main#main-content > div.hub-document-grid / main#main-content > section.panel.hub-audit
+       100px of air between the content of these two sections: 112-420px (56-560px WARN) (SR-3)  [390-rhythm-32-section-air.jpg]
+       fix: keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)
+  FAIL one-section     main#main-content > div.hub-document-grid  "DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ"
+       the screen at scroll 1688px (stride 2) shows 337px of section 4 and the content of 2 sections, over 24px each beside section 5: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)  [390-rhythm-12-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     main#main-content > form.panel.cid-search  "Tra cứu CIDTra cứu hồ sơNhật ký công kha"
+       the screen at scroll 322px (the top of section 2) shows 256px of section 3 and the content of 3 sections, over 24px each beside section 4: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)  [390-rhythm-13-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     main#main-content > div.page-heading.hub-heading > div > h1  "Hồ sơ IPFS."
+       the screen at scroll 100px (the top of section 1) shows 248px of section 4 and the heading of section 1 whole and the content of 4 sections, over 24px each beside section 3: a screen shows one section (another may peek 8px, 24px WARN) (and 2 more like it: scroll 0px, scroll 2873px) (SR-4)  [390-rhythm-14-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     main#main-content > div.page-heading.hub-heading  "HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ"
+       a <div> sits directly in <main>: every part of <main> is a <section> (SR-4)  [390-rhythm-15-one-section.jpg]
+       fix: put every block of <main> in a <section>, and give a band its own section instead of a ground inside one
+  FAIL one-section     main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       a <div> sits directly in <main>: every part of <main> is a <section> (SR-4)  [390-rhythm-16-one-section.jpg]
+       fix: put every block of <main> in a <section>, and give a band its own section instead of a ground inside one
+  FAIL one-section     main#main-content > form.panel.cid-search  "Tra cứu CIDTra cứu hồ sơNhật ký công kha"
+       a <form> sits directly in <main>: every part of <main> is a <section> (and 3 more like it: "DANH MỤC HỒ SƠBộ hồ sơ m", "IS355 · Hồ sơ IPFS & quy", "DANH MỤC HỒ SƠBộ hồ sơ m") (SR-4)  [390-rhythm-17-one-section.jpg]
+       fix: put every block of <main> in a <section>, and give a band its own section instead of a ground inside one
+  FAIL one-heading     h2#preview-title  "Chi tiết hồ sơ"
+       the section holds 2 h2 headings: one per section, first in its .wrap (SR-5)  [390-rhythm-18-one-heading.jpg]
+       fix: give each section one h2, first in its .wrap, and the hero only its h1
+  FAIL one-heading     h2#audit-title  "Nhật ký lãi suất hàng tháng"
+       headings of two sections show whole on one screen at 5 of 58 scroll positions (8.6%; at scroll 1350, 1400, 1450, 1500px), here with "Chi tiết hồ sơ": at most 5% on a phone (SR-5)  [390-rhythm-19-one-heading.jpg]
+       fix: make the sections one screen tall so their headings sit a screen apart and two never share one
+  FAIL container-edges main#main-content > form.panel.cid-search  "Tra cứu CIDTra cứu hồ sơNhật ký công kha"
+       the content of section 3 runs 41px from the left and 41px from the right (read from its outermost blocks: no .wrap): the page's container starts at 20px; the margin is 16-24px at 390px (one container, equal margins, 2px either way) (SR-6)  [390-rhythm-20-container-edges.jpg]
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges div.app-shell.hub-shell > div.workspace > header.topbar  "Ứng dụng /Hồ sơ IPFSMẫu · SIMULATED"
+       the nav's content runs 16px from the left and 16px from the right (read from its outermost blocks: no .wrap): the page's container starts at 20px (one container, equal margins, 2px either way) (SR-6)  [390-rhythm-21-container-edges.jpg]
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges div.app-shell.hub-shell  "Đến nội dung chínhDeFi LendingKHÔNG GIAN"
+       a <div> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)  [390-rhythm-22-container-edges.jpg]
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges main#main-content > div.page-heading.hub-heading  "HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ"
+       the section needs exactly one in-flow child .wrap (it has 2 in-flow children, 0 .wrap) (and 5 more like it: "Mẫu cục bộ · SIMULATEDĐổ", "Tra cứu CIDTra cứu hồ sơ", "DANH MỤC HỒ SƠBộ hồ sơ m") (SR-6)  [390-rhythm-23-container-edges.jpg]
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges div.workspace > header.topbar > div.topbar-left > button.icon-button.mobile-menu  "Mở điều hướng"
+       "Mở điều hướng" runs 16-60px, outside the container lines of the nav at 20-370px: full width is for background layers and grounds only (SR-6)  [390-rhythm-24-container-edges.jpg]
+       fix: keep it inside the container lines (.wrap): full width is for background layers and grounds only
+  FAIL container-edges div.workspace > header.topbar > div.topbar-right > span.hub-session-label  "Mẫu · SIMULATED"
+       "Mẫu · SIMULATED" runs 270-374px, outside the container lines of the nav at 20-370px: full width is for background layers and grounds only (SR-6)  [390-rhythm-25-container-edges.jpg]
+       fix: keep it inside the container lines (.wrap): full width is for background layers and grounds only
+  FAIL container-edges div.hub-document-grid > section.panel.hub-preview > div.hub-preview-empty > h3  "Chọn hồ sơ hoặc dán CID"
+       4 text blocks start on a left line at x 97, 77px from the container's left: text starts on the container's left, or on one split line (x 176, 207, 238) (also "Thỏa thuận vay", "Báo cáo tín dụng", "Nhật ký lãi suất") (and 5 more like it: x 81, x 41, "Bộ hồ sơ minh họa") (SR-6)  [390-rhythm-26-container-edges.jpg]
+       fix: start the text on the container's left, or on the one split line every split shares
+  FAIL container-edges div.hub-document-grid > section.panel.hub-preview > div.hub-preview-empty > p  "File riêng tư chỉ hiển thị sau khi máy c"
+       "File riêng tư chỉ hiển thị sau k" is set centred across 308px, over half the 350px container: text that wide is set left (and 1 more like it: "Chọn hồ sơ hoặc dán CID") (SR-6)  [390-rhythm-27-container-edges.jpg]
+       fix: set the text left (text-align: start)
+  FAIL row-lines       div.hub-document-grid > section.panel.hub-preview > div.hub-preview-empty > div.hub-access-steps  "01Tra cứu CID02Kiểm tra quyền03Đối chiếu"
+       a row of 3 items: its first item starts at 41px, the container's left line at 20px; its last item ends at 349px, the container's right line at 370px (2px either way) (SR-7)  [390-rhythm-28-row-lines.jpg]
+       fix: start the row's first item on the container's left line and end its last on the right line, every item one height
+  FAIL row-lines       div.hub-table-scroll > table > tbody > tr:nth-of-type(1)  "2026-061,41%7,25%20%SIMULATED"
+       a row of 2 items: its first item starts at 41px, the container's left line at 21px; its last item ends at 349px, the container's right line at 369px (2px either way) (SR-7)  [390-rhythm-29-row-lines.jpg]
+       fix: start the row's first item on the container's left line and end its last on the right line, every item one height
+  FAIL row-lines       div.hub-table-scroll > table > tbody > tr:nth-of-type(2)  "2026-072,429%8,328%30%SIMULATED"
+       a row of 2 items: its first item starts at 41px, the container's left line at 21px; its last item ends at 349px, the container's right line at 369px (2px either way) (and 4 more like it: "2026-085,127%10,516%50%S", "2026-096,822%11,626%60%S", "2026-108,762%12,748%70%S") (SR-7)  [390-rhythm-30-row-lines.jpg]
+       fix: start the row's first item on the container's left line and end its last on the right line, every item one height
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Hồ sơ IPFS & quyền truy cậpSIMUL"
+       with every answer and tab open, the section's content does not fit it: its lowest content ends 72px below its top, past 28px (the section less 48px of bottom padding) (SR-2)  [390-rhythm-33-section-height.jpg]
+       fix: show answers and panels open and size the section for its open content, or make it two screens (.g2)
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệuK"
+       with every answer and tab open, the section's content does not fit it: its lowest content ends 594px below its top, past 567px (the section less 48px of bottom padding) (SR-2)  [390-rhythm-34-section-height.jpg]
+       fix: show answers and panels open and size the section for its open content, or make it two screens (.g2)
+  FAIL section-height  main#main-content > section.panel.hub-create  "Tạo hồ sơ và lưu IPFSBackend sinh file t"
+       with every answer and tab open, the section's content does not fit it: its lowest content ends 616px below its top, past 592px (the section less 48px of bottom padding) (and 2 more like it: "Tra cứu CIDTra cứu hồ sơ", "AUDIT LOGS · KHÔNG CHỨA ") (SR-2)  [390-rhythm-35-section-height.jpg]
+       fix: show answers and panels open and size the section for its open content, or make it two screens (.g2)
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệuK"
+       with every answer and tab open, the section starts at 322px, 322px below the screen grid (0 x 844px): sections start on whole screens (SR-2)  [390-rhythm-36-section-height.jpg]
+       fix: size each section for its content with every answer and tab open, so the tops below stay on whole screens
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Hồ sơ IPFS & quyền truy cậpSIMUL"
+       with every answer and tab open, the section starts at 4831px, 233px above the screen grid (6 x 844px): sections start on whole screens (SR-2)  [390-rhythm-37-section-height.jpg]
+       fix: size each section for its content with every answer and tab open, so the tops below stay on whole screens
+  FAIL section-height  main#main-content > div.hub-document-grid  "DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ"
+       with every answer and tab open, the section starts at 1905px, 217px below the screen grid (2 x 844px): sections start on whole screens (and 4 more like it: "AUDIT LOGS · KHÔNG CHỨA ", "Tạo hồ sơ và lưu IPFSBac", "HỒ SƠ & CHỨNG CỨHồ sơ IP") (SR-2)  [390-rhythm-38-section-height.jpg]
+       fix: size each section for its content with every answer and tab open, so the tops below stay on whole screens
+  FAIL section-height  main
+       opening every answer and tab changes the number of sections from 6 to 7: nothing in a section may change its height after load (SR-2)
+       fix: show every answer and panel open from the start (no accordion, no tabs that resize), so nothing changes a section's height after load
+  FAIL section-height  main#main-content > div.page-heading.hub-heading > button.button.secondary  "Tạo & lưu IPFS"
+       opening "Tạo & lưu IPFS" changes the page's height from 3717 to 4381px: nothing in a section may change its height after load (and 1 more like it: "Đổi nguồn dữ liệu") (SR-2)  [390-rhythm-39-section-height.jpg]
+       fix: show every answer and panel open from the start (no accordion, no tabs that resize), so nothing changes a section's height after load
+
+first screen at 1280, 1152, 1024, 896, 768  0 FAIL  0 WARN
+
+the page at 320x640, walked for what runs past the screen's edge  0 FAIL
+
+checks
+  PASS assets                 PASS shader-lint            PASS gl-fallback
+  PASS empty-visual           FAIL hero-fill              FAIL flush
+  PASS placeholder            PASS sample-label           PASS caption
+  PASS credit-wall            FAIL nav                    PASS nav-covers
+  PASS spill                  PASS off-viewport           PASS fold-card
+  PASS hover-spill            PASS overlap-text           PASS collide
+  PASS tap-size               PASS row-gap                PASS cut-text
+  PASS fold-cut               PASS marquee                PASS scroll-linked
+  PASS scroll-reveal          PASS pinned                 PASS loop-pause
+  PASS reduced-motion         PASS hidden-content         PASS webgl
+  FAIL no-visual              FAIL text-only              PASS card-visual
+  PASS hidden-visual          PASS card-family            PASS card-layout
+  PASS nesting                PASS effect-repeat          PASS ui-fit
+  PASS ui-centre              PASS dark-ground            FAIL button-styles
+  PASS button-shape           PASS same-action            PASS button-picture
+  FAIL cta                    PASS pricing-tiers          FAIL copy-headline
+  PASS copy-fact              FAIL copy-headings          WARN copy-buttons
+  WARN copy-actions           WARN heading-scale          PASS stagger
+  PASS top-stagger            WARN off-grid               PASS col-edge
+  PASS right-edge             PASS centre-axis            PASS tilt
+  PASS contrast               PASS text-contrast          PASS body-size
+  PASS busy-ground            FAIL section-gaps           PASS proximity
+  PASS hole                   PASS links                  FAIL forms
+  PASS photo-upscale          PASS photo-set              PASS photo-credit
+  PASS nav-family             PASS nav-labels             PASS link-styles
+  PASS heading-align          WARN label-centre           PASS fake-button
+  WARN stranded-action        WARN orphan                 PASS unit-break
+  PASS tab-wrap               PASS effects-fit            PASS fade-cut
+  PASS photo-weight           WARN copy-length            PASS nav-current
+  PASS progress-bar           PASS photo-repeat           WARN button-contrast
+  PASS photo-print            PASS grounds                PASS split-align
+  PASS fact-agree             PASS fold-action            PASS action-count
+  WARN one-screen             PASS hover                  PASS hover-move
+  PASS product-shown          PASS same-object            PASS font-load
+  PASS visual-caption         PASS visual-empty           PASS effect-kind
+  PASS hero-enter             WARN moment-none            PASS street-number
+  PASS postcode               PASS coordinates            PASS company-number
+  PASS phone-number           FAIL hero-screen            FAIL section-height
+  FAIL section-air            FAIL one-section            FAIL one-heading
+  FAIL container-edges        FAIL row-lines              PASS split-pair
+  PASS motion-layer           PASS count-text             PASS loop-cycle
+  PASS section-tile           PASS empty-area             PASS a11y-name
+  PASS img-alt                PASS field-label            PASS heading-order
+  PASS tabindex               PASS focus-ring             PASS focus-visible
+  PASS focus-hidden           WARN skip-link              PASS menu-toggle
+  PASS lang                   PASS page-meta              WARN share-meta
+  PASS action-repeat          PASS map-link               PASS open-now
+  PASS assumed                PASS run-on                 WARN form-fields
+  PASS form-send
+
+total  89 FAIL  29 WARN  (crops and report.json in C:\Users\ASUS\Documents\GitHub\IS355.R11-DeFi-Lending-DApp\frontend\.taste-skill\l04\documents-consistency-final)

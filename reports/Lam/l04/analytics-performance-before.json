@@ -1,0 +1,292 @@
+{
+ "page": "out/analytics/index.html",
+ "partial": false,
+ "results": [
+  {
+   "w": 1440,
+   "rows": [
+    {
+     "name": "host CPU load (before/after)",
+     "value": "37/69 %",
+     "verdict": "WARN",
+     "note": "busy host: timing verdicts capped at WARN, rerun when idle"
+    },
+    {
+     "name": "total transfer",
+     "value": "507 KiB",
+     "verdict": "PASS",
+     "note": "html 6.6K  css 11.1K  js 301.8K  font 180.4K  other 7.1K"
+    },
+    {
+     "name": "requests",
+     "value": 20,
+     "verdict": "PASS",
+     "note": "19 by load"
+    },
+    {
+     "name": "images bytes",
+     "value": "0 KiB",
+     "verdict": "PASS",
+     "note": "0 files"
+    },
+    {
+     "name": "JS parsed",
+     "value": "994.9 KiB",
+     "verdict": "FAIL",
+     "note": "11 files, 301.8K gz"
+    },
+    {
+     "name": "CSS",
+     "value": "11.1 KiB",
+     "verdict": "PASS",
+     "note": "2 files"
+    },
+    {
+     "name": "font families",
+     "value": 2,
+     "verdict": "PASS",
+     "note": "beVietnam, beVietnam Fallback"
+    },
+    {
+     "name": "font files",
+     "value": 4,
+     "verdict": "PASS",
+     "note": "180.4K"
+    },
+    {
+     "name": "font bytes",
+     "value": "180.4 KiB",
+     "verdict": "WARN",
+     "note": ""
+    },
+    {
+     "name": "images without width+height",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "below-fold images not lazy",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "oversized images (natural > 2.2x shown)",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "WebGL live at load",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "WebGL live at bottom",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "WebGL peak live",
+     "value": 0,
+     "verdict": "PASS",
+     "note": "0 contexts made in all"
+    },
+    {
+     "name": "long tasks",
+     "value": 4,
+     "verdict": "PASS",
+     "note": "runs 3, 3..4, max 176ms"
+    },
+    {
+     "name": "blocking time",
+     "value": "186 ms",
+     "verdict": "PASS",
+     "note": "runs 3, 57..197 ms; at load 186ms"
+    },
+    {
+     "name": "FCP (CPU, relative)",
+     "value": "192 ms",
+     "verdict": "PASS",
+     "note": "runs 3, 136..236"
+    },
+    {
+     "name": "LCP (CPU, relative)",
+     "value": "192 ms",
+     "verdict": "PASS",
+     "note": "runs 3, 136..236, p.hub-note"
+    },
+    {
+     "name": "layout shift",
+     "value": "0.000",
+     "verdict": "PASS",
+     "note": "runs 3, 0.000..0.000; at load 0.000"
+    },
+    {
+     "name": "modules loaded, never mounted",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "broken requests",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "page height",
+     "value": "2.1 screens",
+     "verdict": "PASS",
+     "note": "DOM 438 nodes"
+    }
+   ]
+  },
+  {
+   "w": 390,
+   "rows": [
+    {
+     "name": "host CPU load (before/after)",
+     "value": "37/69 %",
+     "verdict": "WARN",
+     "note": "busy host: timing verdicts capped at WARN, rerun when idle"
+    },
+    {
+     "name": "total transfer",
+     "value": "506.6 KiB",
+     "verdict": "PASS",
+     "note": "html 6.6K  css 11.1K  js 301.8K  font 180.4K  other 6.6K"
+    },
+    {
+     "name": "requests",
+     "value": 19,
+     "verdict": "PASS",
+     "note": "18 by load"
+    },
+    {
+     "name": "images bytes",
+     "value": "0 KiB",
+     "verdict": "PASS",
+     "note": "0 files"
+    },
+    {
+     "name": "JS parsed",
+     "value": "994.9 KiB",
+     "verdict": "FAIL",
+     "note": "11 files, 301.8K gz"
+    },
+    {
+     "name": "CSS",
+     "value": "11.1 KiB",
+     "verdict": "PASS",
+     "note": "2 files"
+    },
+    {
+     "name": "font families",
+     "value": 2,
+     "verdict": "PASS",
+     "note": "beVietnam, beVietnam Fallback"
+    },
+    {
+     "name": "font files",
+     "value": 4,
+     "verdict": "PASS",
+     "note": "180.4K"
+    },
+    {
+     "name": "font bytes",
+     "value": "180.4 KiB",
+     "verdict": "WARN",
+     "note": ""
+    },
+    {
+     "name": "images without width+height",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "below-fold images not lazy",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "oversized images (natural > 2.2x shown)",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "WebGL live at load",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "WebGL live at bottom",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "WebGL peak live",
+     "value": 0,
+     "verdict": "PASS",
+     "note": "0 contexts made in all"
+    },
+    {
+     "name": "long tasks",
+     "value": 2,
+     "verdict": "PASS",
+     "note": "runs 3, 2..3, max 142ms"
+    },
+    {
+     "name": "blocking time",
+     "value": "69 ms",
+     "verdict": "PASS",
+     "note": "runs 3, 68..143 ms; at load 69ms"
+    },
+    {
+     "name": "FCP (CPU, relative)",
+     "value": "160 ms",
+     "verdict": "PASS",
+     "note": "runs 3, 156..208"
+    },
+    {
+     "name": "LCP (CPU, relative)",
+     "value": "160 ms",
+     "verdict": "PASS",
+     "note": "runs 3, 156..208, h2"
+    },
+    {
+     "name": "layout shift",
+     "value": "0.000",
+     "verdict": "PASS",
+     "note": "runs 3, 0.000..0.000; at load 0.000"
+    },
+    {
+     "name": "modules loaded, never mounted",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "broken requests",
+     "value": 0,
+     "verdict": "PASS",
+     "note": ""
+    },
+    {
+     "name": "page height",
+     "value": "2.7 screens",
+     "verdict": "PASS",
+     "note": "DOM 426 nodes"
+    }
+   ]
+  }
+ ]
+}
