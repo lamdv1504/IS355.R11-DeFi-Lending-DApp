@@ -1,169 +1,242 @@
 {
   "network": "localhost",
   "chainId": 31337,
-  "deployedAt": "2026-11-27T01:20:00.732Z",
+  "explorerUrl": "http://127.0.0.1:8545",
+  "deployedAt": "2026-11-27T16:23:16.721683+00:00",
   "contracts": {
     "MyUSDT": {
       "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-      "txHash": "0x69dd32c7c57ead3a1213e2e4884e8cbcfa9862bec7635433a6441af6cf4f7ca0",
+      "txHash": "0x9705d97b58fe7114bcebab75253c7f2ada0e153c40a391332528f12b8b52476e",
       "blockNumber": 1,
+      "explorerUrl": "http://127.0.0.1:8545/tx/0x9705d97b58fe7114bcebab75253c7f2ada0e153c40a391332528f12b8b52476e",
       "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "abiPath": "deployments/abi/MyUSDT.json",
+      "status": "DEPLOYED",
       "decimals": 18,
       "initialSupply": "1000000000000000000000000",
-      "maxFaucetAmount": "1000000000000000000000",
-      "totalSupplyAfterSeed": "1009000000000000000000000",
-      "testAccounts": [
-        {
-          "index": 0,
-          "role": "Deployer / Admin / System Seed",
-          "address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-          "balance": "1000000000000000000000000",
-          "balanceMyUSDT": "1000000.0",
-          "seedTxHash": null
-        },
-        {
-          "index": 1,
-          "role": "Lender A",
-          "address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-          "balance": "1000000000000000000000",
-          "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0x5f5df6bacafc978d32bb8dad8da755338dd9235c123de371fe182da78c7d9da4"
-        },
-        {
-          "index": 2,
-          "role": "Borrower A",
-          "address": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-          "balance": "1000000000000000000000",
-          "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0xd31670515925f4b13dad85f7a2838ec5f6ddb0709af0c1c47922a5eb26d2857e"
-        },
-        {
-          "index": 3,
-          "role": "Lender B",
-          "address": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
-          "balance": "1000000000000000000000",
-          "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0xa5d4ee4f13c143cdf5f344f9fab8c415471e1a3a740405f0347bf864f524a892"
-        },
-        {
-          "index": 4,
-          "role": "Liquidator / Keeper",
-          "address": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
-          "balance": "1000000000000000000000",
-          "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0xa6a919fec4c8c5f0d8f01534c31db0585b423a516ee4ef882618a0d3eed39e52"
-        },
-        {
-          "index": 5,
-          "role": "Borrower B",
-          "address": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
-          "balance": "1000000000000000000000",
-          "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0x42d5493472a1cfcb69554a9552c2f8645295cd56c5a50be03bae97e734832fd9"
-        },
-        {
-          "index": 6,
-          "role": "Hung",
-          "address": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
-          "balance": "1000000000000000000000",
-          "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0xed8bfb7e39358d84109e2ada96b23e96683d7abd5270eb10d0cc2febbdacd1ac"
-        },
-        {
-          "index": 7,
-          "role": "Hieu",
-          "address": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
-          "balance": "1000000000000000000000",
-          "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0x0b2757357a34f000e150d47bb7a68b3a1581ac28576939c417bdc1aaf2684936"
-        },
-        {
-          "index": 8,
-          "role": "Quan",
-          "address": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
-          "balance": "1000000000000000000000",
-          "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0x7fb104d920c178dbb25dfa696235574fdf4ea9e54bf7c1ed3ff8e27711c555eb"
-        },
-        {
-          "index": 9,
-          "role": "Lam",
-          "address": "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720",
-          "balance": "1000000000000000000000",
-          "balanceMyUSDT": "1000.0",
-          "seedTxHash": "0x6bd542d9aa2cf1cf730e7964c9062ae717a18ed8c7668f5a8323aeb88a36f2ed"
-        }
-      ]
+      "maxFaucetAmount": "1000000000000000000000"
     },
     "CollateralNFT": {
-      "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
-      "txHash": "0x1e7c018760315a82804c4519b83cb813fbeb0dea6f99fd609242f03f6a970bf5",
-      "blockNumber": 11,
+      "address": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      "txHash": "0xef35d6837cc652c7819423fef163f0daa9267a9046bf7126e88a06b37669cc16",
+      "blockNumber": 2,
+      "explorerUrl": "http://127.0.0.1:8545/tx/0xef35d6837cc652c7819423fef163f0daa9267a9046bf7126e88a06b37669cc16",
+      "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "abiPath": "deployments/abi/CollateralNFT.json",
-      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "status": "DEPLOYED"
     },
     "CollateralReceiptNFT": {
-      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
-      "txHash": "0xe4b79c24bc0e1f45ac0e6caaa644f928163fb941ac83a815c71a5bffdac10eee",
-      "blockNumber": 12,
+      "address": "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+      "txHash": "0x7bc31ab744f678da18fedd6ee964032b0cc6cb96a33ddb6718ec6b0f0b886fec",
+      "blockNumber": 3,
+      "explorerUrl": "http://127.0.0.1:8545/tx/0x7bc31ab744f678da18fedd6ee964032b0cc6cb96a33ddb6718ec6b0f0b886fec",
+      "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "abiPath": "deployments/abi/CollateralReceiptNFT.json",
-      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "status": "BOUND_TO_POOL",
-      "lendingPool": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "bindTxHash": "0xe3ffb9f894d006379c7c403dd5a5c695dabb9630fc47e7118506542581ec5a85"
+      "lendingPool": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "bindTxHash": "0xc32357efe83d019f5ad1504dd9dba411960d10e46ca033d4e826329d4cb39d4d"
     },
     "DebtToken": {
-      "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
-      "txHash": "0x750e6aa0130861d073bef8fab625c9f24b2be075796c1665bbd26a609f1db654",
-      "blockNumber": 13,
+      "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+      "txHash": "0xd01d0019604bf3681834509ead0d3f35dd6a241cef02301ad29f3f6b4f8d4ab7",
+      "blockNumber": 4,
+      "explorerUrl": "http://127.0.0.1:8545/tx/0xd01d0019604bf3681834509ead0d3f35dd6a241cef02301ad29f3f6b4f8d4ab7",
+      "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "abiPath": "deployments/abi/DebtToken.json",
-      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "status": "BOUND_TO_POOL",
-      "lendingPool": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "bindTxHash": "0xe0aa1ac0a3de74ecc876e15c2ddf502887b3a3135283d7e7ced8292837fa00e0"
+      "lendingPool": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "bindTxHash": "0xcc8c4e56b193badf36882a40faaee767269fc3a7b4510cef31ae8dde3b1fe6a4"
     },
     "LendingPositionNFT": {
-      "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
-      "txHash": "0x862c1ac927ccf25369a90665bf5be49c01ebe79506f5eb39719d24dd7b72460c",
-      "blockNumber": 14,
+      "address": "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+      "txHash": "0x900afe56eb54d707ef87619aa92119e27f47f827ae5d4d289fc414e726aa0992",
+      "blockNumber": 5,
+      "explorerUrl": "http://127.0.0.1:8545/tx/0x900afe56eb54d707ef87619aa92119e27f47f827ae5d4d289fc414e726aa0992",
+      "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "abiPath": "deployments/abi/LendingPositionNFT.json",
-      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "status": "BOUND_TO_POOL",
-      "lendingPool": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "bindTxHash": "0x2632d0c74a9f20f2ce89f729158e73218d9beabed765d45a355c37713b6be0a6"
+      "lendingPool": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "bindTxHash": "0xa9111635e356782715245086b0eb0d38a0224a49dbfe70fa454a14811d21c24b"
     },
     "LendingPool": {
-      "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "txHash": "0xa8eb93b58fb177247eb0ab6c56c71b78a87b73ec4d24e72d68a86280736e0813",
-      "blockNumber": 15,
+      "address": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "txHash": "0x3c67cbbe9380a302a9321e733bec77bdcbb867c31bc6fd3ae53dc311e6847485",
+      "blockNumber": 6,
+      "explorerUrl": "http://127.0.0.1:8545/tx/0x3c67cbbe9380a302a9321e733bec77bdcbb867c31bc6fd3ae53dc311e6847485",
       "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
       "abiPath": "deployments/abi/LendingPool.json",
-      "interfaceAbiPath": "deployments/abi/interfaces/ILendingPool.json",
       "status": "DEPLOYED_AND_BOUND",
       "boundTokens": {
-        "DebtToken": "0xe0aa1ac0a3de74ecc876e15c2ddf502887b3a3135283d7e7ced8292837fa00e0",
-        "CollateralReceiptNFT": "0xe3ffb9f894d006379c7c403dd5a5c695dabb9630fc47e7118506542581ec5a85",
-        "LendingPositionNFT": "0x2632d0c74a9f20f2ce89f729158e73218d9beabed765d45a355c37713b6be0a6"
+        "CollateralReceiptNFT": "0xc32357efe83d019f5ad1504dd9dba411960d10e46ca033d4e826329d4cb39d4d",
+        "DebtToken": "0xcc8c4e56b193badf36882a40faaee767269fc3a7b4510cef31ae8dde3b1fe6a4",
+        "LendingPositionNFT": "0xa9111635e356782715245086b0eb0d38a0224a49dbfe70fa454a14811d21c24b"
       },
-      "priceOracle": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
-      "priceOracleBindTxHash": "0xc31ddc26197f6aa20bddda1f43f3eb7d91041f342ff3f4dc9b231fdcdec375a5"
+      "priceOracle": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+      "priceOracleBindTxHash": "0xc088579fbbbe3b059a2ef7a9b6f100eec4850ae0488139624a2eb67acdb4dd5a",
+      "interfaceAbiPath": "deployments/abi/interfaces/ILendingPool.json"
     },
     "PriceOracle": {
-      "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
-      "txHash": "0x58ed4b1763cec07ef9355e3e6a54445913b9a753cc6323799f2801e19e8a036c",
-      "blockNumber": 19,
+      "address": "0x8A791620dd6260079BF849Dc5567aDC3F2FdC318",
+      "txHash": "0x61554ac9216f1e59018268efd39601b9e6a5409106571363cdc916fbdfb4fc8e",
+      "blockNumber": 10,
+      "explorerUrl": "http://127.0.0.1:8545/tx/0x61554ac9216f1e59018268efd39601b9e6a5409106571363cdc916fbdfb4fc8e",
       "deployer": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-      "collateralNFT": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
       "abiPath": "deployments/abi/PriceOracle.json",
-      "interfaceAbiPath": "deployments/abi/interfaces/IPriceOracle.json",
       "status": "DEPLOYED_AND_BOUND",
-      "lendingPool": "0x9A676e781A523b5d0C0e43731313A708CB607508",
-      "bindTxHash": "0xc31ddc26197f6aa20bddda1f43f3eb7d91041f342ff3f4dc9b231fdcdec375a5",
+      "owner": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+      "collateralNFT": "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+      "lendingPool": "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707",
+      "bindTxHash": "0xc088579fbbbe3b059a2ef7a9b6f100eec4850ae0488139624a2eb67acdb4dd5a",
       "collateralTokenPriceWad": "1000000000000000000",
       "priceMultiplierBps": "10000"
     }
+  },
+  "seed": {
+    "testAccounts": [
+      {
+        "index": 0,
+        "role": "Deployer / Admin / System Seed",
+        "address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        "balance": "1000000000000000000000000",
+        "balanceMyUSDT": "1000000",
+        "seedTxHash": null
+      },
+      {
+        "index": 1,
+        "role": "Lender A",
+        "address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        "balance": "1000000000000000000000",
+        "balanceMyUSDT": "1000.0",
+        "seedTxHash": "0x36ff715667c4303e0a179a7fcd1dc15fdbcacf3a2362a8e680c79cd7f91111fc",
+        "lenderApprovalTxHash": "0x27571ce4acaf041e35805dab9a6dc52a1bc5ff97446e0354bc6af37a22f86fec",
+        "lenderDepositTxHash": "0xd07e75862be3244b23d207a0d94e563f95b2b07cdc552e6c0b419571f037d6f5",
+        "lendingPositionId": "1",
+        "collateralTokenId": "1"
+      },
+      {
+        "index": 2,
+        "role": "Borrower A",
+        "address": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        "balance": "1000000000000000000000",
+        "balanceMyUSDT": "1000.0",
+        "seedTxHash": "0x011ec6a5213f4ab4695d71b982297616e6b5f258983ce92c3c5dd8866316b119",
+        "collateralTokenId": "2"
+      },
+      {
+        "index": 3,
+        "role": "Lender B",
+        "address": "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
+        "balance": "1000000000000000000000",
+        "balanceMyUSDT": "1000.0",
+        "seedTxHash": "0xc81563a29313c005e2fb09b01e248da2b39d4d8c30e74faebb3f62ee2e903335"
+      },
+      {
+        "index": 4,
+        "role": "Liquidator / Keeper",
+        "address": "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+        "balance": "1000000000000000000000",
+        "balanceMyUSDT": "1000.0",
+        "seedTxHash": "0xe2c03d7cc37a37626c17e2cad9eff53544724b1d2617d306a7ac966ed39274a7"
+      },
+      {
+        "index": 5,
+        "role": "Borrower B",
+        "address": "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
+        "balance": "1000000000000000000000",
+        "balanceMyUSDT": "1000.0",
+        "seedTxHash": "0x59b5e0899268615d171d0c466928c005abd8ba92478e1ff5788307ee7d02c0b3"
+      },
+      {
+        "index": 6,
+        "role": "Hung",
+        "address": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
+        "balance": "1000000000000000000000",
+        "balanceMyUSDT": "1000.0",
+        "seedTxHash": "0xbe458ecf79039c9cf8459af455c368e37bda465beb62e7f2ba507bd8621cc3ae"
+      },
+      {
+        "index": 7,
+        "role": "Hieu",
+        "address": "0x14dC79964da2C08b23698B3D3cc7Ca32193d9955",
+        "balance": "1000000000000000000000",
+        "balanceMyUSDT": "1000.0",
+        "seedTxHash": "0x1031e8ed222de83f7ba7b52376368cee65b7a555351f5c05b35216ed84c15af0"
+      },
+      {
+        "index": 8,
+        "role": "Quan",
+        "address": "0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f",
+        "balance": "1000000000000000000000",
+        "balanceMyUSDT": "1000.0",
+        "seedTxHash": "0x19c6d1324d0604b880cb9fb715afd188b8ede5ee2b738f5ab5215d9a4de6e163"
+      },
+      {
+        "index": 9,
+        "role": "Lam",
+        "address": "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720",
+        "balance": "1000000000000000000000",
+        "balanceMyUSDT": "1000.0",
+        "seedTxHash": "0x9db170e37286fa87e8c4668d21df34da6069686b528128f5672b71a761c97e65"
+      }
+    ],
+    "collateralNFTSeeds": {
+      "1": {
+        "owner": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        "valuationWad": "1000000000000000000000",
+        "txHash": "0x068be94203aa3f403ae3e91c2361308b0c8ee6c88238e65cc50ad222ca5a1020"
+      },
+      "2": {
+        "owner": "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        "valuationWad": "1000000000000000000000",
+        "txHash": "0x8abdc205ca48adaea1407f690647364f4660412eb96b733673610333809b882e"
+      }
+    },
+    "initialLiquidityWad": "1000000000000000000000",
+    "initialLiquidityTxHash": "0xd07e75862be3244b23d207a0d94e563f95b2b07cdc552e6c0b419571f037d6f5",
+    "seededAt": "2026-11-27T16:23:17.323174+00:00"
+  },
+  "auditLogs": {
+    "json": {
+      "cid": "bafkreifwuo3ocztcmgbe75cx5ndaia7ioafribzkzol7thq5gacgtyekzm",
+      "gateway_url": "http://127.0.0.1:8080/ipfs/bafkreifwuo3ocztcmgbe75cx5ndaia7ioafribzkzol7thq5gacgtyekzm",
+      "sha256": "b6a3b6e1666261824ff457eb460403e8700b14072acb97f99e1d300469e08acb",
+      "acl_metadata": {
+        "cid": "bafkreifwuo3ocztcmgbe75cx5ndaia7ioafribzkzol7thq5gacgtyekzm",
+        "document_type": "AUDIT_LOGS",
+        "visibility": "PUBLIC",
+        "owner_wallet": null,
+        "encrypted": false,
+        "content_type": "application/json",
+        "filename": "audit_logs.json",
+        "plaintext_sha256": "b6a3b6e1666261824ff457eb460403e8700b14072acb97f99e1d300469e08acb",
+        "ciphertext_sha256": null,
+        "key_id": null
+      }
+    },
+    "csv": {
+      "cid": "bafkreietgbvyfu3w7ghty2ahvp3ko4f3jykwwv7u324tucbj6jbpd4vyhu",
+      "gateway_url": "http://127.0.0.1:8080/ipfs/bafkreietgbvyfu3w7ghty2ahvp3ko4f3jykwwv7u324tucbj6jbpd4vyhu",
+      "sha256": "93306b82d376f98f3c6807abf6a770bb4e156b57f4deb93a0829f242f1f2b83d",
+      "acl_metadata": {
+        "cid": "bafkreietgbvyfu3w7ghty2ahvp3ko4f3jykwwv7u324tucbj6jbpd4vyhu",
+        "document_type": "AUDIT_LOGS",
+        "visibility": "PUBLIC",
+        "owner_wallet": null,
+        "encrypted": false,
+        "content_type": "text/csv",
+        "filename": "audit_logs.csv",
+        "plaintext_sha256": "93306b82d376f98f3c6807abf6a770bb4e156b57f4deb93a0829f242f1f2b83d",
+        "ciphertext_sha256": null,
+        "key_id": null
+      }
+    },
+    "simulatedPeriods": [
+      "2026-06",
+      "2026-07",
+      "2026-08",
+      "2026-09",
+      "2026-10"
+    ],
+    "containsPii": false
   }
 }

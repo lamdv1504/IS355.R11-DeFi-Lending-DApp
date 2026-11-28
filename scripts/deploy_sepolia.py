@@ -208,6 +208,9 @@ def run_sepolia_deployment(
 
 
 def main() -> int:
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8", errors="backslashreplace")
     try:
         load_dotenv(PROJECT_ROOT / ".env")
         rpc_url, private_key = validate_sepolia_environment()

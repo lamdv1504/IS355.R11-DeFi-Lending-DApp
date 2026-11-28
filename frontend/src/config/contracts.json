@@ -1,10 +1,10 @@
 {
-  "network": "local",
-  "chainId": 31337,
-  "explorerUrl": "http://127.0.0.1:8545",
+  "network": "sepolia",
+  "chainId": 11155111,
+  "explorerUrl": "https://sepolia.etherscan.io",
   "contracts": {
     "MyUSDT": {
-      "address": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+      "address": "0xAaB07940F52BB7C105D17681f896E648b8A39881",
       "abi": [
         {
           "inputs": [],
@@ -474,10 +474,10 @@
           "type": "function"
         }
       ],
-      "txHash": "0x69dd32c7c57ead3a1213e2e4884e8cbcfa9862bec7635433a6441af6cf4f7ca0"
+      "txHash": "0x9f44c3e3b087ce4c77305efdfcdc7f786ab1f6d0d97f335cb5f1f5cd82f0ec8e"
     },
     "CollateralNFT": {
-      "address": "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+      "address": "0x19D6c92fd592f5B077189D4300a8737532506500",
       "abi": [
         {
           "inputs": [],
@@ -1156,10 +1156,10 @@
           "type": "function"
         }
       ],
-      "txHash": "0x1e7c018760315a82804c4519b83cb813fbeb0dea6f99fd609242f03f6a970bf5"
+      "txHash": "0xa1343649a5ecfca3647a3a6cc9f291d1de0ee67c1b382e7c9ea4da8e3654fc3c"
     },
     "CollateralReceiptNFT": {
-      "address": "0xB7f8BC63BbcaD18155201308C8f3540b07f84F5e",
+      "address": "0x37daF2FA967b3A72024Ad7ED0BBCe889ab63f858",
       "abi": [
         {
           "inputs": [],
@@ -1957,10 +1957,10 @@
           "type": "function"
         }
       ],
-      "txHash": "0xe4b79c24bc0e1f45ac0e6caaa644f928163fb941ac83a815c71a5bffdac10eee"
+      "txHash": "0xf3621c54c7fff81621fe1a01a767caca0734fe8134375e570add4039ed921940"
     },
     "DebtToken": {
-      "address": "0xA51c1fc2f0D1a1b8494Ed1FE312d7C3a78Ed91C0",
+      "address": "0x5893DE5fe88057dBdE28672C9d85Dcf2FdAaBc92",
       "abi": [
         {
           "inputs": [],
@@ -2506,10 +2506,10 @@
           "type": "function"
         }
       ],
-      "txHash": "0x750e6aa0130861d073bef8fab625c9f24b2be075796c1665bbd26a609f1db654"
+      "txHash": "0x711a426c32af6ac9dbc02dd7787766d882e1510ee2ddc10bd57c8241f9e64768"
     },
     "LendingPositionNFT": {
-      "address": "0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82",
+      "address": "0x288bD02c150b2eEC0FCB82331791AB2dcC37C79F",
       "abi": [
         {
           "inputs": [],
@@ -3182,10 +3182,10 @@
           "type": "function"
         }
       ],
-      "txHash": "0x862c1ac927ccf25369a90665bf5be49c01ebe79506f5eb39719d24dd7b72460c"
+      "txHash": "0xa7247f8f3dea94dc3f5e3b66f5bbd893b81fd4f409d287af627bc0b6a83d87a4"
     },
     "LendingPool": {
-      "address": "0x9A676e781A523b5d0C0e43731313A708CB607508",
+      "address": "0x2BC016744561Dca45a1398dF4309572ccB66a0c1",
       "abi": [
         {
           "inputs": [
@@ -4710,10 +4710,10 @@
           "type": "function"
         }
       ],
-      "txHash": "0xa8eb93b58fb177247eb0ab6c56c71b78a87b73ec4d24e72d68a86280736e0813"
+      "txHash": "0x59dcb57103917c5357ccb7910dd8e0f34f5d4ab6e0232ecad00128306987dd19"
     },
     "PriceOracle": {
-      "address": "0x68B1D87F95878fE05B998F19b66F4baba5De1aed",
+      "address": "0x85cdeb0BA90C69006D61f13F131BC03f16Da484a",
       "abi": [
         {
           "inputs": [
@@ -5082,7 +5082,7 @@
           "type": "function"
         }
       ],
-      "txHash": "0x58ed4b1763cec07ef9355e3e6a54445913b9a753cc6323799f2801e19e8a036c"
+      "txHash": "0x8a4fb3fc4f38d8e178a6a727f73af188391410cd9b93d5dc106aa2acd28dfb4f"
     }
   }
 }

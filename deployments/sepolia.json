@@ -2,7 +2,190 @@
   "network": "sepolia",
   "chainId": 11155111,
   "explorerUrl": "https://sepolia.etherscan.io",
-  "deployedAt": null,
-  "contracts": {},
-  "smokeTestTransactions": []
+  "deployedAt": "2026-11-27T16:46:48+00:00",
+  "contracts": {
+    "MyUSDT": {
+      "address": "0xAaB07940F52BB7C105D17681f896E648b8A39881",
+      "txHash": "0x9f44c3e3b087ce4c77305efdfcdc7f786ab1f6d0d97f335cb5f1f5cd82f0ec8e",
+      "blockNumber": 12224514,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0x9f44c3e3b087ce4c77305efdfcdc7f786ab1f6d0d97f335cb5f1f5cd82f0ec8e",
+      "deployer": "0x3bEda0f07bf14749B907707b6D48135f2B1a73E7",
+      "abiPath": "deployments/abi/MyUSDT.json",
+      "status": "DEPLOYED"
+    },
+    "CollateralNFT": {
+      "address": "0x19D6c92fd592f5B077189D4300a8737532506500",
+      "txHash": "0xa1343649a5ecfca3647a3a6cc9f291d1de0ee67c1b382e7c9ea4da8e3654fc3c",
+      "blockNumber": 12224515,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0xa1343649a5ecfca3647a3a6cc9f291d1de0ee67c1b382e7c9ea4da8e3654fc3c",
+      "deployer": "0x3bEda0f07bf14749B907707b6D48135f2B1a73E7",
+      "abiPath": "deployments/abi/CollateralNFT.json",
+      "status": "DEPLOYED"
+    },
+    "CollateralReceiptNFT": {
+      "address": "0x37daF2FA967b3A72024Ad7ED0BBCe889ab63f858",
+      "txHash": "0xf3621c54c7fff81621fe1a01a767caca0734fe8134375e570add4039ed921940",
+      "blockNumber": 12224516,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0xf3621c54c7fff81621fe1a01a767caca0734fe8134375e570add4039ed921940",
+      "deployer": "0x3bEda0f07bf14749B907707b6D48135f2B1a73E7",
+      "abiPath": "deployments/abi/CollateralReceiptNFT.json",
+      "status": "BOUND_TO_POOL",
+      "lendingPool": "0x2BC016744561Dca45a1398dF4309572ccB66a0c1",
+      "bindTxHash": "0xd2a7b4265c0c0a8ccbdffddf0c95c708186abbbe4106b2f57e001b1f7b81a66b"
+    },
+    "DebtToken": {
+      "address": "0x5893DE5fe88057dBdE28672C9d85Dcf2FdAaBc92",
+      "txHash": "0x711a426c32af6ac9dbc02dd7787766d882e1510ee2ddc10bd57c8241f9e64768",
+      "blockNumber": 12224517,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0x711a426c32af6ac9dbc02dd7787766d882e1510ee2ddc10bd57c8241f9e64768",
+      "deployer": "0x3bEda0f07bf14749B907707b6D48135f2B1a73E7",
+      "abiPath": "deployments/abi/DebtToken.json",
+      "status": "BOUND_TO_POOL",
+      "lendingPool": "0x2BC016744561Dca45a1398dF4309572ccB66a0c1",
+      "bindTxHash": "0xdded9c764403e0c974251998367365d74ace975e253ade6e72ffde5fb9163684"
+    },
+    "LendingPositionNFT": {
+      "address": "0x288bD02c150b2eEC0FCB82331791AB2dcC37C79F",
+      "txHash": "0xa7247f8f3dea94dc3f5e3b66f5bbd893b81fd4f409d287af627bc0b6a83d87a4",
+      "blockNumber": 12224518,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0xa7247f8f3dea94dc3f5e3b66f5bbd893b81fd4f409d287af627bc0b6a83d87a4",
+      "deployer": "0x3bEda0f07bf14749B907707b6D48135f2B1a73E7",
+      "abiPath": "deployments/abi/LendingPositionNFT.json",
+      "status": "BOUND_TO_POOL",
+      "lendingPool": "0x2BC016744561Dca45a1398dF4309572ccB66a0c1",
+      "bindTxHash": "0x3b44711276705828c56215d583c64b013e757f9c8b6ad5cd0f7e02f3e1706b34"
+    },
+    "LendingPool": {
+      "address": "0x2BC016744561Dca45a1398dF4309572ccB66a0c1",
+      "txHash": "0x59dcb57103917c5357ccb7910dd8e0f34f5d4ab6e0232ecad00128306987dd19",
+      "blockNumber": 12224519,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0x59dcb57103917c5357ccb7910dd8e0f34f5d4ab6e0232ecad00128306987dd19",
+      "deployer": "0x3bEda0f07bf14749B907707b6D48135f2B1a73E7",
+      "abiPath": "deployments/abi/LendingPool.json",
+      "status": "DEPLOYED_AND_BOUND",
+      "boundTokens": {
+        "CollateralReceiptNFT": "0xd2a7b4265c0c0a8ccbdffddf0c95c708186abbbe4106b2f57e001b1f7b81a66b",
+        "DebtToken": "0xdded9c764403e0c974251998367365d74ace975e253ade6e72ffde5fb9163684",
+        "LendingPositionNFT": "0x3b44711276705828c56215d583c64b013e757f9c8b6ad5cd0f7e02f3e1706b34"
+      },
+      "priceOracle": "0x85cdeb0BA90C69006D61f13F131BC03f16Da484a",
+      "priceOracleBindTxHash": "0xc3b7610d490a7ddc43c43e09b9d0b8ee81e8b500aba90828a2a0287ec33e37c7",
+      "interfaceAbiPath": "deployments/abi/interfaces/ILendingPool.json"
+    },
+    "PriceOracle": {
+      "address": "0x85cdeb0BA90C69006D61f13F131BC03f16Da484a",
+      "txHash": "0x8a4fb3fc4f38d8e178a6a727f73af188391410cd9b93d5dc106aa2acd28dfb4f",
+      "blockNumber": 12224540,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0x8a4fb3fc4f38d8e178a6a727f73af188391410cd9b93d5dc106aa2acd28dfb4f",
+      "deployer": "0x3bEda0f07bf14749B907707b6D48135f2B1a73E7",
+      "abiPath": "deployments/abi/PriceOracle.json",
+      "status": "DEPLOYED_AND_BOUND",
+      "owner": "0x3bEda0f07bf14749B907707b6D48135f2B1a73E7",
+      "collateralNFT": "0x19D6c92fd592f5B077189D4300a8737532506500",
+      "lendingPool": "0x2BC016744561Dca45a1398dF4309572ccB66a0c1",
+      "bindTxHash": "0xc3b7610d490a7ddc43c43e09b9d0b8ee81e8b500aba90828a2a0287ec33e37c7",
+      "collateralTokenPriceWad": "1000000000000000000",
+      "priceMultiplierBps": "10000"
+    }
+  },
+  "deployer": {
+    "address": "0x3bEda0f07bf14749B907707b6D48135f2B1a73E7",
+    "balanceWeiBeforeDeploy": "50000000000000000"
+  },
+  "recoveredPartialDeployment": true,
+  "smokeTestTransactions": [
+    {
+      "action": "faucet",
+      "txHash": "0x456a4d2e7fc5e02e24612d9d1177be5fe2800d84e049915963acb8c88782e603",
+      "blockNumber": 12224586,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0x456a4d2e7fc5e02e24612d9d1177be5fe2800d84e049915963acb8c88782e603",
+      "status": 1
+    },
+    {
+      "action": "approve_lender",
+      "txHash": "0x92a8022618a60c847ce797e2e97b44900e8cf11d6074c52800ec417d574a7c4c",
+      "blockNumber": 12224587,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0x92a8022618a60c847ce797e2e97b44900e8cf11d6074c52800ec417d574a7c4c",
+      "status": 1
+    },
+    {
+      "action": "depositLender",
+      "txHash": "0xca79806161e128a215c9a323e9d8f647cfa2b863e12c7010d156493ddbee6474",
+      "blockNumber": 12224588,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0xca79806161e128a215c9a323e9d8f647cfa2b863e12c7010d156493ddbee6474",
+      "status": 1
+    },
+    {
+      "action": "mintCollateralNFT",
+      "txHash": "0xaf0b538ff355f10c4395b8749bdf417334637373b0840934a1d74db38e8a19ed",
+      "blockNumber": 12224589,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0xaf0b538ff355f10c4395b8749bdf417334637373b0840934a1d74db38e8a19ed",
+      "status": 1
+    },
+    {
+      "action": "approve_collateral_nft",
+      "txHash": "0x2bec895af8bfdb803e382646d5254b59a9dbd58c927194054d3cf49abe2197bc",
+      "blockNumber": 12224590,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0x2bec895af8bfdb803e382646d5254b59a9dbd58c927194054d3cf49abe2197bc",
+      "status": 1
+    },
+    {
+      "action": "depositCollateral",
+      "txHash": "0xe4c9bb82a72c2cf01290edf03eb8c9c8ffb9427a9556e782af07b1689d1f5196",
+      "blockNumber": 12224591,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0xe4c9bb82a72c2cf01290edf03eb8c9c8ffb9427a9556e782af07b1689d1f5196",
+      "status": 1
+    },
+    {
+      "action": "borrow",
+      "txHash": "0xae4834106c6911370355a9018bdb78fc40bac5adc320c3a7d0ff80abef72bf8f",
+      "blockNumber": 12224611,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0xae4834106c6911370355a9018bdb78fc40bac5adc320c3a7d0ff80abef72bf8f",
+      "status": 1
+    },
+    {
+      "action": "approve_repayment",
+      "txHash": "0xceb4768a088fa7cbbca3870c02d13594bd67243204488c9cddb8ad188fe76865",
+      "blockNumber": 12224612,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0xceb4768a088fa7cbbca3870c02d13594bd67243204488c9cddb8ad188fe76865",
+      "status": 1
+    },
+    {
+      "action": "repay",
+      "txHash": "0x7b01aff9caae11dedcd9908ee60e713c477b21047cc5b0741a9370cec588157d",
+      "blockNumber": 12224613,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0x7b01aff9caae11dedcd9908ee60e713c477b21047cc5b0741a9370cec588157d",
+      "status": 1
+    }
+  ],
+  "smokeTestFailedAttempts": [
+    {
+      "action": "borrow_failed_attempt",
+      "txHash": "0xbd583320635a63711dbaeebcf8fe107226f92624933b24b9aa13df092041dcac",
+      "blockNumber": 12224592,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0xbd583320635a63711dbaeebcf8fe107226f92624933b24b9aa13df092041dcac",
+      "status": 0
+    }
+  ],
+  "smokeTestRecoveryTransactions": [
+    {
+      "action": "faucet_retry_setup",
+      "txHash": "0xd0559d1f72765dee0aaf1b29eb83108dc0ea93e5ef0ea86268d46da1399d46f9",
+      "blockNumber": 12224559,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0xd0559d1f72765dee0aaf1b29eb83108dc0ea93e5ef0ea86268d46da1399d46f9",
+      "status": 1
+    },
+    {
+      "action": "approve_lender_retry_setup",
+      "txHash": "0x1f85bf47d37168e6d099eee986ee610be959d037c85aa31335010f7f9e2d2d4c",
+      "blockNumber": 12224560,
+      "explorerUrl": "https://sepolia.etherscan.io/tx/0x1f85bf47d37168e6d099eee986ee610be959d037c85aa31335010f7f9e2d2d4c",
+      "status": 1
+    }
+  ],
+  "smokeTestPassedAt": "2026-11-27T17:11:34.326172+00:00",
+  "smokeTestVerifiedState": {
+    "poolTotalSuppliedWad": "500000000000000000000",
+    "borrowerTotalDebtWad": "0"
+  }
 }
