@@ -211,6 +211,8 @@ class AgreementGeneratorService:
         loan_id: str,
         borrower_wallet: str,
         transaction_receipt: Mapping[str, Any],
+        *,
+        expected_chain_id: int | None = None,
     ) -> LoanTxBindingRecord:
         """Persist the CID/loan/tx binding only after a successful borrow receipt."""
         index = self._load_index()
@@ -218,6 +220,13 @@ class AgreementGeneratorService:
         acl_raw = index["acl_metadata"].get(agreement_cid)
         if agreement is None or acl_raw is None:
             raise ValueError(f"No locally indexed agreement for CID {agreement_cid!r}.")
+        if (
+            expected_chain_id is not None
+            and int(agreement["chain_id"]) != int(expected_chain_id)
+        ):
+            raise ValueError(
+                "Agreement chain_id does not match the confirmed transaction network."
+            )
         borrower = normalize_wallet_address(borrower_wallet)
         if borrower != normalize_wallet_address(agreement["borrower_wallet"]):
             raise ValueError("Borrower wallet does not own this agreement.")

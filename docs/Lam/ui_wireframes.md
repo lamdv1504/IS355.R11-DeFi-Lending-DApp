@@ -264,10 +264,9 @@ Dữ liệu số tiền: `amount_wad` và `amount_display`. Xem [hợp đồng A
   depositCollateral, withdrawLender, liquidate, chuyển Position NFT, faucet/approve.
 - [x] Ma trận Borrower/Lender/Admin, public/private và quy tắc Retrieve.
 - [x] JSON mẫu đồng bộ hằng số HI01, không dựng endpoint runtime hoặc CID/txHash giả.
-- [ ] Hiếu + Quân + Lâm xác nhận endpoint/payload bổ sung trong `l01_api_contract.md`.
-- [ ] Hiếu xác nhận cách hiểu withdrawCollateral: comment interface nói LTV còn an toàn,
-  trong khi 6.1 và luồng repay của đặc tả yêu cầu nợ = 0 / tự mở khóa.
-  Bản thiết kế chọn điều kiện nợ = 0 và tránh hiển thị thao tác rút trùng sau auto-unlock.
+- [x] Hiếu + Quân + Lâm xác nhận endpoint/payload bổ sung trong `l01_api_contract.md`
+  *(đã triển khai và đối chiếu đầy đủ ở Q05: `/api/pool`, `/api/accounts/{address}/lending-positions|loan|balances|snapshot`, `/api/analytics/rates`, `/api/transactions/prepare|confirm`, `/api/ipfs/*`, `/api/demo/time` hỗ trợ đa mạng local/sepolia)*.
+- [x] Hiếu xác nhận cách hiểu withdrawCollateral: `LendingPool.sol` (`withdrawCollateral()`) chỉ cho phép rút toàn bộ tài sản thế chấp khi `totalDebt == 0` (revert `OutstandingDebtExists` nếu còn nợ), `repay()` tự động mở khóa khi tất toán nợ = 0, và comment NatSpec trong `ILendingPool.sol` đã được chuẩn hóa thống nhất theo thiết kế L01.
 - [ ] Nghiệm thu giao dịch chạy thật (tối thiểu gửi/vay/trả nợ) ở L05 khi có
   H02, HI02–HI05 và API Q05; dùng receipt thật để xác nhận.
 

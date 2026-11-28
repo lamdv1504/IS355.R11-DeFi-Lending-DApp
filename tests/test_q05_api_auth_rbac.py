@@ -1666,3 +1666,87 @@ def test_balances_list_owned_collateral_nfts_and_lending_positions_defaults_sepo
         client.get(f"/api/accounts/{owner.address}/lending-positions?network=sepolia").status_code
         == 422
     )
+
+
+def test_confirm_borrow_rejects_cross_chain_agreement_cid_binding(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+
+    sepolia_fake = _FakeWeb3Service()
+    sepolia_fake.network = SimpleNamespace(name="sepolia")
+    sepolia_fake.chain_id = 11155111
+    sepolia_fake.w3.eth.chain_id = 11155111
+
+    manager = WalletAuthManager(
+        "test-only-signing-secret-that-is-at-least-32-bytes",
+        domain="localhost",
+        allowed_chain_ids=(31337, 11155111),
+    )
+    client.app.state.auth_manager = manager
+    client.app.state.web3_services = {"local": api_env["web3"], "sepolia": sepolia_fake}
+
+    local_headers = _login(client, owner, chain_id=31337)
+    sepolia_headers = _login(client, owner, chain_id=11155111)
+
+    # Agreement created on local (31337) cannot be bound to a Sepolia (11155111) borrow receipt.
+    local_agreement = client.post(
+        "/api/ipfs/create-agreement",
+        json={
+            "principal_wad": str(100 * constants.WAD),
+            "asset_description": "Local-only agreement",
+        },
+        headers=local_headers,
+    )
+    assert local_agreement.status_code == 200, local_agreement.text
+    local_cid = local_agreement.json()["cid"]
+
+    sep_borrow = client.post(
+        "/api/transactions/prepare",
+        json={
+            "account": owner.address,
+            "network": "sepolia",
+            "chain_id": 11155111,
+            "action": "BORROW",
+            "args": {
+                "amount_wad": str(100 * constants.WAD),
+                "agreement_cid": local_cid,
+            },
+        },
+        headers=sepolia_headers,
+    )
+    assert sep_borrow.status_code == 200, sep_borrow.text
+    tx_data = sep_borrow.json()
+
+    tx_hash_bytes = bytes.fromhex("99" * 32)
+    sepolia_fake.w3.eth.transaction = {
+        "from": owner.address,
+        "to": POOL,
+        "input": tx_data["unsignedTransaction"]["data"],
+        "chainId": 11155111,
+        "value": 0,
+    }
+    sepolia_fake.w3.eth.receipt = {
+        "status": 1,
+        "blockNumber": 12224900,
+        "transactionHash": tx_hash_bytes,
+    }
+    sepolia_fake.borrow_receipt_events = [
+        {
+            "address": POOL,
+            "args": {
+                "borrower": owner.address,
+                "amountWad": 100 * constants.WAD,
+                "agreementCid": local_cid,
+            },
+        }
+    ]
+
+    rejected = client.post(
+        "/api/transactions/confirm",
+        json={"intent_id": tx_data["intent_id"], "tx_hash": "0x" + tx_hash_bytes.hex()},
+        headers=sepolia_headers,
+    )
+    assert rejected.status_code == 400, rejected.text
+    assert "chain_id" in rejected.text

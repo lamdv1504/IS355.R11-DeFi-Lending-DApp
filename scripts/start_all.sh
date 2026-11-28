@@ -97,6 +97,11 @@ echo "[Q06] Starting FastAPI on http://127.0.0.1:8000..."
 "$PYTHON_EXE" -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 &
 BACKEND_PID=$!
 
+if [[ ! -d "$ROOT/frontend/node_modules" ]]; then
+  echo "[Q06] Installing frontend dependencies via npm ci..."
+  npm --prefix frontend ci
+fi
+
 echo "[Q06] Starting Next.js on http://127.0.0.1:3000..."
 npm --prefix frontend run dev -- --hostname 127.0.0.1 --port 3000 &
 FRONTEND_PID=$!

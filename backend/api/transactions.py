@@ -13,13 +13,13 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from web3.exceptions import TransactionNotFound
 
 from backend.api.dependencies import (
-    get_agreement_generator,
-    get_web3_service,
+    get_agreement_generator_for_service,
     get_web3_service_for_chain_id,
     get_web3_service_for_network,
     lock_for_index,
-    normalize_network_name,
     require_matching_chain,
+    resolve_authenticated_web3_service,
+    resolve_requested_network,
 )
 from backend.config import constants
 from backend.schemas.transactions import (
@@ -407,64 +407,6 @@ def _build_prepare_preview(
     return preview
 
 
-def _resolve_requested_network(
-    query_network: str | None,
-    body_network: str | None,
-) -> str | None:
-    normalized_query = (
-        normalize_network_name(query_network) if query_network is not None else None
-    )
-    normalized_body = (
-        normalize_network_name(body_network) if body_network is not None else None
-    )
-    if (
-        normalized_query is not None
-        and normalized_body is not None
-        and normalized_query != normalized_body
-    ):
-        raise HTTPException(
-            status_code=403,
-            detail="Transaction query network does not match request body network.",
-        )
-    return normalized_query or normalized_body
-
-
-def _resolve_prepare_service(
-    request: Request,
-    *,
-    query_network: str | None,
-    body_network: str | None,
-    body_chain_id: int | None,
-    context: AccessContext,
-) -> Web3Service:
-    target_network = _resolve_requested_network(query_network, body_network)
-    if target_network is not None:
-        service = get_web3_service_for_network(request, target_network)
-    elif body_chain_id is not None:
-        service = get_web3_service_for_chain_id(request, body_chain_id)
-    else:
-        default_service = get_web3_service(request)
-        if (
-            context.authenticated
-            and context.chain_id is not None
-            and int(context.chain_id) != int(default_service.chain_id)
-        ):
-            service = get_web3_service_for_chain_id(request, int(context.chain_id))
-        else:
-            service = default_service
-
-    require_matching_chain(context, service)
-    if target_network is not None and target_network != service.network.name:
-        raise HTTPException(
-            status_code=403, detail="Transaction network does not match the target network."
-        )
-    if body_chain_id is not None and int(body_chain_id) != int(service.chain_id):
-        raise HTTPException(
-            status_code=403, detail="Transaction chain_id does not match the target network."
-        )
-    return service
-
-
 @router.post("/prepare", response_model=TransactionPrepareResponse)
 def prepare_transaction(
     body: TransactionPrepareRequest,
@@ -478,7 +420,7 @@ def prepare_transaction(
     ),
     context: AccessContext = Depends(get_current_context),
 ) -> dict[str, Any]:
-    service = _resolve_prepare_service(
+    service = resolve_authenticated_web3_service(
         request,
         query_network=network,
         body_network=body.network,
@@ -604,7 +546,7 @@ def confirm_transaction(
     ),
     context: AccessContext = Depends(get_current_context),
 ) -> dict[str, Any]:
-    requested_network = _resolve_requested_network(network, body.network)
+    requested_network = resolve_requested_network(network, body.network)
     with _claim_intent(request, body.intent_id) as intent:
         if (
             not context.wallet_address
@@ -702,7 +644,7 @@ def confirm_transaction(
 
         binding: dict[str, object] | None = None
         if intent["action"] == TransactionAction.BORROW.value:
-            agreement_generator = get_agreement_generator(request)
+            agreement_generator = get_agreement_generator_for_service(request, service)
             agreement_cid = intent["data"].get("agreement_cid")
             if not agreement_cid:
                 raise HTTPException(status_code=400, detail="Borrow intent is missing agreement CID.")
@@ -737,6 +679,7 @@ def confirm_transaction(
                     tx_hash,
                     str(intent["wallet_address"]),
                     receipt,
+                    expected_chain_id=int(service.chain_id),
                 )
             binding = record.model_dump(mode="json")
 

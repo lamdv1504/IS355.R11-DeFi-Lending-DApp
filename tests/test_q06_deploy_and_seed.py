@@ -355,6 +355,14 @@ def test_start_all_sh_prefers_venv_and_supports_ipfs_daemon() -> None:
     assert ".venv/bin/python" in content
     assert "ipfs daemon" in content
     assert "IPFS_PROVIDER=\"local_fallback\"" in content
+    assert "frontend/node_modules" in content
+
+
+def test_start_all_bat_respects_ipfs_env_exits_early_and_checks_frontend_deps() -> None:
+    content = (PROJECT_ROOT / "scripts" / "start_all.bat").read_text(encoding="utf-8")
+    assert "IPFS_LOCAL_API_URL" in content
+    assert ":wait_for_kubo" in content
+    assert "frontend\\node_modules" in content
 
 
 @pytest.mark.parametrize(
