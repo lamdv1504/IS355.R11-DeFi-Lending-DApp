@@ -10,6 +10,7 @@ from typing import Any
 import pytest
 from eth_account import Account
 from web3 import Web3
+from web3.exceptions import ContractLogicError
 
 from backend.config import constants
 from backend.config.settings import settings
@@ -472,3 +473,56 @@ def test_sepolia_web3_service_loads_sepolia_manifest_without_attribute_error() -
     assert service.chain_id == 11155111
     assert service.registry["contracts"]["LendingPool"]["address"].startswith("0x")
     assert service.registry["contracts"]["PriceOracle"]["address"].startswith("0x")
+
+
+def test_build_unsigned_transaction_skips_gas_estimation_when_approval_pending(
+    web3_service: tuple[Web3Service, _FakeWeb3],
+) -> None:
+    service, fake_w3 = web3_service
+    wallet = "0x0000000000000000000000000000000000000001"
+
+    def _boom(_tx: dict[str, Any]) -> int:
+        raise ContractLogicError("execution reverted: ERC20InsufficientAllowance")
+
+    fake_w3.eth.estimate_gas = _boom  # type: ignore[method-assign]
+
+    quote = service.build_unsigned_transaction(
+        "LendingPool",
+        "depositLender",
+        (100 * constants.WAD,),
+        from_address=wallet,
+        eth_usd_price="2000",
+        skip_gas_estimation=True,
+    )
+
+    tx = quote["transaction"]
+    assert tx["from"] == Web3.to_checksum_address(wallet)
+    assert tx["chainId"] == 31337
+    assert tx["gasPrice"] == fake_w3.eth.gas_price
+    assert "gas" not in tx
+    assert quote["gas_quote"]["estimated_gas"] is None
+    assert quote["gas_quote"]["gas_limit"] is None
+    assert quote["gas_quote"]["estimated_fee_wei"] is None
+    assert quote["gas_quote"]["estimation_status"] == "PENDING_APPROVAL"
+    assert quote["gas_quote"]["estimation_skipped_reason"]
+    assert fake_w3.eth.estimated_transaction is None
+
+
+def test_build_unsigned_transaction_propagates_contract_logic_error_without_masking(
+    web3_service: tuple[Web3Service, _FakeWeb3],
+) -> None:
+    service, fake_w3 = web3_service
+    wallet = "0x0000000000000000000000000000000000000001"
+
+    def _revert(_tx: dict[str, Any]) -> int:
+        raise ContractLogicError("execution reverted: ExceedsMaxLTV")
+
+    fake_w3.eth.estimate_gas = _revert  # type: ignore[method-assign]
+
+    with pytest.raises(ContractLogicError, match="ExceedsMaxLTV"):
+        service.build_unsigned_transaction(
+            "LendingPool",
+            "borrow",
+            (500 * constants.WAD, "bafy-test"),
+            from_address=wallet,
+        )

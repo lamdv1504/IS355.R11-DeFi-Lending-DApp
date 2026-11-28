@@ -8,6 +8,7 @@ from pathlib import Path
 
 from fastapi import HTTPException, Request
 
+from backend.config.settings import settings
 from backend.services.agreement_generator import AgreementGeneratorService
 from backend.services.credit_and_audit_ipfs import CreditAndAuditIPFSService
 from backend.services.web3_service import Web3Service
@@ -15,6 +16,7 @@ from src.ipfs.rbac import AccessContext
 
 _index_locks: dict[str, threading.Lock] = {}
 _index_locks_guard = threading.Lock()
+_web3_services_lock = threading.Lock()
 
 
 def normalize_network_name(network: str) -> str:
@@ -43,18 +45,38 @@ def get_web3_service_for_network(
     if network is None:
         return get_web3_service(request)
     target = normalize_network_name(network)
+    with _web3_services_lock:
+        services_by_network = getattr(request.app.state, "web3_services", None)
+        if isinstance(services_by_network, dict) and target in services_by_network:
+            return services_by_network[target]
+        default_service = getattr(request.app.state, "web3_service", None)
+        if default_service is not None and default_service.network.name == target:
+            return default_service
+        service = Web3Service(network_name=target)
+        if not isinstance(services_by_network, dict):
+            services_by_network = {}
+            request.app.state.web3_services = services_by_network
+        services_by_network[target] = service
+        return service
+
+
+def get_web3_service_for_chain_id(request: Request, chain_id: int) -> Web3Service:
     services_by_network = getattr(request.app.state, "web3_services", None)
-    if isinstance(services_by_network, dict) and target in services_by_network:
-        return services_by_network[target]
+    if isinstance(services_by_network, dict):
+        for cached in services_by_network.values():
+            if int(cached.chain_id) == int(chain_id):
+                return cached
     default_service = getattr(request.app.state, "web3_service", None)
-    if default_service is not None and default_service.network.name == target:
+    if default_service is not None and int(default_service.chain_id) == int(chain_id):
         return default_service
-    service = Web3Service(network_name=target)
-    if not isinstance(services_by_network, dict):
-        services_by_network = {}
-        request.app.state.web3_services = services_by_network
-    services_by_network[target] = service
-    return service
+    if int(chain_id) == int(settings.local_network.chain_id):
+        return get_web3_service_for_network(request, "local")
+    if int(chain_id) == int(settings.sepolia_network.chain_id):
+        return get_web3_service_for_network(request, "sepolia")
+    raise HTTPException(
+        status_code=403,
+        detail=f"Unsupported transaction chain_id {chain_id}.",
+    )
 
 
 def resolve_analytics_from_block(

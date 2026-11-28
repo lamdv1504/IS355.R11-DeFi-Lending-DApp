@@ -9,13 +9,16 @@ import time
 from contextlib import contextmanager
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from web3.exceptions import TransactionNotFound
 
 from backend.api.dependencies import (
     get_agreement_generator,
     get_web3_service,
+    get_web3_service_for_chain_id,
+    get_web3_service_for_network,
     lock_for_index,
+    normalize_network_name,
     require_matching_chain,
 )
 from backend.config import constants
@@ -404,22 +407,84 @@ def _build_prepare_preview(
     return preview
 
 
+def _resolve_requested_network(
+    query_network: str | None,
+    body_network: str | None,
+) -> str | None:
+    normalized_query = (
+        normalize_network_name(query_network) if query_network is not None else None
+    )
+    normalized_body = (
+        normalize_network_name(body_network) if body_network is not None else None
+    )
+    if (
+        normalized_query is not None
+        and normalized_body is not None
+        and normalized_query != normalized_body
+    ):
+        raise HTTPException(
+            status_code=403,
+            detail="Transaction query network does not match request body network.",
+        )
+    return normalized_query or normalized_body
+
+
+def _resolve_prepare_service(
+    request: Request,
+    *,
+    query_network: str | None,
+    body_network: str | None,
+    body_chain_id: int | None,
+    context: AccessContext,
+) -> Web3Service:
+    target_network = _resolve_requested_network(query_network, body_network)
+    if target_network is not None:
+        service = get_web3_service_for_network(request, target_network)
+    elif body_chain_id is not None:
+        service = get_web3_service_for_chain_id(request, body_chain_id)
+    else:
+        default_service = get_web3_service(request)
+        if (
+            context.authenticated
+            and context.chain_id is not None
+            and int(context.chain_id) != int(default_service.chain_id)
+        ):
+            service = get_web3_service_for_chain_id(request, int(context.chain_id))
+        else:
+            service = default_service
+
+    require_matching_chain(context, service)
+    if target_network is not None and target_network != service.network.name:
+        raise HTTPException(
+            status_code=403, detail="Transaction network does not match the target network."
+        )
+    if body_chain_id is not None and int(body_chain_id) != int(service.chain_id):
+        raise HTTPException(
+            status_code=403, detail="Transaction chain_id does not match the target network."
+        )
+    return service
+
+
 @router.post("/prepare", response_model=TransactionPrepareResponse)
 def prepare_transaction(
     body: TransactionPrepareRequest,
     request: Request,
+    network: str | None = Query(
+        default=None,
+        description=(
+            "Target network ('local' or 'sepolia'). Defaults to body.network, "
+            "chain_id, authenticated session chain, or ACTIVE_NETWORK."
+        ),
+    ),
     context: AccessContext = Depends(get_current_context),
-    service: Web3Service = Depends(get_web3_service),
 ) -> dict[str, Any]:
-    require_matching_chain(context, service)
-    if body.network and body.network.strip().lower() != service.network.name:
-        raise HTTPException(
-            status_code=403, detail="Transaction network does not match the active network."
-        )
-    if body.chain_id is not None and body.chain_id != service.chain_id:
-        raise HTTPException(
-            status_code=403, detail="Transaction chain_id does not match the active network."
-        )
+    service = _resolve_prepare_service(
+        request,
+        query_network=network,
+        body_network=body.network,
+        body_chain_id=body.chain_id,
+        context=context,
+    )
     wallet_address = body.wallet_address
     if not wallet_address:
         raise HTTPException(status_code=422, detail="wallet_address or account is required.")
@@ -429,10 +494,13 @@ def prepare_transaction(
     contract_name, function_name, args, intent_data = _transaction_spec(
         body, context, service, sender
     )
+    allowance = _build_prepare_allowance(body.action, sender, intent_data, service)
     build_options: dict[str, Any] = {
         "from_address": sender,
         "eth_usd_price": body.eth_usd_price,
     }
+    if allowance.get("approval_required"):
+        build_options["skip_gas_estimation"] = True
     if body.action == TransactionAction.BORROW:
         rates = service.get_interest_rate_snapshot()
         build_options.update(
@@ -444,12 +512,13 @@ def prepare_transaction(
         contract_name, function_name, args, **build_options
     )
     block_number, as_of_timestamp = _block_snapshot(service)
-    allowance = _build_prepare_allowance(body.action, sender, intent_data, service)
     preview = _build_prepare_preview(body.action, sender, intent_data, service)
     intent_id = secrets.token_urlsafe(24)
     intent = {
         "wallet_address": sender,
         "action": body.action.value,
+        "network": service.network.name,
+        "chain_id": int(service.chain_id),
         "transaction": quote["transaction"],
         "data": intent_data,
         "expires_at": int(time.time()) + _INTENT_TTL_SECONDS,
@@ -529,16 +598,50 @@ def _claim_intent(request: Request, intent_id: str) -> Generator[dict[str, Any],
 def confirm_transaction(
     body: TransactionConfirmRequest,
     request: Request,
+    network: str | None = Query(
+        default=None,
+        description="Optional target network ('local' or 'sepolia'); must match the prepared intent.",
+    ),
     context: AccessContext = Depends(get_current_context),
-    service: Web3Service = Depends(get_web3_service),
 ) -> dict[str, Any]:
-    require_matching_chain(context, service)
+    requested_network = _resolve_requested_network(network, body.network)
     with _claim_intent(request, body.intent_id) as intent:
         if (
             not context.wallet_address
             or context.wallet_address.lower() != str(intent["wallet_address"]).lower()
         ):
             raise HTTPException(status_code=403, detail="Transaction intent belongs to another wallet.")
+
+        intent_network = intent.get("network")
+        intent_chain_id = intent.get("chain_id")
+        if requested_network is not None and intent_network and requested_network != str(intent_network):
+            raise HTTPException(
+                status_code=403,
+                detail="Transaction confirmation network does not match the prepared intent.",
+            )
+        if (
+            body.chain_id is not None
+            and intent_chain_id is not None
+            and int(body.chain_id) != int(intent_chain_id)
+        ):
+            raise HTTPException(
+                status_code=403,
+                detail="Transaction confirmation chain_id does not match the prepared intent.",
+            )
+
+        if intent_network:
+            service = get_web3_service_for_network(request, str(intent_network))
+        elif intent_chain_id is not None:
+            service = get_web3_service_for_chain_id(request, int(intent_chain_id))
+        else:
+            service = get_web3_service_for_network(request, requested_network)
+
+        require_matching_chain(context, service)
+        if intent_chain_id is not None and int(intent_chain_id) != int(service.chain_id):
+            raise HTTPException(
+                status_code=403,
+                detail="Prepared transaction intent chain does not match the target network.",
+            )
 
         try:
             transaction = service.w3.eth.get_transaction(body.tx_hash)
