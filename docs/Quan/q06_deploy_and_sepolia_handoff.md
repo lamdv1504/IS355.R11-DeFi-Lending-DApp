@@ -140,8 +140,18 @@ and fall back to `local_fallback` only if Kubo is unavailable.
 Pinata credentials in `.env` are used for live pinning whenever configured.
 
 The exact structure applies to both local and Sepolia; the generated ABI is the
-canonical array from `deployments/abi/<Contract>.json`. Generated manifests
-contain addresses and transaction metadata only, never private keys.
+canonical array from `deployments/abi/<Contract>.json` stored once under
+top-level `contracts[name].abi`. Per-network entries under
+`networks.{local,sepolia}.contracts[name]` intentionally store only
+`address`, `txHash`, and `explorerUrl` without duplicating ABI arrays, so
+consumers should read `address` from `networks[net].contracts[name]` and `abi`
+from top-level `contracts[name].abi`. Generated manifests contain addresses and
+transaction metadata only, never private keys.
+
+Note on collateral architecture (Phương án A): `deploy_utils.py` passes
+`MyUSDT.address` as `LendingPool`'s `_collateralToken` constructor parameter
+and binds `CollateralNFT` as the primary tokenized collateral asset; local
+seeding, Sepolia smoke tests, and E2E flows use `CollateralNFT` (`isNFT=true`).
 
 ## Validation and integration
 

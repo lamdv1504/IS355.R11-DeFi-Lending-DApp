@@ -1805,3 +1805,73 @@ def test_missing_or_invalid_aes_key_returns_503_for_ipfs_dependencies(
     resp_credit = TestClient(app_credit).get("/api/ipfs/documents")
     assert resp_credit.status_code == 503, resp_credit.text
     assert "encryption" in resp_credit.json()["detail"].lower()
+
+
+def test_auth_domain_supports_local_loopback_and_rejects_cross_domain_or_external(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+
+    # 1) Default AUTH_DOMAIN='localhost' also accepts '127.0.0.1' for local Next.js dev.
+    nonce_resp = client.post(
+        "/api/auth/nonce",
+        json={"wallet_address": owner.address, "chain_id": 31337, "domain": "127.0.0.1"},
+    )
+    assert nonce_resp.status_code == 200, nonce_resp.text
+    challenge = nonce_resp.json()
+    assert challenge["domain"] == "127.0.0.1"
+    assert challenge["message"].startswith("127.0.0.1 requests a wallet signature")
+
+    signature = Account.sign_message(
+        encode_defunct(text=challenge["message"]), owner.key
+    ).signature.hex()
+    if not signature.startswith("0x"):
+        signature = "0x" + signature
+
+    # Cross-domain replay ('127.0.0.1' nonce verified as 'localhost') must still fail.
+    cross_domain = client.post(
+        "/api/auth/verify",
+        json={
+            "wallet_address": owner.address,
+            "chain_id": 31337,
+            "domain": "localhost",
+            "nonce": challenge["nonce"],
+            "signature": signature,
+        },
+    )
+    assert cross_domain.status_code == 401
+
+    # Matching '127.0.0.1' domain succeeds.
+    ok_verify = client.post(
+        "/api/auth/verify",
+        json={
+            "wallet_address": owner.address,
+            "chain_id": 31337,
+            "domain": "127.0.0.1",
+            "nonce": challenge["nonce"],
+            "signature": signature,
+        },
+    )
+    assert ok_verify.status_code == 200, ok_verify.text
+    assert ok_verify.json()["wallet_address"] == Web3.to_checksum_address(owner.address)
+
+    # 2) External untrusted domains remain blocked.
+    bad_domain = client.post(
+        "/api/auth/nonce",
+        json={"wallet_address": owner.address, "chain_id": 31337, "domain": "evil.example"},
+    )
+    assert bad_domain.status_code == 400
+
+    # 3) Non-loopback production domains never auto-allow localhost/127.0.0.1; comma lists work.
+    prod_manager = WalletAuthManager(
+        "test-only-signing-secret-that-is-at-least-32-bytes",
+        domain="app.example.com,admin.example.com",
+        allowed_chain_ids=(31337, 11155111),
+    )
+    assert prod_manager.domain == "app.example.com"
+    assert prod_manager.issue_nonce(owner.address, 31337, domain="admin.example.com")["domain"] == "admin.example.com"
+    with pytest.raises(AuthenticationError, match="Domain"):
+        prod_manager.issue_nonce(owner.address, 31337, domain="127.0.0.1")
+    with pytest.raises(AuthenticationError, match="Domain"):
+        prod_manager.issue_nonce(owner.address, 31337, domain="localhost")
