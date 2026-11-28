@@ -29,8 +29,12 @@ Set `AUTH_TOKEN_SECRET` through a secret manager or environment configuration;
 the API returns 503 for authentication when it is absent or shorter than 32
 bytes. Do not commit the value. Wallets in `ADMIN_WALLETS` map to `ADMIN`,
 wallets in `LENDER_WALLETS` map to `LENDER`, and other verified wallets map to
-`BORROWER`. Client-supplied role values are never used. `http://localhost:3000`
-is allowed in addition to configured CORS origins.
+`BORROWER`. Client-supplied role values are never used. Both
+`http://localhost:3000` and `http://127.0.0.1:3000` are always allowed in
+addition to configured CORS origins. `AUTH_DOMAIN` supports comma-separated
+hostnames; when configured for local loopback (`localhost` or `127.0.0.1`),
+both loopback hostnames are accepted while each issued nonce remains strictly
+bound to the exact domain it was created for.
 
 ## Endpoint contract
 
@@ -40,9 +44,10 @@ is allowed in addition to configured CORS origins.
 | `POST /api/auth/verify` | Public | `{wallet_address, chain_id, domain?, nonce, signature}` -> bearer session |
 | `GET /api/pool?network=local\|sepolia` | Public | Pool totals/liquidity, APR/APY snapshot, `block_number`, and `as_of_timestamp` |
 | `GET /api/analytics/rates?network=...` | Public | Current pool/rate snapshot plus monthly `series` (`SIMULATED` + `ON_CHAIN`) for charts |
-| `GET /api/accounts/{address}/lending-positions` | Public on-chain data | Current LendingPositionNFT ownership and claimable values (optional `?network=`) |
+| `GET /api/accounts/{address}/lending-positions` | Public on-chain data | Current LendingPositionNFT ownership and claimable values (optional `?network=`; defaults `from_block` to Sepolia deploy block) |
 | `GET /api/accounts/{address}/loan` | Public on-chain data | Loan position, risk, LTV, borrowing capacity, accrued interest, and `liquidation_preview` |
-| `GET /api/accounts/{address}/balances` | Public on-chain data | MyUSDT/DebtToken balances, NFT counts, receipt, pool allowance (optional `?network=`) |
+| `GET /api/accounts/{address}/balances` | Public on-chain data | MyUSDT/DebtToken balances, owned `collateral_nfts` (`token_id`, valuation, approval), receipt, pool allowance (optional `?network=`) |
+| `GET /api/accounts/{address}/snapshot` | Public on-chain data | Single-block unified account balances, owned CollateralNFTs, loan, risk, and accrued interest (optional `?network=`) |
 | `POST /api/transactions/prepare` | Verified wallet | Builds unsigned tx (including `TRANSFER_LENDING_POSITION_NFT` and `DEPOSIT_COLLATERAL` with NFT `tokenId >= 0`), `gas_quote`, `interest_quote`, `context`, `availability`, `allowance`, and `preview` (`resulting_ltv`, `resulting_hf`) |
 | `POST /api/transactions/confirm` | Prepared-intent wallet | Checks mined transaction/receipt against the server-side prepare intent |
 | `POST /api/ipfs/create-agreement` | Verified borrower | Creates a private encrypted pre-borrow agreement |
@@ -143,8 +148,14 @@ BPS (`10_000` BPS = 100%).
   configured Web3 service network is `local`; HI04 additionally validates
   Hardhat chain ID `31337`.
 - Historical event endpoints accept `from_block`. Local mode defaults it to
-  zero; on Sepolia callers must provide a non-negative `from_block` so API
-  requests do not start an unbounded scan from genesis.
+  zero; on Sepolia, `/api/accounts/{address}/lending-positions` and
+  `/api/analytics/rates` default `from_block` to the recorded `LendingPool`
+  deployment block when available, while `POST /api/ipfs/credit-report/{address}`
+  and `POST /api/ipfs/audit-logs` still require an explicit non-negative
+  `from_block` so API requests do not start an unbounded scan from genesis.
+- Run Uvicorn with a **single worker** (default, no `--workers > 1`) during
+  local demos and testing because one-use auth nonces (`_nonces`) and
+  short-lived `prepared_intents` are stored in process memory (`app.state`).
 - `ContractNotDeployedError` / contract configuration problems map to `503`,
   transaction input validation to `422`, private-document authentication to
   `401`, and authenticated access denial to `403`. Solidity custom errors use

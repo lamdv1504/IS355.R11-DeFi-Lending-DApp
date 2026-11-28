@@ -23,6 +23,8 @@ from web3 import Web3
 from backend.config.settings import AppSettings, settings
 from src.ipfs.rbac import AccessContext, Role
 
+_LOCAL_LOOPBACK_DOMAINS = frozenset({"localhost", "127.0.0.1"})
+
 
 class AuthenticationError(ValueError):
     """Raised when a nonce, wallet signature, or session token is invalid."""
@@ -60,12 +62,19 @@ class WalletAuthManager:
             raise AuthenticationConfigurationError(
                 "AUTH_TOKEN_SECRET must contain at least 32 bytes."
             )
-        if not domain.strip():
+        configured_domains = [
+            item.strip() for item in domain.split(",") if item.strip()
+        ]
+        if not configured_domains:
             raise AuthenticationConfigurationError("AUTH_DOMAIN must not be empty.")
         if nonce_ttl_seconds <= 0 or session_ttl_seconds <= 0:
             raise AuthenticationConfigurationError("Authentication TTLs must be positive.")
         self._secret = secret.encode("utf-8")
-        self.domain = domain.strip()
+        self.domain = configured_domains[0]
+        allowed_domains = set(configured_domains)
+        if allowed_domains.intersection(_LOCAL_LOOPBACK_DOMAINS):
+            allowed_domains.update(_LOCAL_LOOPBACK_DOMAINS)
+        self.allowed_domains = frozenset(allowed_domains)
         self.allowed_chain_ids = frozenset(int(chain_id) for chain_id in allowed_chain_ids)
         try:
             self._admin_wallets = self._normalize_wallets(admin_wallets)
@@ -102,13 +111,13 @@ class WalletAuthManager:
         if isinstance(chain_id, bool) or int(chain_id) not in self.allowed_chain_ids:
             raise AuthenticationError("Unsupported chain_id.")
         requested_domain = self.domain if domain is None else domain.strip()
-        if requested_domain != self.domain:
+        if requested_domain not in self.allowed_domains:
             raise AuthenticationError("Domain does not match the configured API domain.")
         now = int(self._clock())
         expires_at = now + self.nonce_ttl_seconds
         nonce = secrets.token_urlsafe(24)
         message = (
-            f"{self.domain} requests a wallet signature for DeFi Lending DApp.\n"
+            f"{requested_domain} requests a wallet signature for DeFi Lending DApp.\n"
             f"Address: {wallet}\n"
             f"Chain ID: {int(chain_id)}\n"
             f"Nonce: {nonce}\n"
@@ -118,7 +127,7 @@ class WalletAuthManager:
         record = _NonceRecord(
             wallet_address=wallet,
             chain_id=int(chain_id),
-            domain=self.domain,
+            domain=requested_domain,
             message=message,
             expires_at=expires_at,
         )
@@ -132,7 +141,7 @@ class WalletAuthManager:
         return {
             "nonce": nonce,
             "message": message,
-            "domain": self.domain,
+            "domain": requested_domain,
             "chain_id": int(chain_id),
             "wallet_address": wallet,
             "expires_at": expires_at,
@@ -159,7 +168,7 @@ class WalletAuthManager:
             or record.domain != requested_domain
         ):
             raise AuthenticationError("Nonce challenge does not match wallet, chain, or domain.")
-        if requested_domain != self.domain:
+        if requested_domain not in self.allowed_domains:
             raise AuthenticationError("Domain does not match the configured API domain.")
         if not isinstance(signature, str) or not signature.startswith("0x"):
             raise AuthenticationError("A valid EIP-191 signature is required.")

@@ -41,9 +41,10 @@ DApp hiển thị thông tin khoản vay và **Health Factor** để người d�
 ### 3.4. Token ERC-20 và NFT
 
 - **MyUSDT (ERC-20):** Token ổn định giả lập, được sử dụng làm đơn vị tiền tệ trong các nghiệp vụ gửi và vay.
-- **Debt Token:** Đại diện hoặc hỗ trợ theo dõi nghĩa vụ nợ của người vay.
-- **Collateral Receipt NFT:** Biên nhận NFT đại diện cho tài sản đã được đưa vào thế chấp.
-- **Lending Position NFT:** Đại diện cho vị thế cho vay và hỗ trợ minh họa việc chuyển nhượng vị thế giữa các người cho vay.
+- **Collateral NFT (ERC-721):** Đại diện cho tài sản số hóa có định giá dùng làm tài sản thế chấp gốc.
+- **Debt Token (ERC-20 không chuyển nhượng):** Đại diện và theo dõi nghĩa vụ nợ gốc on-chain của người vay.
+- **Collateral Receipt NFT (ERC-721 không chuyển nhượng):** Biên nhận NFT phát hành khi tài sản được khóa vào hợp đồng thế chấp.
+- **Lending Position NFT (ERC-721):** Đại diện cho vị thế cho vay và hỗ trợ chuyển nhượng quyền rút gốc + lãi giữa các người cho vay.
 
 ### 3.5. Lưu trữ hồ sơ với IPFS
 
@@ -85,7 +86,7 @@ Người dùng thao tác trên giao diện web và kết nối ví MetaMask đ�
 | Môi trường phát triển | Hardhat | Biên dịch, triển khai và kiểm thử hợp đồng |
 | Kết nối ví | MetaMask | Kết nối ví và ký giao dịch |
 | Backend | Python, FastAPI, Web3.py | Xây dựng API và tương tác Blockchain |
-| Frontend | React, Vite | Xây dựng giao diện DApp |
+| Frontend | Next.js 16 (App Router), React 19, Tailwind CSS v4, Recharts | Xây dựng giao diện DApp |
 | Lưu trữ phi tập trung | IPFS | Lưu trữ và truy xuất hồ sơ |
 | Mạng kiểm thử | Hardhat Local Network, Sepolia | Kiểm thử và triển khai thử nghiệm |
 
@@ -107,14 +108,16 @@ DeFi-Lending-DApp/
 │   ├── services/              # Xử lý nghiệp vụ
 │   ├── security/              # Xác thực và bảo mật
 │   └── config/                # Cấu hình Backend
-├── frontend/                  # Giao diện React
-│   ├── public/                # Tài nguyên tĩnh
+├── frontend/                  # Giao diện Next.js (App Router) + React + Tailwind CSS
+│   ├── public/                # Tài nguyên tĩnh và dữ liệu mẫu công khai
+│   ├── tests/                 # Unit test giao diện và adapter API
 │   └── src/
-│       ├── components/        # Component giao diện
-│       ├── pages/             # Các trang chức năng
+│       ├── app/               # Các route chính (/, /borrow, /documents, /analytics)
+│       ├── components/        # Component giao diện dùng chung và từng phân hệ
+│       ├── config/            # Manifest địa chỉ contract và ABI đồng bộ cho Frontend
+│       ├── data/              # Fixture mẫu hiển thị cục bộ
 │       ├── hooks/             # Custom React hooks
-│       ├── services/          # Kết nối API và Smart Contract
-│       └── assets/            # Hình ảnh và tài nguyên
+│       └── lib/               # Helper tính toán WAD/APR/APY và adapter gọi API
 ├── src/                       # Module Python dùng chung
 │   ├── documents/             # Xử lý hồ sơ vay
 │   └── ipfs/                  # Tích hợp IPFS
