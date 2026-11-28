@@ -1,0 +1,1277 @@
+{
+ "start": "2026-11-27T16:31:04.211Z",
+ "round": 3,
+ "idle": 0,
+ "errors": 0,
+ "status": "open",
+ "history": [
+  {
+   "at": "2026-11-27T16:56:17.058Z",
+   "mode": "manual",
+   "status": "fail",
+   "fails": 30,
+   "round": 1,
+   "reused": false,
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-27T17:03:28.825Z",
+   "mode": "manual",
+   "status": "fail",
+   "fails": 25,
+   "round": 2,
+   "reused": false,
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-28T06:29:24.600Z",
+   "mode": "manual",
+   "status": "open",
+   "fails": 24,
+   "round": 3,
+   "reused": false,
+   "stopHookActive": false
+  }
+ ],
+ "max": 3,
+ "marker": {
+  "page": "out/documents/index.html",
+  "url": null,
+  "root": "out",
+  "kind": "software",
+  "category": "DeFi IPFS document hub",
+  "primary": "Tra cứu CID",
+  "rounds": 3,
+  "start": "2026-11-27T16:31:04.211Z",
+  "by": "gate.mjs --start"
+ },
+ "manual": true,
+ "roundKey": "986f994b03f5eee5:c05fe267",
+ "roundFree": false,
+ "idleFree": false,
+ "blockKey": null,
+ "fp": "986f994b03f5eee5",
+ "page": "out/documents/index.html",
+ "found": {
+  "fails": [
+   {
+    "check": "hero-fill",
+    "where": "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATED Đổi nguồn dữ liệu\"",
+    "msg": "the next section shows on the first screen: it starts at 277px on a 900px screen (the hero ends at 237px)",
+    "fix": "let the hero fill the first screen alone (min-height: 100svh, less above it): nothing of the next section on load",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "hero-fill"
+    ],
+    "wheres": [
+     "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATED Đổi nguồn dữ liệu\""
+    ]
+   },
+   {
+    "check": "flush",
+    "where": "div.hub-document-list > article.hub-document-row:nth-of-type(3) > div.hub-doc-actions > button.text-button \"Xem hồ sơ\"",
+    "msg": "its button sits -639px above the rule on top of section.panel.hub-preview",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "flush"
+    ],
+    "wheres": [
+     "div.hub-document-list > article.hub-document-row:nth-of-type(3) > div.hub-doc-actions > button.text-button \"Xem hồ sơ\""
+    ]
+   },
+   {
+    "check": "nav",
+    "where": "(the first screen)",
+    "msg": "no nav bar across the top of the first screen (a header with the brand, the section links and the main action)",
+    "fix": "make the nav one bar from the content's left edge to its right edge, with every link and action inside it",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "nav"
+    ],
+    "wheres": [
+     "(the first screen)"
+    ]
+   },
+   {
+    "check": "text-only",
+    "where": "main#main-content > section.panel.hub-audit \"Nhật ký lãi suất hàng tháng\"",
+    "msg": "the closing section is only text: no picture, icon, mock or effect in it",
+    "fix": "give the section a visual: a photograph that fits, the real icons, or a UI fragment on a ground",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "text-only"
+    ],
+    "wheres": [
+     "main#main-content > section.panel.hub-audit \"Nhật ký lãi suất hàng tháng\""
+    ]
+   },
+   {
+    "check": "button-styles",
+    "where": "(one screen)",
+    "msg": "4 button styles on one screen: label and disc, fill #122b50 (\"DeFi Lending\"); pill, fill #edf3fd (\"Hồ sơ IPFS\"); pill, outline #e0e5ed (\"Tạo & lưu IPFS\"); pill, fill #245bd6 (\"Tra cứu hồ sơ\"); the odd ones out: \"Tạo & lưu IPFS\", \"Tra cứu hồ sơ\"",
+    "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "button-styles"
+    ],
+    "wheres": [
+     "(one screen)"
+    ]
+   },
+   {
+    "check": "button-styles",
+    "where": "(the page)",
+    "msg": "4 button styles on the page: label and disc, fill #122b50 x1 (\"DeFi Lending\"); pill, fill #edf3fd x1 (\"Hồ sơ IPFS\"); pill, outline #e0e5ed x1 (\"Tạo & lưu IPFS\"); pill, fill #245bd6 x1 (\"Tra cứu hồ sơ\")",
+    "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "button-styles"
+    ],
+    "wheres": [
+     "(the page)"
+    ]
+   },
+   {
+    "check": "cta",
+    "where": "main#main-content > section.panel.hub-audit \"Nhật ký lãi suất hàng tháng\"",
+    "msg": "the last section before the footer ends with no button",
+    "fix": "add the action: a button in the hero, one on every priced item, one in the closing section",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "cta"
+    ],
+    "wheres": [
+     "main#main-content > section.panel.hub-audit \"Nhật ký lãi suất hàng tháng\""
+    ]
+   },
+   {
+    "check": "copy-headings",
+    "where": "h2#library-title \"Bộ hồ sơ minh họa\"",
+    "msg": "\"Bộ hồ sơ minh họa\" names no product, part, place or section (2 headings like it; at most one brand line per page) (and 1 more like it: \"Chi tiết hồ sơ\")",
+    "fix": "name the thing in every heading: the product, a part, the place or a section noun",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "copy-headings"
+    ],
+    "wheres": [
+     "h2#library-title \"Bộ hồ sơ minh họa\""
+    ]
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#main-content > div.hub-document-grid > section.panel.hub-preview / main#main-content > section.panel.hub-audit",
+    "msg": "191px between these sections, +198% against the median 64px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-gaps"
+    ],
+    "wheres": [
+     "main#main-content > div.hub-document-grid > section.panel.hub-preview / main#main-content > section.panel.hub-audit"
+    ]
+   },
+   {
+    "check": "moment-none",
+    "where": "(the page)",
+    "msg": "a software page (--type) deals no moment: every kind carries one, two on a long page (moments.md)",
+    "fix": "deal one (moments.mjs pick --page software) and mount it in its own section",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "moment-none"
+    ],
+    "wheres": [
+     "(the page)"
+    ]
+   },
+   {
+    "check": "hero-screen",
+    "where": "main#main-content > div.page-heading.hub-heading \"HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ\"",
+    "msg": "the hero ends at 237px on a 900px screen, 663px above the fold: it ends at the fold, 1px either way (SR-1)",
+    "fix": "make the hero exactly one screen (height: 100svh, its content fitted inside), never taller or shorter",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "hero-screen"
+    ],
+    "wheres": [
+     "main#main-content > div.page-heading.hub-heading \"HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ\""
+    ]
+   },
+   {
+    "check": "hero-screen",
+    "where": "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu\"",
+    "msg": "635px of the next section shows on the first screen (from 265px on a 900px screen): nothing below the hero shows at load (SR-1)",
+    "fix": "end the hero at the fold so nothing of the next section shows at load (hero height: 100svh)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "hero-screen"
+    ],
+    "wheres": [
+     "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu\""
+    ]
+   },
+   {
+    "check": "section-height",
+    "where": "main#main-content > footer.app-footer \"IS355 · Hồ sơ IPFS & quyền truy cậpSIMUL\"",
+    "msg": "the section is 46px tall (0.1 screens), 854px short of one screen (900px): every section after the hero is one screen or two, 2px either way (SR-2)",
+    "fix": "set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-height"
+    ],
+    "wheres": [
+     "main#main-content > footer.app-footer \"IS355 · Hồ sơ IPFS & quyền truy cậpSIMUL\"",
+     "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu\"",
+     "main#main-content > form.panel.cid-search \"Tra cứu CIDTra cứu hồ sơNhật ký công kha\"",
+     "main#main-content > div.hub-document-grid \"DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ\"",
+     "main#main-content > section.panel.hub-audit \"AUDIT LOGS · KHÔNG CHỨA PIINhật ký lãi s\""
+    ]
+   },
+   {
+    "check": "section-air",
+    "where": "main#main-content > div.hub-connection / main#main-content > form.panel.cid-search",
+    "msg": "50px of air between the content of these two sections: 128-480px (64-600px WARN) (every gap out of the band at 1440px, top to bottom: 50px after \"Mẫu cục bộ · SIMULAT\", 78px after \"Tra cứu CIDTra cứu h\", 87px after \"DANH MỤC HỒ SƠBộ hồ \") (SR-3)",
+    "fix": "keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-air"
+    ],
+    "wheres": [
+     "main#main-content > div.hub-connection / main#main-content > form.panel.cid-search"
+    ]
+   },
+   {
+    "check": "one-section",
+    "where": "main#main-content > div.hub-document-grid \"DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ\"",
+    "msg": "the screen at scroll 900px (stride 1) shows 321px of section 4 and the content of 2 sections, over 24px each beside section 5: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)",
+    "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-section"
+    ],
+    "wheres": [
+     "main#main-content > div.hub-document-grid \"DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ\"",
+     "main#main-content > div.page-heading.hub-heading \"HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ\"",
+     "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu\"",
+     "main#main-content > form.panel.cid-search \"Tra cứu CIDTra cứu hồ sơNhật ký công kha\""
+    ]
+   },
+   {
+    "check": "one-section",
+    "where": "h2#audit-title \"Nhật ký lãi suất hàng tháng\"",
+    "msg": "the screen at scroll 531px (the top of section 4) shows 186px of section 5 and the heading of section 5 whole and the content of 2 sections, over 24px each beside section 4: a screen shows one section (another may peek 8px, 24px WARN) (and 3 more like it: scroll 0px, scroll 120px, scroll 265px) (SR-4)",
+    "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-section"
+    ],
+    "wheres": [
+     "h2#audit-title \"Nhật ký lãi suất hàng tháng\""
+    ]
+   },
+   {
+    "check": "one-heading",
+    "where": "h2#preview-title \"Chi tiết hồ sơ\"",
+    "msg": "the section holds 2 h2 headings: one per section, first in its .wrap (SR-5)",
+    "fix": "give each section one h2, first in its .wrap, and the hero only its h1",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-heading"
+    ],
+    "wheres": [
+     "h2#preview-title \"Chi tiết hồ sơ\""
+    ]
+   },
+   {
+    "check": "one-heading",
+    "where": "h2#audit-title \"Nhật ký lãi suất hàng tháng\"",
+    "msg": "headings of two sections show whole on one screen at 3 of 21 scroll positions (14.3%; at scroll 450, 500, 550px), here with \"Bộ hồ sơ minh họa\": at most 3% on a desktop (SR-5)",
+    "fix": "make the sections one screen tall so their headings sit a screen apart and two never share one",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-heading"
+    ],
+    "wheres": [
+     "h2#audit-title \"Nhật ký lãi suất hàng tháng\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "div.app-shell.hub-shell > div.workspace > header.topbar \"Ứng dụng /Hồ sơ IPFSMẫu · SIMULATED\"",
+    "msg": "the nav's content runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)",
+    "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "div.app-shell.hub-shell > div.workspace > header.topbar \"Ứng dụng /Hồ sơ IPFSMẫu · SIMULATED\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "main#main-content > div.page-heading.hub-heading \"HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ\"",
+    "msg": "the content of section 1 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)",
+    "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "main#main-content > div.page-heading.hub-heading \"HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu\"",
+    "msg": "the content of section 2 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (and 4 more like it: \"Tra cứu CIDTra cứu hồ sơ\", \"DANH MỤC HỒ SƠBộ hồ sơ m\", \"AUDIT LOGS · KHÔNG CHỨA \") (SR-6)",
+    "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "div.app-shell.hub-shell \"Đến nội dung chínhDeFi LendingKHÔNG GIAN\"",
+    "msg": "a <div> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)",
+    "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "div.app-shell.hub-shell \"Đến nội dung chínhDeFi LendingKHÔNG GIAN\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "h2#preview-title \"Chi tiết hồ sơ\"",
+    "msg": "the h2 starts 619px right of the container's left: every h1 and h2 starts on it, 2px either way (SR-6)",
+    "fix": "start the text on the container's left, or on the one split line every split shares",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "h2#preview-title \"Chi tiết hồ sơ\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "h2#library-title \"Bộ hồ sơ minh họa\"",
+    "msg": "the h2 starts 25px right of the container's left: every h1 and h2 starts on it, 2px either way (and 2 more like it: x 312, \"Nhật ký lãi suất hàng th\") (SR-6)",
+    "fix": "start the text on the container's left, or on the one split line every split shares",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "h2#library-title \"Bộ hồ sơ minh họa\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "main#main-content > div.hub-document-grid > section.panel.hub-library \"DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ\"",
+    "msg": "a box over half the container wide runs 288-858px, not on the container's lines at 288-1400px (SR-6)",
+    "fix": "run the picture or box from the container's left line to its right line, or put it in a row or a split",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "main#main-content > div.hub-document-grid > section.panel.hub-library \"DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ\""
+    ]
+   },
+   {
+    "check": "no-visual",
+    "where": "main#main-content > div.hub-document-grid > section.panel.hub-library \"Bộ hồ sơ minh họa\"",
+    "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+    "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "no-visual"
+    ],
+    "wheres": [
+     "main#main-content > div.hub-document-grid > section.panel.hub-library \"Bộ hồ sơ minh họa\""
+    ]
+   },
+   {
+    "check": "no-visual",
+    "where": "main#main-content > section.panel.hub-audit \"Nhật ký lãi suất hàng tháng\"",
+    "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+    "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "no-visual"
+    ],
+    "wheres": [
+     "main#main-content > section.panel.hub-audit \"Nhật ký lãi suất hàng tháng\""
+    ]
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#main-content > div.page-heading.hub-heading / main#main-content > div.hub-connection",
+    "msg": "21px between these sections, -68% against the median 66px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-gaps"
+    ],
+    "wheres": [
+     "main#main-content > div.page-heading.hub-heading / main#main-content > div.hub-connection"
+    ]
+   },
+   {
+    "check": "container",
+    "where": "page",
+    "msg": "no .wrap",
+    "fix": "put the content in one .wrap",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "container"
+    ],
+    "wheres": [
+     "page"
+    ]
+   }
+  ],
+  "warns": [
+   {
+    "check": "flush",
+    "where": "main#main-content > form.panel.cid-search > label \"Tra cứu CID\"",
+    "msg": "its first line sits 26px under the top edge of form.panel.cid-search, where the ground changes",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "p#cid-help \"Nhật ký công khai có thể đọc tự do. Hồ s\"",
+    "msg": "its last line sits 28px above the lower edge of form.panel.cid-search, where the ground changes to section.panel.hub-library",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "section.panel.hub-library > div.hub-section-heading > div > p.eyebrow \"DANH MỤC HỒ SƠ\"",
+    "msg": "its first line sits 26px under the top edge of section.panel.hub-library, where the ground changes",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "section.panel.hub-audit > div.hub-section-heading > div > p.eyebrow \"AUDIT LOGS · KHÔNG CHỨA PII\"",
+    "msg": "its first line sits 26px under the top edge of section.panel.hub-audit, where the ground changes",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "main#main-content > section.panel.hub-audit > p.hub-note \"APY ghép lãi hằng ngày chỉ để tham khảo;\"",
+    "msg": "its last line sits 28px above the lower edge of section.panel.hub-audit, where the ground changes to the footer",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "copy-buttons",
+    "where": "main#main-content > form.panel.cid-search > div.cid-search-line > button.button.primary \"Tra cứu hồ sơ\"",
+    "msg": "\"Tra cứu hồ sơ\" does not start with a verb (book, buy, try, start, get, see...)",
+    "fix": "label buttons with a verb and what the visitor gets (\"Book a room\", \"Start free trial\")",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "copy-actions",
+    "where": "(the page)",
+    "msg": "the main action \"Tra cứu CID\" does not read word for word the same in the nav or hero and the closing section",
+    "fix": "few actions, one wording: at most 2 in the hero, the main action word for word in nav, hero and close",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "off-grid",
+    "where": "h2#preview-title \"Chi tiết hồ sơ\"",
+    "msg": "the section's heading starts at 907px, 619px off the page margin (288px), and no other section starts there",
+    "fix": "move it onto the page margin, or the column edge its section uses",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#main-content > div.page-heading.hub-heading / main#main-content > div.hub-connection",
+    "msg": "43px between these sections, -33% against the median 64px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#main-content > div.hub-document-grid > section.panel.hub-library / main#main-content > div.hub-document-grid > section.panel.hub-preview",
+    "msg": "the sections overlap by 613px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "label-centre",
+    "where": "div.app-shell.hub-shell > aside.sidebar > a.brand \"DeFi Lending\"",
+    "msg": "its label sits 39px off-centre (0px of room at the left, 39px at the right) (and 1 more like it: \"Hồ sơ IPFS\")",
+    "fix": "centre the label in its button, or fill the empty side with an icon",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "stranded-action",
+    "where": "main#main-content > div.page-heading.hub-heading > button.button.secondary \"Tạo & lưu IPFS\"",
+    "msg": "stands 551px across from the nearest text of its block (\"Hồ sơ IPFS.\")",
+    "fix": "put the button under or beside the text it belongs to",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "copy-length",
+    "where": "main#main-content > section.panel.hub-audit \"Nhật ký lãi suất hàng tháng\"",
+    "msg": "1 section over 90 words a screen outside the UI mocks (\"Nhật ký lãi suất hàng th\" 92); 42 words a screen across the page (252 words in 6 screens): a tech page says it in about 80 or fewer",
+    "fix": "cut every section to its heading, one line and the product UI: the UI says the rest; no second paragraph, no list of feature sentences",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "button-contrast",
+    "where": "div.app-shell.hub-shell > aside.sidebar > nav.main-nav > a:nth-of-type(3) \"Hồ sơ IPFS\"",
+    "msg": "the button \"Hồ sơ IPFS\" (#edf3fd) stands only 1.11:1 off the ground around it: it reads as part of the ground, or as switched off",
+    "fix": "give the button a fill that stands at least 1.5:1 off what is around it, or an outline in the ink",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "one-screen",
+    "where": "main#main-content > div.hub-document-grid > section.panel.hub-library \"Bộ hồ sơ minh họa\"",
+    "msg": "2 sections are shorter than the screen, so the next one's heading or picture shows with them: \"Bộ hồ sơ minh họa\" is 690px of the 900px under the nav, and \"Chi tiết hồ sơ\" shows below it (\"Chi tiết hồ sơ\")",
+    "fix": "give each section the screen (min-height: 100svh less the nav, its content centred), or join two short ones into one",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "skip-link",
+    "where": "div.app-shell.hub-shell:nth-of-type(2) > a.skip-link \"Đến nội dung chính\"",
+    "msg": "the first Tab stop is \"Đến nội dung chính\", not a skip link: a keyboard user tabs through the whole nav on every visit",
+    "fix": "add the starter's skip link as the header's first child: <a class=\"skip-link\" href=\"#top\">Skip to content</a>",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "share-meta",
+    "where": "head",
+    "msg": "the head lacks og:title, og:description, og:image, twitter:card, theme-color: a shared link shows no picture or title of its own",
+    "fix": "copy the head block of starter.html: og tags, twitter:card, the icon and theme-color (references/system.md, Head)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "form-fields",
+    "where": "main#main-content > form.panel.cid-search",
+    "msg": "the form has no status line (role=\"status\"): sending, sent and errors are never read out",
+    "fix": "give each field its type, autocomplete and inputmode, never block paste or disable the button before a submit, and add the status line (references/system.md, Forms)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-air",
+    "where": "main#main-content > form.panel.cid-search / main#main-content > div.hub-document-grid",
+    "msg": "78px of air between the content of these two sections: 128-480px (64-600px WARN) (SR-3)",
+    "fix": "keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-air",
+    "where": "main#main-content > div.hub-document-grid / main#main-content > section.panel.hub-audit",
+    "msg": "87px of air between the content of these two sections: 128-480px (64-600px WARN) (SR-3)",
+    "fix": "keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "main#main-content > div.page-heading.hub-heading > button.button.secondary \"Tạo & lưu IPFS\"",
+    "msg": "div.page-heading.hub-heading and div.hub-connection run together: 21px between their content, on one ground",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "button-styles",
+    "where": "div.hub-document-grid > section.panel.hub-library > div.hub-filters > button:nth-of-type(1) \"Tất cả\"",
+    "msg": "the selected tab \"Tất cả\" is drawn as a filled pill in #122b50, a fill none of the page's buttons use (#245bd6): it reads as one more button style",
+    "fix": "draw the selected tab as a line under its word, or in the primary button's fill",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "heading-scale",
+    "where": "article.hub-document-row:nth-of-type(1) > div.hub-doc-top > div > h3 \"Thỏa thuận vay\"",
+    "msg": "the h3s (16px) are only 1.06x smaller than the h2s (17px): one level a clear step (1.3x or more) below the other",
+    "fix": "size headings by level: the h1 largest, one size per level, each level below the one above",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#main-content > div.hub-document-grid > section.panel.hub-preview / main#main-content > section.panel.hub-audit",
+    "msg": "102px between these sections, +56% against the median 66px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "orphan",
+    "where": "section.panel.hub-audit > div.hub-section-heading > div > p.eyebrow \"AUDIT LOGS · KHÔNG CHỨA PII\"",
+    "msg": "its last line holds only \"PII\"",
+    "fix": "rebalance the text (text-wrap: pretty, or a shorter line) so the last line holds more than one short word",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   }
+  ],
+  "crashed": [],
+  "seconds": {
+   "consistency": 82,
+   "layout": 14
+  }
+ },
+ "open": [
+  {
+   "check": "flush",
+   "where": "div.hub-document-list > article.hub-document-row:nth-of-type(3) > div.hub-doc-actions > button.text-button \"Xem hồ sơ\"",
+   "msg": "its button sits -639px above the rule on top of section.panel.hub-preview",
+   "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "flush"
+   ],
+   "wheres": [
+    "div.hub-document-list > article.hub-document-row:nth-of-type(3) > div.hub-doc-actions > button.text-button \"Xem hồ sơ\""
+   ]
+  },
+  {
+   "check": "button-styles",
+   "where": "(one screen)",
+   "msg": "4 button styles on one screen: label and disc, fill #122b50 (\"DeFi Lending\"); pill, fill #edf3fd (\"Hồ sơ IPFS\"); pill, outline #e0e5ed (\"Tạo & lưu IPFS\"); pill, fill #245bd6 (\"Tra cứu hồ sơ\"); the odd ones out: \"Tạo & lưu IPFS\", \"Tra cứu hồ sơ\"",
+   "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "button-styles"
+   ],
+   "wheres": [
+    "(one screen)"
+   ]
+  },
+  {
+   "check": "button-styles",
+   "where": "(the page)",
+   "msg": "4 button styles on the page: label and disc, fill #122b50 x1 (\"DeFi Lending\"); pill, fill #edf3fd x1 (\"Hồ sơ IPFS\"); pill, outline #e0e5ed x1 (\"Tạo & lưu IPFS\"); pill, fill #245bd6 x1 (\"Tra cứu hồ sơ\")",
+   "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "button-styles"
+   ],
+   "wheres": [
+    "(the page)"
+   ]
+  },
+  {
+   "check": "cta",
+   "where": "main#main-content > section.panel.hub-audit \"Nhật ký lãi suất hàng tháng\"",
+   "msg": "the last section before the footer ends with no button",
+   "fix": "add the action: a button in the hero, one on every priced item, one in the closing section",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "cta"
+   ],
+   "wheres": [
+    "main#main-content > section.panel.hub-audit \"Nhật ký lãi suất hàng tháng\""
+   ]
+  },
+  {
+   "check": "copy-headings",
+   "where": "h2#library-title \"Bộ hồ sơ minh họa\"",
+   "msg": "\"Bộ hồ sơ minh họa\" names no product, part, place or section (2 headings like it; at most one brand line per page) (and 1 more like it: \"Chi tiết hồ sơ\")",
+   "fix": "name the thing in every heading: the product, a part, the place or a section noun",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "copy-headings"
+   ],
+   "wheres": [
+    "h2#library-title \"Bộ hồ sơ minh họa\""
+   ]
+  },
+  {
+   "check": "section-gaps",
+   "where": "main#main-content > div.hub-document-grid > section.panel.hub-preview / main#main-content > section.panel.hub-audit",
+   "msg": "191px between these sections, +198% against the median 64px",
+   "fix": "use one gap between sections (all within 25% of each other)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-gaps"
+   ],
+   "wheres": [
+    "main#main-content > div.hub-document-grid > section.panel.hub-preview / main#main-content > section.panel.hub-audit"
+   ]
+  },
+  {
+   "check": "hero-screen",
+   "where": "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu\"",
+   "msg": "635px of the next section shows on the first screen (from 265px on a 900px screen): nothing below the hero shows at load (SR-1)",
+   "fix": "end the hero at the fold so nothing of the next section shows at load (hero height: 100svh)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "hero-screen"
+   ],
+   "wheres": [
+    "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu\""
+   ]
+  },
+  {
+   "check": "section-height",
+   "where": "main#main-content > footer.app-footer \"IS355 · Hồ sơ IPFS & quyền truy cậpSIMUL\"",
+   "msg": "the section is 46px tall (0.1 screens), 854px short of one screen (900px): every section after the hero is one screen or two, 2px either way (SR-2)",
+   "fix": "set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-height"
+   ],
+   "wheres": [
+    "main#main-content > footer.app-footer \"IS355 · Hồ sơ IPFS & quyền truy cậpSIMUL\"",
+    "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu\"",
+    "main#main-content > form.panel.cid-search \"Tra cứu CIDTra cứu hồ sơNhật ký công kha\"",
+    "main#main-content > div.hub-document-grid \"DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ\"",
+    "main#main-content > section.panel.hub-audit \"AUDIT LOGS · KHÔNG CHỨA PIINhật ký lãi s\""
+   ]
+  },
+  {
+   "check": "section-air",
+   "where": "main#main-content > div.hub-connection / main#main-content > form.panel.cid-search",
+   "msg": "50px of air between the content of these two sections: 128-480px (64-600px WARN) (every gap out of the band at 1440px, top to bottom: 50px after \"Mẫu cục bộ · SIMULAT\", 78px after \"Tra cứu CIDTra cứu h\", 87px after \"DANH MỤC HỒ SƠBộ hồ \") (SR-3)",
+   "fix": "keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-air"
+   ],
+   "wheres": [
+    "main#main-content > div.hub-connection / main#main-content > form.panel.cid-search"
+   ]
+  },
+  {
+   "check": "one-section",
+   "where": "main#main-content > div.hub-document-grid \"DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ\"",
+   "msg": "the screen at scroll 900px (stride 1) shows 321px of section 4 and the content of 2 sections, over 24px each beside section 5: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)",
+   "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-section"
+   ],
+   "wheres": [
+    "main#main-content > div.hub-document-grid \"DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ\"",
+    "main#main-content > div.page-heading.hub-heading \"HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ\"",
+    "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu\"",
+    "main#main-content > form.panel.cid-search \"Tra cứu CIDTra cứu hồ sơNhật ký công kha\""
+   ]
+  },
+  {
+   "check": "one-section",
+   "where": "h2#audit-title \"Nhật ký lãi suất hàng tháng\"",
+   "msg": "the screen at scroll 531px (the top of section 4) shows 186px of section 5 and the heading of section 5 whole and the content of 2 sections, over 24px each beside section 4: a screen shows one section (another may peek 8px, 24px WARN) (and 3 more like it: scroll 0px, scroll 120px, scroll 265px) (SR-4)",
+   "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-section"
+   ],
+   "wheres": [
+    "h2#audit-title \"Nhật ký lãi suất hàng tháng\""
+   ]
+  },
+  {
+   "check": "one-heading",
+   "where": "h2#preview-title \"Chi tiết hồ sơ\"",
+   "msg": "the section holds 2 h2 headings: one per section, first in its .wrap (SR-5)",
+   "fix": "give each section one h2, first in its .wrap, and the hero only its h1",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-heading"
+   ],
+   "wheres": [
+    "h2#preview-title \"Chi tiết hồ sơ\""
+   ]
+  },
+  {
+   "check": "one-heading",
+   "where": "h2#audit-title \"Nhật ký lãi suất hàng tháng\"",
+   "msg": "headings of two sections show whole on one screen at 3 of 21 scroll positions (14.3%; at scroll 450, 500, 550px), here with \"Bộ hồ sơ minh họa\": at most 3% on a desktop (SR-5)",
+   "fix": "make the sections one screen tall so their headings sit a screen apart and two never share one",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-heading"
+   ],
+   "wheres": [
+    "h2#audit-title \"Nhật ký lãi suất hàng tháng\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "div.app-shell.hub-shell > div.workspace > header.topbar \"Ứng dụng /Hồ sơ IPFSMẫu · SIMULATED\"",
+   "msg": "the nav's content runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)",
+   "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "div.app-shell.hub-shell > div.workspace > header.topbar \"Ứng dụng /Hồ sơ IPFSMẫu · SIMULATED\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "main#main-content > div.page-heading.hub-heading \"HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ\"",
+   "msg": "the content of section 1 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)",
+   "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "main#main-content > div.page-heading.hub-heading \"HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu\"",
+   "msg": "the content of section 2 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (and 4 more like it: \"Tra cứu CIDTra cứu hồ sơ\", \"DANH MỤC HỒ SƠBộ hồ sơ m\", \"AUDIT LOGS · KHÔNG CHỨA \") (SR-6)",
+   "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "div.app-shell.hub-shell \"Đến nội dung chínhDeFi LendingKHÔNG GIAN\"",
+   "msg": "a <div> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)",
+   "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "div.app-shell.hub-shell \"Đến nội dung chínhDeFi LendingKHÔNG GIAN\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "h2#preview-title \"Chi tiết hồ sơ\"",
+   "msg": "the h2 starts 619px right of the container's left: every h1 and h2 starts on it, 2px either way (SR-6)",
+   "fix": "start the text on the container's left, or on the one split line every split shares",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "h2#preview-title \"Chi tiết hồ sơ\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "h2#library-title \"Bộ hồ sơ minh họa\"",
+   "msg": "the h2 starts 25px right of the container's left: every h1 and h2 starts on it, 2px either way (and 2 more like it: x 312, \"Nhật ký lãi suất hàng th\") (SR-6)",
+   "fix": "start the text on the container's left, or on the one split line every split shares",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "h2#library-title \"Bộ hồ sơ minh họa\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "main#main-content > div.hub-document-grid > section.panel.hub-library \"DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ\"",
+   "msg": "a box over half the container wide runs 288-858px, not on the container's lines at 288-1400px (SR-6)",
+   "fix": "run the picture or box from the container's left line to its right line, or put it in a row or a split",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "main#main-content > div.hub-document-grid > section.panel.hub-library \"DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ\""
+   ]
+  },
+  {
+   "check": "no-visual",
+   "where": "main#main-content > div.hub-document-grid > section.panel.hub-library \"Bộ hồ sơ minh họa\"",
+   "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+   "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "no-visual"
+   ],
+   "wheres": [
+    "main#main-content > div.hub-document-grid > section.panel.hub-library \"Bộ hồ sơ minh họa\""
+   ]
+  },
+  {
+   "check": "no-visual",
+   "where": "main#main-content > section.panel.hub-audit \"Nhật ký lãi suất hàng tháng\"",
+   "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+   "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "no-visual"
+   ],
+   "wheres": [
+    "main#main-content > section.panel.hub-audit \"Nhật ký lãi suất hàng tháng\""
+   ]
+  },
+  {
+   "check": "section-gaps",
+   "where": "main#main-content > div.page-heading.hub-heading / main#main-content > div.hub-connection",
+   "msg": "21px between these sections, -68% against the median 66px",
+   "fix": "use one gap between sections (all within 25% of each other)",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-gaps"
+   ],
+   "wheres": [
+    "main#main-content > div.page-heading.hub-heading / main#main-content > div.hub-connection"
+   ]
+  },
+  {
+   "check": "container",
+   "where": "page",
+   "msg": "no .wrap",
+   "fix": "put the content in one .wrap",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "container"
+   ],
+   "wheres": [
+    "page"
+   ]
+  }
+ ],
+ "waived": [
+  {
+   "check": "hero-fill",
+   "where": "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATED Đổi nguồn dữ liệu\"",
+   "msg": "the next section shows on the first screen: it starts at 277px on a 900px screen (the hero ends at 237px)",
+   "fix": "let the hero fill the first screen alone (min-height: 100svh, less above it): nothing of the next section on load",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "hero-fill"
+   ],
+   "wheres": [
+    "main#main-content > div.hub-connection \"Mẫu cục bộ · SIMULATED Đổi nguồn dữ liệu\""
+   ],
+   "reason": "The requested CID search and document list must be visible immediately in this operational app; a full-screen promotional hero would displace its main controls."
+  },
+  {
+   "check": "nav",
+   "where": "(the first screen)",
+   "msg": "no nav bar across the top of the first screen (a header with the brand, the section links and the main action)",
+   "fix": "make the nav one bar from the content's left edge to its right edge, with every link and action inside it",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "nav"
+   ],
+   "wheres": [
+    "(the first screen)"
+   ],
+   "reason": "L04 extends the existing application sidebar shared by L02/L03. Its four functional routes are the requested navigation; this is not a marketing navigation bar."
+  },
+  {
+   "check": "text-only",
+   "where": "main#main-content > section.panel.hub-audit \"Nhật ký lãi suất hàng tháng\"",
+   "msg": "the closing section is only text: no picture, icon, mock or effect in it",
+   "fix": "give the section a visual: a photograph that fits, the real icons, or a UI fragment on a ground",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "text-only"
+   ],
+   "wheres": [
+    "main#main-content > section.panel.hub-audit \"Nhật ký lãi suất hàng tháng\""
+   ],
+   "reason": "This is the requested actual audit data table with rates, utilization and provenance. Replacing data with a decorative photograph or UI mock would reduce the utility of this app screen."
+  },
+  {
+   "check": "moment-none",
+   "where": "(the page)",
+   "msg": "a software page (--type) deals no moment: every kind carries one, two on a long page (moments.md)",
+   "fix": "deal one (moments.mjs pick --page software) and mount it in its own section",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "moment-none"
+   ],
+   "wheres": [
+    "(the page)"
+   ],
+   "reason": "L04 is the actual document search and authorization workspace. Existing user-approved flat navy UI takes priority over an unrelated marketing scroll scene."
+  },
+  {
+   "check": "hero-screen",
+   "where": "main#main-content > div.page-heading.hub-heading \"HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ\"",
+   "msg": "the hero ends at 237px on a 900px screen, 663px above the fold: it ends at the fold, 1px either way (SR-1)",
+   "fix": "make the hero exactly one screen (height: 100svh, its content fitted inside), never taller or shorter",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "hero-screen"
+   ],
+   "wheres": [
+    "main#main-content > div.page-heading.hub-heading \"HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ\""
+   ],
+   "reason": "The compact application title intentionally leaves room for CID retrieval on the first screen, consistent with the existing app and design reference."
+  }
+ ],
+ "warnCount": 25,
+ "at": "2026-11-28T06:29:24.601Z",
+ "openTold": true
+}

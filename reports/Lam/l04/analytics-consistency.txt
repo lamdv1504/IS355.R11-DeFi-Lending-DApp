@@ -1,0 +1,371 @@
+consistency  C:\Users\ASUS\Documents\GitHub\IS355.R11-DeFi-Lending-DApp\frontend\out\analytics\index.html
+
+1440x900  3 screens  42 FAIL  16 WARN
+  FAIL hero-fill       main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATED Đổi nguồn dữ liệu"
+       the next section shows on the first screen: it starts at 277px on a 900px screen (the hero ends at 237px)  [1440-01-hero-fill.jpg]
+       fix: let the hero fill the first screen alone (min-height: 100svh, less above it): nothing of the next section on load
+  FAIL nav             (the first screen)
+       no nav bar across the top of the first screen (a header with the brand, the section links and the main action)
+       fix: make the nav one bar from the content's left edge to its right edge, with every link and action inside it
+  FAIL button-styles   (one screen)
+       3 button styles on one screen: label and disc, fill #122b50 ("DeFi Lending"); pill, fill #edf3fd ("Phân tích"); pill, outline #e0e5ed ("Tra cứu hồ sơ IPFS"); the odd one out: "Tra cứu hồ sơ IPFS"  [1440-02-button-styles.jpg]
+       fix: one primary and one secondary button: one shape, one height per size, one label size
+  FAIL button-styles   (the page)
+       3 button styles on the page: label and disc, fill #122b50 x1 ("DeFi Lending"); pill, fill #edf3fd x1 ("Phân tích"); pill, outline #e0e5ed x1 ("Tra cứu hồ sơ IPFS")  [1440-03-button-styles.jpg]
+       fix: one primary and one secondary button: one shape, one height per size, one label size
+  FAIL cta             main#main-content > section.panel.analytics-method  "APR, APY và nguồn dữ liệu"
+       the last section before the footer ends with no button  [1440-14-cta.jpg]
+       fix: add the action: a button in the hero, one on every priced item, one in the closing section
+  FAIL copy-headline   main#main-content > div.page-heading.hub-heading > div > h1  "Phân tích tài sản."
+       "Phân tích tài sản." does not name what is sold (defi lending analytics, defi, lending, analytics, from flags)  [1440-04-copy-headline.jpg]
+       fix: put the category noun in the h1 (and who it is for, or where), in 2 to 8 words
+  WARN flush           section.panel.analytics-panel:nth-of-type(2) > div.hub-section-heading > div > p.eyebrow  "ĐƠN VỊ ĐỊNH GIÁ: MYUSDT"
+       its first line sits 26px under the top edge of section.panel.analytics-panel:nth-of-type(2), where the ground changes  [1440-12-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  WARN flush           main#main-content > div.analytics-grid > section.panel.analytics-panel:nth-of-type(2) > p.hub-note:nth-of-type(2)  "Nợ gốc và lãi vay là nghĩa vụ phải trả, "
+       its last line sits 28px above the lower edge of section.panel.analytics-panel:nth-of-type(2), where the ground changes to section.panel.analytics-method  [1440-13-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  WARN flush           h2#method-title  "APR, APY và nguồn dữ liệu"
+       its first line sits 26px under the top edge of section.panel.analytics-method, where the ground changes  [1440-15-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  WARN flush           main#main-content > section.panel.analytics-method > p.hub-note  "APR dùng tính lãi đơn theo giây trên hợp"
+       its last line sits 28px above the lower edge of section.panel.analytics-method, where the ground changes to the footer  [1440-16-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  WARN copy-buttons    div.app-shell.hub-shell > aside.sidebar > nav.main-nav > a:nth-of-type(4)  "Phân tích"
+       "Phân tích" does not start with a verb (book, buy, try, start, get, see...) (and 1 more like it: "Tra cứu hồ sơ IPFS")  [1440-05-copy-buttons.jpg]
+       fix: label buttons with a verb and what the visitor gets ("Book a room", "Start free trial")
+  WARN copy-actions    (the page)
+       the main action "Tra c?u h? s? IPFS" does not read word for word the same in the nav or hero and the closing section
+       fix: few actions, one wording: at most 2 in the hero, the main action word for word in nav, hero and close
+  WARN section-gaps    main#main-content > div.page-heading.hub-heading / main#main-content > div.hub-connection
+       43px between these sections, -43% against the median 76px  [1440-06-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN label-centre    div.app-shell.hub-shell > aside.sidebar > a.brand  "DeFi Lending"
+       its label sits 39px off-centre (0px of room at the left, 39px at the right) (and 1 more like it: "Phân tích")  [1440-07-label-centre.jpg]
+       fix: centre the label in its button, or fill the empty side with an icon
+  WARN stranded-action main#main-content > div.page-heading.hub-heading > a.button.secondary  "Tra cứu hồ sơ IPFS"
+       stands 521px across from the nearest text of its block ("Phân tích tài sản.")  [1440-08-stranded-action.jpg]
+       fix: put the button under or beside the text it belongs to
+  WARN button-contrast div.app-shell.hub-shell > aside.sidebar > nav.main-nav > a:nth-of-type(4)  "Phân tích"
+       the button "Phân tích" (#edf3fd) stands only 1.11:1 off the ground around it: it reads as part of the ground, or as switched off  [1440-09-button-contrast.jpg]
+       fix: give the button a fill that stands at least 1.5:1 off what is around it, or an outline in the ink
+  WARN one-screen      main#main-content > div.analytics-grid > section.panel.analytics-panel:nth-of-type(1)  "Biến động APY gửi & vay"
+       2 sections are shorter than the screen, so the next one's heading or picture shows with them: "Biến động APY gửi & vay" is 639px of the 900px under the nav, and "Thành phần số dư ví" shows below it ("Thành phần số dư ví")  [1440-10-one-screen.jpg]
+       fix: give each section the screen (min-height: 100svh less the nav, its content centred), or join two short ones into one
+  WARN visual-caption  div.analytics-grid > section.panel.analytics-panel:nth-of-type(1) > div.analytics-legend > span:nth-of-type(1)  "APY gửi"
+       a muted 14px line of 1 row sits 16px under the drawing (svg): it reads as a caption: "APY gửi"; no caption or description under any image, render or visual (house rule)  [1440-11-visual-caption.jpg]
+       fix: take the line away: no caption or description under, over or on any image, render or visual; a licence credit goes in one footer line
+  WARN moment-none     (the page)
+       a software page (--type) deals no moment: every kind carries one, two on a long page (moments.md)
+       fix: deal one (moments.mjs pick --page software) and mount it in its own section
+  WARN skip-link       div.app-shell.hub-shell:nth-of-type(2) > a.skip-link  "Đến nội dung chính"
+       the first Tab stop is "Đến nội dung chính", not a skip link: a keyboard user tabs through the whole nav on every visit
+       fix: add the starter's skip link as the header's first child: <a class="skip-link" href="#top">Skip to content</a>
+  WARN share-meta      head
+       the head lacks og:title, og:description, og:image, twitter:card, theme-color: a shared link shows no picture or title of its own
+       fix: copy the head block of starter.html: og tags, twitter:card, the icon and theme-color (references/system.md, Head)
+  FAIL hero-screen     main#main-content > div.page-heading.hub-heading  "LÃI SUẤT & SỐ DƯPhân tích tài sản.Theo d"
+       the hero ends at 237px on a 900px screen, 663px above the fold: it ends at the fold, 1px either way (SR-1)  [1440-rhythm-01-hero-screen.jpg]
+       fix: make the hero exactly one screen (height: 100svh, its content fitted inside), never taller or shorter
+  FAIL hero-screen     main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       635px of the next section shows on the first screen (from 265px on a 900px screen): nothing below the hero shows at load (SR-1)  [1440-rhythm-02-hero-screen.jpg]
+       fix: end the hero at the fold so nothing of the next section shows at load (hero height: 100svh)
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       the section is 64px tall (0.1 screens), 836px short of one screen (900px): every section after the hero is one screen or two, 2px either way (SR-2)  [1440-rhythm-03-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Phân tích DeFi LendingMở Borrowi"
+       the section is 68px tall (0.1 screens), 832px short of one screen (900px): every section after the hero is one screen or two, 2px either way (SR-2)  [1440-rhythm-04-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  main#main-content > section.panel.analytics-method  "APR, APY và nguồn dữ liệuAPR dùng tính l"
+       the section is 133px tall (0.1 screens), 767px short of one screen (900px): every section after the hero is one screen or two, 2px either way (and 1 more like it: "NHẬT KÝ THEO THÁNGBiến đ") (SR-2)  [1440-rhythm-05-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  main#main-content > div.analytics-grid  "NHẬT KÝ THEO THÁNGBiến động APY gửi & va"
+       the section starts at 333px, 333px below the screen grid (0 x 900px): sections start on whole screens (SR-2)  [1440-rhythm-06-section-height.jpg]
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       the section starts at 265px, 265px below the screen grid (0 x 900px): sections start on whole screens (SR-2)  [1440-rhythm-07-section-height.jpg]
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  main#main-content > section.panel.analytics-method  "APR, APY và nguồn dữ liệuAPR dùng tính l"
+       the section starts at 1629px, 171px above the screen grid (2 x 900px): sections start on whole screens (and 2 more like it: "LÃI SUẤT & SỐ DƯPhân tíc", "IS355 · Phân tích DeFi L") (SR-2)  [1440-rhythm-08-section-height.jpg]
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Phân tích DeFi LendingMở Borrowi"
+       the section's content does not fit it: its lowest content ends 68px below its top, past -4px (the section less 72px of bottom padding) (SR-2)  [1440-rhythm-09-section-height.jpg]
+       fix: fit the content above the section's bottom padding (--padb), or make it two screens (.g2) in two groups
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       the section's content does not fit it: its lowest content ends 44px below its top, past -8px (the section less 72px of bottom padding) (and 2 more like it: "NHẬT KÝ THEO THÁNGBiến đ", "APR, APY và nguồn dữ liệ") (SR-2)  [1440-rhythm-10-section-height.jpg]
+       fix: fit the content above the section's bottom padding (--padb), or make it two screens (.g2) in two groups
+  FAIL section-air     main#main-content > div.hub-connection / main#main-content > div.analytics-grid
+       63px of air between the content of these two sections: 128-480px (64-600px WARN) (every gap out of the band at 1440px, top to bottom: 63px after "Mẫu cục bộ · SIMULAT", 78px after "NHẬT KÝ THEO THÁNGBi") (SR-3)  [1440-rhythm-11-section-air.jpg]
+       fix: keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)
+  WARN section-air     main#main-content > div.analytics-grid / main#main-content > section.panel.analytics-method
+       78px of air between the content of these two sections: 128-480px (64-600px WARN) (SR-3)  [1440-rhythm-28-section-air.jpg]
+       fix: keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)
+  FAIL one-section     h2#method-title  "APR, APY và nguồn dữ liệu"
+       the screen at scroll 900px (stride 1) shows 133px of section 4 and the heading of section 4 whole and the content of 2 sections, over 24px each beside section 3: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)  [1440-rhythm-12-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     h2#method-title  "APR, APY và nguồn dữ liệu"
+       the screen at scroll 950px (the top of section 4) shows 133px of section 4 and the heading of section 4 whole and the content of 3 sections, over 24px each beside section 3: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)  [1440-rhythm-13-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     main#main-content > div.page-heading.hub-heading > div > h1  "Phân tích tài sản."
+       the screen at scroll 0px (stride 0) shows 117px of section 1 and the heading of section 1 whole and the content of 3 sections, over 24px each beside section 3: a screen shows one section (another may peek 8px, 24px WARN) (and 2 more like it: scroll 120px, scroll 265px) (SR-4)  [1440-rhythm-14-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     main#main-content > div.page-heading.hub-heading  "LÃI SUẤT & SỐ DƯPhân tích tài sản.Theo d"
+       a <div> sits directly in <main>: every part of <main> is a <section> (SR-4)  [1440-rhythm-15-one-section.jpg]
+       fix: put every block of <main> in a <section>, and give a band its own section instead of a ground inside one
+  FAIL one-section     main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       a <div> sits directly in <main>: every part of <main> is a <section> (SR-4)  [1440-rhythm-16-one-section.jpg]
+       fix: put every block of <main> in a <section>, and give a band its own section instead of a ground inside one
+  FAIL one-section     main#main-content > div.analytics-grid  "NHẬT KÝ THEO THÁNGBiến động APY gửi & va"
+       a <div> sits directly in <main>: every part of <main> is a <section> (and 2 more like it: "IS355 · Phân tích DeFi L", "NHẬT KÝ THEO THÁNGBiến đ") (SR-4)  [1440-rhythm-17-one-section.jpg]
+       fix: put every block of <main> in a <section>, and give a band its own section instead of a ground inside one
+  FAIL one-heading     h2#wallet-title  "Thành phần số dư ví"
+       the section holds 2 h2 headings: one per section, first in its .wrap (SR-5)  [1440-rhythm-18-one-heading.jpg]
+       fix: give each section one h2, first in its .wrap, and the hero only its h1
+  FAIL one-heading     h2#method-title  "APR, APY và nguồn dữ liệu"
+       headings of two sections show whole on one screen at 4 of 20 scroll positions (20%; at scroll 800, 850, 900, 950px), here with "Thành phần số dư ví": at most 3% on a desktop (SR-5)  [1440-rhythm-19-one-heading.jpg]
+       fix: make the sections one screen tall so their headings sit a screen apart and two never share one
+  FAIL container-edges main#main-content > div.page-heading.hub-heading  "LÃI SUẤT & SỐ DƯPhân tích tài sản.Theo d"
+       the content of section 1 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)  [1440-rhythm-20-container-edges.jpg]
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       the content of section 2 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)  [1440-rhythm-21-container-edges.jpg]
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges main#main-content > div.analytics-grid  "NHẬT KÝ THEO THÁNGBiến động APY gửi & va"
+       the content of section 3 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (and 3 more like it: "APR, APY và nguồn dữ liệ", "IS355 · Phân tích DeFi L", "Ứng dụng /Phân tíchPhân ") (SR-6)  [1440-rhythm-22-container-edges.jpg]
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges div.app-shell.hub-shell  "Đến nội dung chínhDeFi LendingKHÔNG GIAN"
+       a <div> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)  [1440-rhythm-23-container-edges.jpg]
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges span#recharts_measurement_span  "MyUSDT"
+       a <span> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges main#main-content > div.page-heading.hub-heading  "LÃI SUẤT & SỐ DƯPhân tích tài sản.Theo d"
+       the section needs exactly one in-flow child .wrap (it has 2 in-flow children, 0 .wrap) (and 4 more like it: "Mẫu cục bộ · SIMULATEDĐổ", "NHẬT KÝ THEO THÁNGBiến đ", "APR, APY và nguồn dữ liệ") (SR-6)  [1440-rhythm-24-container-edges.jpg]
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges section.panel.analytics-panel:nth-of-type(1) > div.hub-section-heading > div:nth-of-type(1) > p.eyebrow  "NHẬT KÝ THEO THÁNG"
+       9 text blocks start on a left line at x 313, 25px from the container's left: text starts on the container's left, or on one split line (x 761, 856, 951) (also "Biến động APY gửi & vay", "Nguồn CID: bafkreiaubcy6lpxuh3fe", "ĐƠN VỊ ĐỊNH GIÁ: MYUSDT") (SR-6)  [1440-rhythm-25-container-edges.jpg]
+       fix: start the text on the container's left, or on the one split line every split shares
+  FAIL container-edges h2#rates-title  "Biến động APY gửi & vay"
+       the h2 starts 25px right of the container's left: every h1 and h2 starts on it, 2px either way (and 1 more like it: "Thành phần số dư ví") (SR-6)  [1440-rhythm-26-container-edges.jpg]
+       fix: start the text on the container's left, or on the one split line every split shares
+  FAIL row-lines       main#main-content > div.analytics-grid > section.panel.analytics-panel:nth-of-type(2) > dl.analytics-values  "MyUSDT khả dụng1.500Thế chấp (định giá)1"
+       a row of 4 items: its first item starts at 313px, the container's left line at 288px; its last item ends at 1375px, the container's right line at 1400px (2px either way) (SR-7)  [1440-rhythm-27-row-lines.jpg]
+       fix: start the row's first item on the container's left line and end its last on the right line, every item one height
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Phân tích DeFi LendingMở Borrowi"
+       with every answer and tab open, the section's content does not fit it: its lowest content ends 68px below its top, past -4px (the section less 72px of bottom padding) (SR-2)  [1440-rhythm-29-section-height.jpg]
+       fix: show answers and panels open and size the section for its open content, or make it two screens (.g2)
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệuK"
+       with every answer and tab open, the section's content does not fit it: its lowest content ends 337px below its top, past 290px (the section less 72px of bottom padding) (SR-2)  [1440-rhythm-30-section-height.jpg]
+       fix: show answers and panels open and size the section for its open content, or make it two screens (.g2)
+  FAIL section-height  main#main-content > div.analytics-grid  "NHẬT KÝ THEO THÁNGBiến động APY gửi & va"
+       with every answer and tab open, the section's content does not fit it: its lowest content ends 1648px below its top, past 1604px (the section less 72px of bottom padding) (and 1 more like it: "APR, APY và nguồn dữ liệ") (SR-2)  [1440-rhythm-31-section-height.jpg]
+       fix: show answers and panels open and size the section for its open content, or make it two screens (.g2)
+  FAIL section-height  main#main-content > section.panel.analytics-method  "APR, APY và nguồn dữ liệuAPR dùng tính l"
+       with every answer and tab open, the section starts at 2351px, 349px above the screen grid (3 x 900px): sections start on whole screens (SR-2)  [1440-rhythm-32-section-height.jpg]
+       fix: size each section for its content with every answer and tab open, so the tops below stay on whole screens
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệuK"
+       with every answer and tab open, the section starts at 265px, 265px below the screen grid (0 x 900px): sections start on whole screens (SR-2)  [1440-rhythm-33-section-height.jpg]
+       fix: size each section for its content with every answer and tab open, so the tops below stay on whole screens
+  FAIL section-height  main#main-content > div.analytics-grid  "NHẬT KÝ THEO THÁNGBiến động APY gửi & va"
+       with every answer and tab open, the section starts at 651px, 249px above the screen grid (1 x 900px): sections start on whole screens (and 2 more like it: "IS355 · Phân tích DeFi L", "LÃI SUẤT & SỐ DƯPhân tíc") (SR-2)  [1440-rhythm-34-section-height.jpg]
+       fix: size each section for its content with every answer and tab open, so the tops below stay on whole screens
+  FAIL section-height  main#main-content > div.analytics-grid  "NHẬT KÝ THEO THÁNGBiến động APY gửi & va"
+       with every answer and tab open the section is 1676px tall, not 1272px, and starts at 651px, not 333px: nothing in a section may change its height after load (SR-2)  [1440-rhythm-35-section-height.jpg]
+       fix: show every answer and panel open from the start (no accordion, no tabs that resize), so nothing changes a section's height after load
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệuK"
+       with every answer and tab open the section is 363px tall, not 64px: nothing in a section may change its height after load (and 4 more like it: "APR, APY và nguồn dữ liệ", "IS355 · Phân tích DeFi L", "Xem bảng số liệu APY") (SR-2)  [1440-rhythm-36-section-height.jpg]
+       fix: show every answer and panel open from the start (no accordion, no tabs that resize), so nothing changes a section's height after load
+
+390x844  4 screens  40 FAIL  5 WARN
+  FAIL hero-fill       main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATED Đổi nguồn dữ liệu"
+       the next section shows on the first screen: it starts at 323px on a 844px screen (the hero ends at 302px)  [390-01-hero-fill.jpg]
+       fix: let the hero fill the first screen alone (min-height: 100svh, less above it): nothing of the next section on load
+  FAIL cta             main#main-content > section.panel.analytics-method  "APR, APY và nguồn dữ liệu"
+       the last section before the footer ends with no button  [390-07-cta.jpg]
+       fix: add the action: a button in the hero, one on every priced item, one in the closing section
+  FAIL right-edge      div.workspace > header.topbar > div.topbar-right > div.wallet-control  "Ví người vay · 0x3C44…93BC Ví thanh lý ·"
+       its right edge runs 4px past the content's right edge (370px, where 4 boxes end)  [390-02-right-edge.jpg]
+       fix: end it on the content's right edge, like the other blocks of its section
+  FAIL section-gaps    main#main-content > div.page-heading.hub-heading / main#main-content > div.hub-connection
+       21px between these sections, -66% against the median 61px  [390-03-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN flush           main#main-content > div.page-heading.hub-heading > a.button.secondary  "Tra cứu hồ sơ IPFS"
+       div.page-heading.hub-heading and div.hub-connection run together: 21px between their content, on one ground  [390-04-flush.jpg]
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  WARN section-gaps    main#main-content > div.analytics-grid > section.panel.analytics-panel:nth-of-type(1) / main#main-content > div.analytics-grid > section.panel.analytics-panel:nth-of-type(2)
+       83px between these sections, +36% against the median 61px  [390-05-section-gaps.jpg]
+       fix: use one gap between sections (all within 25% of each other)
+  WARN orphan          main#main-content > div.analytics-grid > section.panel.analytics-panel:nth-of-type(2) > p.hub-note:nth-of-type(2)  "Nợ gốc và lãi vay là nghĩa vụ phải trả, "
+       its last line holds only "NFT."  [390-08-orphan.jpg]
+       fix: rebalance the text (text-wrap: pretty, or a shorter line) so the last line holds more than one short word
+  WARN visual-caption  div.analytics-grid > section.panel.analytics-panel:nth-of-type(1) > div.analytics-legend > span:nth-of-type(1)  "APY gửi"
+       a muted 14px line of 1 row sits 16px under the drawing (svg): it reads as a caption: "APY gửi"; no caption or description under any image, render or visual (house rule)  [390-06-visual-caption.jpg]
+       fix: take the line away: no caption or description under, over or on any image, render or visual; a licence credit goes in one footer line
+  FAIL hero-screen     main#main-content > div.page-heading.hub-heading  "LÃI SUẤT & SỐ DƯPhân tích tài sản.Theo d"
+       the hero ends at 302px on a 844px screen, 542px above the fold: it ends at the fold, 1px either way (SR-1)  [390-rhythm-01-hero-screen.jpg]
+       fix: make the hero exactly one screen (height: 100svh, its content fitted inside), never taller or shorter
+  FAIL hero-screen     main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       522px of the next section shows on the first screen (from 322px on a 844px screen): nothing below the hero shows at load (SR-1)  [390-rhythm-02-hero-screen.jpg]
+       fix: end the hero at the fold so nothing of the next section shows at load (hero height: 100svh)
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       the section is 90px tall (0.1 screens), 754px short of one screen (844px): every section after the hero is one screen or two, 2px either way (SR-2)  [390-rhythm-03-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Phân tích DeFi LendingMở Borrowi"
+       the section is 96px tall (0.1 screens), 748px short of one screen (844px): every section after the hero is one screen or two, 2px either way (SR-2)  [390-rhythm-04-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  main#main-content > section.panel.analytics-method  "APR, APY và nguồn dữ liệuAPR dùng tính l"
+       the section is 193px tall (0.2 screens), 651px short of one screen (844px): every section after the hero is one screen or two, 2px either way (and 1 more like it: "NHẬT KÝ THEO THÁNGBiến đ") (SR-2)  [390-rhythm-05-section-height.jpg]
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-height  main#main-content > div.analytics-grid  "NHẬT KÝ THEO THÁNGBiến động APY gửi & va"
+       the section starts at 416px, 416px below the screen grid (0 x 844px): sections start on whole screens (SR-2)  [390-rhythm-06-section-height.jpg]
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Phân tích DeFi LendingMở Borrowi"
+       the section starts at 2182px, 350px above the screen grid (3 x 844px): sections start on whole screens (SR-2)  [390-rhythm-07-section-height.jpg]
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       the section starts at 322px, 322px below the screen grid (0 x 844px): sections start on whole screens (and 2 more like it: "APR, APY và nguồn dữ liệ", "LÃI SUẤT & SỐ DƯPhân tíc") (SR-2)  [390-rhythm-08-section-height.jpg]
+       fix: make every section above it exactly one or two screens tall, so this one starts on a whole screen
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Phân tích DeFi LendingMở Borrowi"
+       the section's content does not fit it: its lowest content ends 96px below its top, past 48px (the section less 48px of bottom padding) (SR-2)  [390-rhythm-09-section-height.jpg]
+       fix: fit the content above the section's bottom padding (--padb), or make it two screens (.g2) in two groups
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       the section's content does not fit it: its lowest content ends 70px below its top, past 42px (the section less 48px of bottom padding) (and 2 more like it: "NHẬT KÝ THEO THÁNGBiến đ", "APR, APY và nguồn dữ liệ") (SR-2)  [390-rhythm-10-section-height.jpg]
+       fix: fit the content above the section's bottom padding (--padb), or make it two screens (.g2) in two groups
+  FAIL section-air     main#main-content > div.hub-connection / main#main-content > div.analytics-grid
+       47px of air between the content of these two sections: 112-420px (56-560px WARN) (every gap out of the band at 390px, top to bottom: 47px after "Mẫu cục bộ · SIMULAT", 69px after "NHẬT KÝ THEO THÁNGBi") (SR-3)  [390-rhythm-11-section-air.jpg]
+       fix: keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)
+  WARN section-air     main#main-content > div.analytics-grid / main#main-content > section.panel.analytics-method
+       69px of air between the content of these two sections: 112-420px (56-560px WARN) (SR-3)  [390-rhythm-28-section-air.jpg]
+       fix: keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)
+  FAIL one-section     main#main-content > div.page-heading.hub-heading > div > h1  "Phân tích tài sản."
+       the screen at scroll 0px (stride 0) shows 202px of section 1 and the heading of section 1 whole and the content of 3 sections, over 24px each beside section 3: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)  [390-rhythm-12-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     main#main-content > div.page-heading.hub-heading > div > h1  "Phân tích tài sản."
+       the screen at scroll 100px (the top of section 1) shows 202px of section 1 and the heading of section 1 whole and the content of 3 sections, over 24px each beside section 3: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)  [390-rhythm-13-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     h2#method-title  "APR, APY và nguồn dữ liệu"
+       the screen at scroll 1454px (the top of section 4) shows 193px of section 4 and the heading of section 4 whole and the content of 3 sections, over 24px each beside section 3: a screen shows one section (another may peek 8px, 24px WARN) (and 1 more like it: scroll 322px) (SR-4)  [390-rhythm-14-one-section.jpg]
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section     main#main-content > div.page-heading.hub-heading  "LÃI SUẤT & SỐ DƯPhân tích tài sản.Theo d"
+       a <div> sits directly in <main>: every part of <main> is a <section> (SR-4)  [390-rhythm-15-one-section.jpg]
+       fix: put every block of <main> in a <section>, and give a band its own section instead of a ground inside one
+  FAIL one-section     main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"
+       a <div> sits directly in <main>: every part of <main> is a <section> (SR-4)  [390-rhythm-16-one-section.jpg]
+       fix: put every block of <main> in a <section>, and give a band its own section instead of a ground inside one
+  FAIL one-section     main#main-content > div.analytics-grid  "NHẬT KÝ THEO THÁNGBiến động APY gửi & va"
+       a <div> sits directly in <main>: every part of <main> is a <section> (and 2 more like it: "IS355 · Phân tích DeFi L", "NHẬT KÝ THEO THÁNGBiến đ") (SR-4)  [390-rhythm-17-one-section.jpg]
+       fix: put every block of <main> in a <section>, and give a band its own section instead of a ground inside one
+  FAIL one-heading     h2#wallet-title  "Thành phần số dư ví"
+       the section holds 2 h2 headings: one per section, first in its .wrap (SR-5)  [390-rhythm-18-one-heading.jpg]
+       fix: give each section one h2, first in its .wrap, and the hero only its h1
+  FAIL container-edges main#main-content > section.panel.analytics-method  "APR, APY và nguồn dữ liệuAPR dùng tính l"
+       the content of section 4 runs 41px from the left and 41px from the right (read from its outermost blocks: no .wrap): the page's container starts at 20px; the margin is 16-24px at 390px (one container, equal margins, 2px either way) (SR-6)  [390-rhythm-19-container-edges.jpg]
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges div.app-shell.hub-shell > div.workspace > header.topbar  "Ứng dụng /Phân tíchPhân tích · SIMULATED"
+       the nav's content runs 16px from the left and 25px from the right (read from its outermost blocks: no .wrap): the page's container starts at 20px; 16 and 25px are not one margin (one container, equal margins, 2px either way) (SR-6)  [390-rhythm-20-container-edges.jpg]
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges div.app-shell.hub-shell  "Đến nội dung chínhDeFi LendingKHÔNG GIAN"
+       a <div> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)  [390-rhythm-21-container-edges.jpg]
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges span#recharts_measurement_span  "MyUSDT"
+       a <span> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (and 5 more like it: "LÃI SUẤT & SỐ DƯPhân tíc", "Mẫu cục bộ · SIMULATEDĐổ", "NHẬT KÝ THEO THÁNGBiến đ") (SR-6)
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges div.workspace > header.topbar > div.topbar-left > button.icon-button.mobile-menu  "Mở điều hướng"
+       "Mở điều hướng" runs 16-60px, outside the container lines of the nav at 20-370px: full width is for background layers and grounds only (SR-6)  [390-rhythm-22-container-edges.jpg]
+       fix: keep it inside the container lines (.wrap): full width is for background layers and grounds only
+  FAIL container-edges div.workspace > header.topbar > div.topbar-right > div.wallet-control  "Ví demoVí người vay · 0x3C44…93BCVí than"
+       a box runs 156-374px, outside the container lines of the nav at 20-370px: full width is for background layers and grounds only (SR-6)  [390-rhythm-23-container-edges.jpg]
+       fix: keep it inside the container lines (.wrap): full width is for background layers and grounds only
+  FAIL container-edges div.analytics-grid > section.panel.analytics-panel:nth-of-type(2) > div.hub-section-heading > span.hub-provenance  "SIMULATED"
+       1 text block starts on a left line at x 50, 30px from the container's left: text starts on the container's left, or on one split line (x 176, 207, 238) (SR-6)  [390-rhythm-24-container-edges.jpg]
+       fix: start the text on the container's left, or on the one split line every split shares
+  FAIL container-edges section.panel.analytics-panel:nth-of-type(1) > div.hub-section-heading > div:nth-of-type(1) > p.eyebrow  "NHẬT KÝ THEO THÁNG"
+       9 text blocks start on a left line at x 41, 21px from the container's left: text starts on the container's left, or on one split line (x 176, 207, 238) (also "Biến động APY gửi & vay", "Nguồn CID: bafkreiaubcy6lpxuh3fe", "ĐƠN VỊ ĐỊNH GIÁ: MYUSDT") (and 2 more like it: "Biến động APY gửi & vay", "Thành phần số dư ví") (SR-6)  [390-rhythm-25-container-edges.jpg]
+       fix: start the text on the container's left, or on the one split line every split shares
+  FAIL row-lines       main#main-content > div.analytics-grid > section.panel.analytics-panel:nth-of-type(1) > div.analytics-legend  "APY gửiAPY vaySIMULATEDCột đậm: ON_CHAIN"
+       a row of 2 items: its first item starts at 41px, the container's left line at 20px; its last item ends at 231px, the container's right line at 370px (2px either way) (SR-7)  [390-rhythm-26-row-lines.jpg]
+       fix: start the row's first item on the container's left line and end its last on the right line, every item one height
+  FAIL row-lines       main#main-content > div.analytics-grid > section.panel.analytics-panel:nth-of-type(2) > dl.analytics-values  "MyUSDT khả dụng1.500Thế chấp (định giá)1"
+       a row of 2 items: its first item starts at 41px, the container's left line at 20px; its last item ends at 349px, the container's right line at 370px (2px either way) (SR-7)  [390-rhythm-27-row-lines.jpg]
+       fix: start the row's first item on the container's left line and end its last on the right line, every item one height
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Phân tích DeFi LendingMở Borrowi"
+       with every answer and tab open, the section's content does not fit it: its lowest content ends 96px below its top, past 48px (the section less 48px of bottom padding) (SR-2)  [390-rhythm-29-section-height.jpg]
+       fix: show answers and panels open and size the section for its open content, or make it two screens (.g2)
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệuK"
+       with every answer and tab open, the section's content does not fit it: its lowest content ends 594px below its top, past 567px (the section less 48px of bottom padding) (SR-2)  [390-rhythm-30-section-height.jpg]
+       fix: show answers and panels open and size the section for its open content, or make it two screens (.g2)
+  FAIL section-height  main#main-content > div.analytics-grid  "NHẬT KÝ THEO THÁNGBiến động APY gửi & va"
+       with every answer and tab open, the section's content does not fit it: its lowest content ends 2808px below its top, past 2784px (the section less 48px of bottom padding) (and 1 more like it: "APR, APY và nguồn dữ liệ") (SR-2)  [390-rhythm-31-section-height.jpg]
+       fix: show answers and panels open and size the section for its open content, or make it two screens (.g2)
+  FAIL section-height  main#main-content > section.panel.analytics-method  "APR, APY và nguồn dữ liệuAPR dùng tính l"
+       with every answer and tab open, the section starts at 3817px, 403px above the screen grid (5 x 844px): sections start on whole screens (SR-2)  [390-rhythm-32-section-height.jpg]
+       fix: size each section for its content with every answer and tab open, so the tops below stay on whole screens
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệuK"
+       with every answer and tab open, the section starts at 322px, 322px below the screen grid (0 x 844px): sections start on whole screens (SR-2)  [390-rhythm-33-section-height.jpg]
+       fix: size each section for its content with every answer and tab open, so the tops below stay on whole screens
+  FAIL section-height  main#main-content > footer.app-footer  "IS355 · Phân tích DeFi LendingMở Borrowi"
+       with every answer and tab open, the section starts at 4011px, 209px above the screen grid (5 x 844px): sections start on whole screens (and 2 more like it: "NHẬT KÝ THEO THÁNGBiến đ", "LÃI SUẤT & SỐ DƯPhân tíc") (SR-2)  [390-rhythm-34-section-height.jpg]
+       fix: size each section for its content with every answer and tab open, so the tops below stay on whole screens
+  FAIL section-height  main#main-content > div.analytics-grid  "NHẬT KÝ THEO THÁNGBiến động APY gửi & va"
+       with every answer and tab open the section is 2832px tall, not 1549px, and starts at 961px, not 416px: nothing in a section may change its height after load (SR-2)  [390-rhythm-35-section-height.jpg]
+       fix: show every answer and panel open from the start (no accordion, no tabs that resize), so nothing changes a section's height after load
+  FAIL section-height  main#main-content > div.hub-connection  "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệuK"
+       with every answer and tab open the section is 615px tall, not 90px: nothing in a section may change its height after load (and 4 more like it: "APR, APY và nguồn dữ liệ", "IS355 · Phân tích DeFi L", "Xem bảng số liệu APY") (SR-2)  [390-rhythm-36-section-height.jpg]
+       fix: show every answer and panel open from the start (no accordion, no tabs that resize), so nothing changes a section's height after load
+
+first screen at 1280, 1152, 1024, 896, 768  0 FAIL  0 WARN
+
+the page at 320x640, walked for what runs past the screen's edge  0 FAIL
+
+checks
+  PASS assets                 PASS shader-lint            PASS gl-fallback
+  PASS empty-visual           FAIL hero-fill              WARN flush
+  PASS placeholder            PASS sample-label           PASS caption
+  PASS credit-wall            FAIL nav                    PASS nav-covers
+  PASS spill                  PASS off-viewport           PASS fold-card
+  PASS hover-spill            PASS overlap-text           PASS collide
+  PASS tap-size               PASS row-gap                PASS cut-text
+  PASS fold-cut               PASS marquee                PASS scroll-linked
+  PASS scroll-reveal          PASS pinned                 PASS loop-pause
+  PASS reduced-motion         PASS hidden-content         PASS webgl
+  PASS no-visual              PASS text-only              PASS card-visual
+  PASS hidden-visual          PASS card-family            PASS card-layout
+  PASS nesting                PASS effect-repeat          PASS ui-fit
+  PASS ui-centre              PASS dark-ground            FAIL button-styles
+  PASS button-shape           PASS same-action            PASS button-picture
+  FAIL cta                    PASS pricing-tiers          FAIL copy-headline
+  PASS copy-fact              PASS copy-headings          WARN copy-buttons
+  WARN copy-actions           PASS heading-scale          PASS stagger
+  PASS top-stagger            PASS off-grid               PASS col-edge
+  FAIL right-edge             PASS centre-axis            PASS tilt
+  PASS contrast               PASS text-contrast          PASS body-size
+  PASS busy-ground            FAIL section-gaps           PASS proximity
+  PASS hole                   PASS links                  PASS forms
+  PASS photo-upscale          PASS photo-set              PASS photo-credit
+  PASS nav-family             PASS nav-labels             PASS link-styles
+  PASS heading-align          WARN label-centre           PASS fake-button
+  WARN stranded-action        WARN orphan                 PASS unit-break
+  PASS tab-wrap               PASS effects-fit            PASS fade-cut
+  PASS photo-weight           PASS copy-length            PASS nav-current
+  PASS progress-bar           PASS photo-repeat           WARN button-contrast
+  PASS photo-print            PASS grounds                PASS split-align
+  PASS fact-agree             PASS fold-action            PASS action-count
+  WARN one-screen             PASS hover                  PASS hover-move
+  PASS product-shown          PASS same-object            PASS font-load
+  WARN visual-caption         PASS visual-empty           PASS effect-kind
+  PASS hero-enter             WARN moment-none            PASS street-number
+  PASS postcode               PASS coordinates            PASS company-number
+  PASS phone-number           FAIL hero-screen            FAIL section-height
+  FAIL section-air            FAIL one-section            FAIL one-heading
+  FAIL container-edges        FAIL row-lines              PASS split-pair
+  PASS motion-layer           PASS count-text             PASS loop-cycle
+  PASS section-tile           PASS empty-area             PASS a11y-name
+  PASS img-alt                PASS field-label            PASS heading-order
+  PASS tabindex               PASS focus-ring             PASS focus-visible
+  PASS focus-hidden           WARN skip-link              PASS menu-toggle
+  PASS lang                   PASS page-meta              WARN share-meta
+  PASS action-repeat          PASS map-link               PASS open-now
+  PASS assumed                PASS run-on                 PASS form-fields
+  PASS form-send
+
+total  82 FAIL  21 WARN  (crops and report.json in C:\Users\ASUS\Documents\GitHub\IS355.R11-DeFi-Lending-DApp\frontend\.taste-skill\l04\analytics-consistency-final)

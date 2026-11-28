@@ -1,6 +1,6 @@
 # DeFi Lending frontend
 
-Lending Dashboard và Borrowing Console mô phỏng MyUSDT (L02/L03), sử dụng Next.js, TypeScript, Tailwind CSS, Recharts, Ethers và Lucide.
+Frontend DeFi Lending gồm Lending Dashboard, Borrowing Console, IPFS Hub và Analytics; sử dụng Next.js, TypeScript, Tailwind CSS, Recharts, Ethers và Lucide.
 
 ## Chạy tại máy
 
@@ -61,3 +61,11 @@ Mở http://localhost:3000/borrow/ hoặc chọn **Vay thế chấp** ở menu. 
 - Mỗi màn hình có phiên mô phỏng riêng. Không cần Ganache/MetaMask để chạy L03; ký ví/API thật thuộc L05.
 
 Chi tiết: [L03 handoff](../docs/Lam/l03_borrowing_console.md) · [L03 validation](../reports/Lam/l03_frontend_validation.md).
+
+## IPFS Hub và Analytics — L04
+
+Mở `/documents/` để tra cứu CID, tải file và dùng ba generator PDF/Credit Report/Audit Logs của backend. `/analytics/` có biểu đồ APY theo tháng và bốn thành phần số dư ví. Hai trang mặc định dùng dữ liệu mẫu ghi rõ SIMULATED; frontend chỉ phân phối Audit Logs công khai và bản mã của hồ sơ riêng tư.
+
+Chọn **Đổi nguồn dữ liệu** để dùng Q05 API. Token phiên đã xác thực chỉ giữ trong bộ nhớ của trang; quyền xem do backend quyết định (401/403/200). Phần nối MetaMask và phiên dùng chung thuộc L05. Khi API lỗi, giao diện báo lỗi, không thay số liệu bằng mẫu.
+
+Chi tiết cách chạy, SHA-256, quyền và giới hạn: [L04 handoff](../docs/Lam/l04_ipfs_hub_analytics.md) · [L04 validation](../reports/Lam/l04_frontend_validation.md).

@@ -1,0 +1,27 @@
+[
+  {
+    "check": "nav",
+    "target": "(the first screen)",
+    "reason": "L04 extends the existing application sidebar shared by L02/L03. Its four functional routes are the requested navigation; this is not a marketing navigation bar."
+  },
+  {
+    "check": "moment-none",
+    "target": "(the page)",
+    "reason": "L04 is the actual document search and authorization workspace. Existing user-approved flat navy UI takes priority over an unrelated marketing scroll scene."
+  },
+  {
+    "check": "hero-fill",
+    "target": "main#main-content > div.hub-connection",
+    "reason": "The requested CID search and document list must be visible immediately in this operational app; a full-screen promotional hero would displace its main controls."
+  },
+  {
+    "check": "hero-screen",
+    "target": "main#main-content > div.page-heading.hub-heading",
+    "reason": "The compact application title intentionally leaves room for CID retrieval on the first screen, consistent with the existing app and design reference."
+  },
+  {
+    "check": "text-only",
+    "target": "main#main-content > section.panel.hub-audit",
+    "reason": "This is the requested actual audit data table with rates, utilization and provenance. Replacing data with a decorative photograph or UI mock would reduce the utility of this app screen."
+  }
+]

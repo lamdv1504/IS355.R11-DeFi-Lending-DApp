@@ -1,0 +1,82 @@
+gate: checking out/documents/index.html (software); this takes a few minutes on a CPU Chrome
+gate: rounds used up; 24 FAIL open
+  FAIL flush            div.hub-document-list > article.hub-document-row:nth-of-type(3) > div.hub-doc-actions > bu  [1440]
+       its button sits -639px above the rule on top of section.panel.hub-preview
+       fix: give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)
+  FAIL button-styles    (one screen)  [1440]
+       4 button styles on one screen: label and disc, fill #122b50 ("DeFi Lending"); pill, fill #edf3fd ("Hồ sơ IPFS"); pill, outline #e0e5ed ("Tạo & lưu IPFS"); pill, fill #245bd6 ("Tra cứu hồ sơ"); the odd ones out: "Tạo & lư
+       fix: one primary and one secondary button: one shape, one height per size, one label size
+  FAIL button-styles    (the page)  [1440]
+       4 button styles on the page: label and disc, fill #122b50 x1 ("DeFi Lending"); pill, fill #edf3fd x1 ("Hồ sơ IPFS"); pill, outline #e0e5ed x1 ("Tạo & lưu IPFS"); pill, fill #245bd6 x1 ("Tra cứu hồ sơ")
+       fix: one primary and one secondary button: one shape, one height per size, one label size
+  FAIL cta              main#main-content > section.panel.hub-audit "Nhật ký lãi suất hàng tháng"  [1440, 390]
+       the last section before the footer ends with no button
+       fix: add the action: a button in the hero, one on every priced item, one in the closing section
+  FAIL copy-headings    h2#library-title "Bộ hồ sơ minh họa"  [1440]
+       "Bộ hồ sơ minh họa" names no product, part, place or section (2 headings like it; at most one brand line per page) (and 1 more like it: "Chi tiết hồ sơ")
+       fix: name the thing in every heading: the product, a part, the place or a section noun
+  FAIL section-gaps     main#main-content > div.hub-document-grid > section.panel.hub-preview / main#main-content   [1440]
+       191px between these sections, +198% against the median 64px
+       fix: use one gap between sections (all within 25% of each other)
+  FAIL hero-screen      main#main-content > div.hub-connection "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"  [1440]
+       635px of the next section shows on the first screen (from 265px on a 900px screen): nothing below the hero shows at load (SR-1)
+       fix: end the hero at the fold so nothing of the next section shows at load (hero height: 100svh)
+  FAIL section-height   main#main-content > footer.app-footer "IS355 · Hồ sơ IPFS & quyền truy cậpSIMUL"  [1440]
+       the section is 46px tall (0.1 screens), 854px short of one screen (900px): every section after the hero is one screen or two, 2px either way (SR-2)
+       fix: set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit
+  FAIL section-air      main#main-content > div.hub-connection / main#main-content > form.panel.cid-search  [1440]
+       50px of air between the content of these two sections: 128-480px (64-600px WARN) (every gap out of the band at 1440px, top to bottom: 50px after "Mẫu cục bộ · SIMULAT", 78px after "Tra cứu CIDTra cứu h", 87px after "DANH
+       fix: keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)
+  FAIL one-section      main#main-content > div.hub-document-grid "DANH MỤC HỒ SƠBộ hồ sơ minh họaTất cảThỏ"  [1440]
+       the screen at scroll 900px (stride 1) shows 321px of section 4 and the content of 2 sections, over 24px each beside section 5: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-section      h2#audit-title "Nhật ký lãi suất hàng tháng"  [1440]
+       the screen at scroll 531px (the top of section 4) shows 186px of section 5 and the heading of section 5 whole and the content of 2 sections, over 24px each beside section 4: a screen shows one section (another may peek 8
+       fix: make each section exactly one screen or two, so a screen shows one section and no neighbour peeks
+  FAIL one-heading      h2#preview-title "Chi tiết hồ sơ"  [1440]
+       the section holds 2 h2 headings: one per section, first in its .wrap (SR-5)
+       fix: give each section one h2, first in its .wrap, and the hero only its h1
+  FAIL one-heading      h2#audit-title "Nhật ký lãi suất hàng tháng"  [1440]
+       headings of two sections show whole on one screen at 3 of 21 scroll positions (14.3%; at scroll 450, 500, 550px), here with "Bộ hồ sơ minh họa": at most 3% on a desktop (SR-5)
+       fix: make the sections one screen tall so their headings sit a screen apart and two never share one
+  FAIL container-edges  div.app-shell.hub-shell > div.workspace > header.topbar "Ứng dụng /Hồ sơ IPFSMẫu · SIMULAT  [1440]
+       the nav's content runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either w
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges  main#main-content > div.page-heading.hub-heading "HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba loại hồ sơ  [1440]
+       the content of section 1 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px e
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges  main#main-content > div.hub-connection "Mẫu cục bộ · SIMULATEDĐổi nguồn dữ liệu"  [1440]
+       the content of section 2 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px e
+       fix: use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone
+  FAIL container-edges  div.app-shell.hub-shell "Đến nội dung chínhDeFi LendingKHÔNG GIAN"  [1440]
+       a <div> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)
+       fix: build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing
+  FAIL container-edges  h2#preview-title "Chi tiết hồ sơ"  [1440]
+       the h2 starts 619px right of the container's left: every h1 and h2 starts on it, 2px either way (SR-6)
+       fix: start the text on the container's left, or on the one split line every split shares
+  FAIL container-edges  h2#library-title "Bộ hồ sơ minh họa"  [1440]
+       the h2 starts 25px right of the container's left: every h1 and h2 starts on it, 2px either way (and 2 more like it: x 312, "Nhật ký lãi suất hàng th") (SR-6)
+       fix: start the text on the container's left, or on the one split line every split shares
+  FAIL container-edges  main#main-content > div.hub-document-grid > section.panel.hub-library "DANH MỤC HỒ SƠBộ hồ  [1440]
+       a box over half the container wide runs 288-858px, not on the container's lines at 288-1400px (SR-6)
+       fix: run the picture or box from the container's left line to its right line, or put it in a row or a split
+  FAIL no-visual        main#main-content > div.hub-document-grid > section.panel.hub-library "Bộ hồ sơ minh họa"  [390]
+       no picture, effect or mock in this section; a feature section needs a visual
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL no-visual        main#main-content > section.panel.hub-audit "Nhật ký lãi suất hàng tháng"  [390]
+       no picture, effect or mock in this section; a feature section needs a visual
+       fix: give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits
+  FAIL section-gaps     main#main-content > div.page-heading.hub-heading / main#main-content > div.hub-connection  [390]
+       21px between these sections, -68% against the median 66px
+       fix: use one gap between sections (all within 25% of each other)
+  FAIL container        page  [1440, 390]
+       no .wrap
+       fix: put the content in one .wrap
+  WAIVED hero-fill main#main-content > div.hub-connection "Mẫu cục bộ · SIMULATED Đổi nguồn dữ liệu: The requested CID search and document list must be visible immediately in this operational app; a full-screen promotional hero would displace its main controls.
+  WAIVED nav (the first screen): L04 extends the existing application sidebar shared by L02/L03. Its four functional routes are the requested navigation; this is not a marketing navigation bar.
+  WAIVED text-only main#main-content > section.panel.hub-audit "Nhật ký lãi suất hàng tháng": This is the requested actual audit data table with rates, utilization and provenance. Replacing data with a decorative photograph or UI mock would reduce the utility of this app screen.
+  WAIVED moment-none (the page): L04 is the actual document search and authorization workspace. Existing user-approved flat navy UI takes priority over an unrelated marketing scroll scene.
+  WAIVED hero-screen main#main-content > div.page-heading.hub-heading "HỒ SƠ & CHỨNG CỨHồ sơ IPFS.Ba : The compact application title intentionally leaves room for CID retrieval on the first screen, consistent with the existing app and design reference.
+  25 WARN (not blocking), first: flush main#main-content > form.panel.cid-searc; flush p#cid-help "Nhật ký công khai có thể đọc; flush section.panel.hub-library > div.hub-sect; flush section.panel.hub-audit > div.hub-sectio; flush main#main-content > section.panel.hub-au
+Stop fixing: put these open FAILs and the waivers in your report, then finish.
+GATE: OPEN 24 (rounds used up)

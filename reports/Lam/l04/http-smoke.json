@@ -1,0 +1,52 @@
+{
+  "routes": [
+    {
+      "route": "/",
+      "status": 200
+    },
+    {
+      "route": "/borrow/",
+      "status": 200
+    },
+    {
+      "route": "/documents/",
+      "status": 200
+    },
+    {
+      "route": "/analytics/",
+      "status": 200
+    }
+  ],
+  "assets_ok": 27,
+  "assets": [
+    "/_next/static/chunks/0a9tyvw8qld11.js",
+    "/_next/static/chunks/0c98xzjfks9hq.js",
+    "/_next/static/chunks/0cz1d0mv5g_q7.js",
+    "/_next/static/chunks/0m-yp9_ek4vq1.js",
+    "/_next/static/chunks/1k1bjrhwb4yhj.css",
+    "/_next/static/chunks/1shq24gy-094e.js",
+    "/_next/static/chunks/1tx71n5n227_u.js",
+    "/_next/static/chunks/1wnov70f88xjy.js",
+    "/_next/static/chunks/26j03wng46xf7.js",
+    "/_next/static/chunks/310vm2bl3xxpt.js",
+    "/_next/static/chunks/31zcka9r1y7-2.css",
+    "/_next/static/chunks/3708omeqo7zbt.css",
+    "/_next/static/chunks/39_j1bdzreq0m.js",
+    "/_next/static/chunks/3i3ubd0juqj18.js",
+    "/_next/static/chunks/3mmx_tpgetbs1.js",
+    "/_next/static/chunks/3ndwvuym-ibmy.js",
+    "/_next/static/chunks/3qfy96eoyh-ek.js",
+    "/_next/static/chunks/3yzbwrul_ep6u.js",
+    "/_next/static/chunks/42m776c-adwz2.js",
+    "/_next/static/chunks/turbopack-2u1d16houkiyo.js",
+    "/_next/static/media/BeVietnamPro_400-s.p.14-5bj-jmyo2r.woff",
+    "/_next/static/media/BeVietnamPro_500-s.p.23siq1fwg13-r.woff",
+    "/_next/static/media/BeVietnamPro_600-s.p.2k3uejju69_ct.woff",
+    "/_next/static/media/BeVietnamPro_700-s.p.2mmr-dh35j3hq.woff",
+    "/l04/audit_logs_sample.json",
+    "/l04/credit_report_sample.encrypted.json",
+    "/l04/loan_agreement_sample.encrypted.json"
+  ],
+  "server": "temporary loopback static export server; closed after check",
+  "source": "final APY grouped bars build"
+}

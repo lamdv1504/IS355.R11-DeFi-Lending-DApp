@@ -1,0 +1,107 @@
+{
+  "service": "Q05 FastAPI + actual H03/Q03/Q04 local encrypted storage",
+  "blockchain": "test double; no live RPC",
+  "scenarios": 20,
+  "results": [
+    {
+      "role": "guest",
+      "document": "pdf",
+      "http": 401
+    },
+    {
+      "role": "guest",
+      "document": "credit",
+      "http": 401
+    },
+    {
+      "role": "guest",
+      "document": "audit_json",
+      "http": 200
+    },
+    {
+      "role": "guest",
+      "document": "audit_csv",
+      "http": 200
+    },
+    {
+      "role": "lender",
+      "document": "pdf",
+      "http": 403
+    },
+    {
+      "role": "lender",
+      "document": "credit",
+      "http": 403
+    },
+    {
+      "role": "lender",
+      "document": "audit_json",
+      "http": 200
+    },
+    {
+      "role": "lender",
+      "document": "audit_csv",
+      "http": 200
+    },
+    {
+      "role": "other",
+      "document": "pdf",
+      "http": 403
+    },
+    {
+      "role": "other",
+      "document": "credit",
+      "http": 403
+    },
+    {
+      "role": "other",
+      "document": "audit_json",
+      "http": 200
+    },
+    {
+      "role": "other",
+      "document": "audit_csv",
+      "http": 200
+    },
+    {
+      "role": "owner",
+      "document": "pdf",
+      "http": 200
+    },
+    {
+      "role": "owner",
+      "document": "credit",
+      "http": 200
+    },
+    {
+      "role": "owner",
+      "document": "audit_json",
+      "http": 200
+    },
+    {
+      "role": "owner",
+      "document": "audit_csv",
+      "http": 200
+    },
+    {
+      "role": "admin",
+      "document": "pdf",
+      "http": 200
+    },
+    {
+      "role": "admin",
+      "document": "credit",
+      "http": 200
+    },
+    {
+      "role": "admin",
+      "document": "audit_json",
+      "http": 200
+    },
+    {
+      "role": "admin",
+      "document": "audit_csv",
+      "http": 200
+    }
+  ]
+}
