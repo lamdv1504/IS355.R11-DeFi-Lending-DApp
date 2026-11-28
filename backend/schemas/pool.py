@@ -18,6 +18,10 @@ class PoolResponse(APIModel):
 
 
 class AccountPositionsResponse(APIModel):
+    network: str | None = None
+    chain_id: int | None = None
+    block_number: int | None = None
+    as_of_timestamp: int | None = None
     wallet_address: str
     positions: list[dict[str, Any]]
 

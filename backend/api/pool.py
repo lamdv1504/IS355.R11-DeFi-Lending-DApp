@@ -10,7 +10,7 @@ from web3.exceptions import ContractLogicError
 from backend.api.dependencies import (
     get_web3_service_for_network,
     resolve_analytics_from_block,
-    resolve_from_block,
+    resolve_contract_from_block,
 )
 from backend.schemas.pool import (
     AccountBalancesResponse,
@@ -71,7 +71,8 @@ def read_lending_positions(
 ) -> dict[str, Any]:
     service = get_web3_service_for_network(request, network)
     wallet = service._checksum_address(address, "account")
-    scan_from_block = resolve_from_block(service, from_block)
+    scan_from_block = resolve_contract_from_block(service, "LendingPool", from_block)
+    block_number, as_of_timestamp = _block_snapshot(service, {})
     pool = service.get_contract("LendingPool")
     logs = pool.events.LenderDeposited().get_logs(
         from_block=scan_from_block,
@@ -104,20 +105,40 @@ def read_lending_positions(
                 "max_withdrawable": service.get_max_withdrawable(position_id),
             }
         )
-    return {"wallet_address": wallet, "positions": positions}
+    return {
+        "network": service.network.name,
+        "chain_id": service.chain_id,
+        "block_number": block_number,
+        "as_of_timestamp": as_of_timestamp,
+        "wallet_address": wallet,
+        "positions": positions,
+    }
 
 
-def _read_wallet_balances(service: Web3Service, wallet: str) -> dict[str, Any]:
+def _read_wallet_balances(
+    service: Web3Service, wallet: str, *, from_block: int | None = None
+) -> dict[str, Any]:
     pool_address = service.registry.get("contracts", {}).get("LendingPool", {}).get("address")
+    collateral_nft_balance = int(
+        service.get_contract("CollateralNFT").functions.balanceOf(wallet).call()
+    )
+    collateral_nfts: list[dict[str, Any]] = []
+    if collateral_nft_balance > 0:
+        lister = getattr(service, "get_owned_collateral_nfts", None)
+        if callable(lister):
+            nft_from_block = resolve_contract_from_block(
+                service, "CollateralNFT", from_block
+            )
+            collateral_nfts = lister(wallet, from_block=nft_from_block)
     balances: dict[str, Any] = {
         "myusdt": service.get_myusdt_balance(wallet),
         "debt_token": service.get_debt_token_balance(wallet),
         "lending_position_nft_balance": int(
             service.get_contract("LendingPositionNFT").functions.balanceOf(wallet).call()
         ),
-        "collateral_nft_balance": int(
-            service.get_contract("CollateralNFT").functions.balanceOf(wallet).call()
-        ),
+        "collateral_nft_balance": collateral_nft_balance,
+        "collateral_nft_token_ids": [int(item["token_id"]) for item in collateral_nfts],
+        "collateral_nfts": collateral_nfts,
         "active_collateral_receipt_id": service.get_active_collateral_receipt(wallet),
     }
     if pool_address:
@@ -167,6 +188,7 @@ def read_loan(
 def read_balances(
     address: str,
     request: Request,
+    from_block: int | None = Query(default=None, ge=0),
     network: str | None = Query(default=None),
 ) -> dict[str, Any]:
     service = get_web3_service_for_network(request, network)
@@ -178,7 +200,7 @@ def read_balances(
         "block_number": block_number,
         "as_of_timestamp": as_of_timestamp,
         "wallet_address": wallet,
-        "balances": _read_wallet_balances(service, wallet),
+        "balances": _read_wallet_balances(service, wallet, from_block=from_block),
     }
 
 
@@ -186,6 +208,7 @@ def read_balances(
 def read_account_snapshot(
     address: str,
     request: Request,
+    from_block: int | None = Query(default=None, ge=0),
     network: str | None = Query(default=None),
 ) -> dict[str, Any]:
     service = get_web3_service_for_network(request, network)
@@ -198,7 +221,7 @@ def read_account_snapshot(
         "block_number": block_number,
         "as_of_timestamp": as_of_timestamp,
         "wallet_address": wallet,
-        "balances": _read_wallet_balances(service, wallet),
+        "balances": _read_wallet_balances(service, wallet, from_block=from_block),
         "loan_position": service.get_loan_position(wallet),
         "risk": service.get_borrower_risk(wallet),
         "interest": {

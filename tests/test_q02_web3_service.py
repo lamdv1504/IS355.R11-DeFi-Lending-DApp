@@ -526,3 +526,65 @@ def test_build_unsigned_transaction_propagates_contract_logic_error_without_mask
             (500 * constants.WAD, "bafy-test"),
             from_address=wallet,
         )
+
+
+def test_get_owned_collateral_nfts_filters_current_owner_and_reads_valuation_and_approval(
+    web3_service: tuple[Web3Service, _FakeWeb3],
+) -> None:
+    service, fake_w3 = web3_service
+    owner = Web3.to_checksum_address("0x0000000000000000000000000000000000000001")
+    pool = Web3.to_checksum_address("0x0000000000000000000000000000000000000002")
+
+    owners = {1: pool, 2: owner, 3: owner}
+    valuations = {2: 1_000 * constants.WAD, 3: 500 * constants.WAD}
+    approvals = {2: pool, 3: "0x0000000000000000000000000000000000000000"}
+    uris = {2: "ipfs://bafy-nft-2", 3: "ipfs://bafy-nft-3"}
+
+    class _NFTTransferEvent:
+        def get_logs(self, *, from_block: int, to_block: str, argument_filters: dict[str, Any]):
+            assert from_block == 0
+            assert to_block == "latest"
+            assert argument_filters == {"to": owner}
+            return [
+                {"args": {"tokenId": 3}},
+                {"args": {"tokenId": 1}},
+                {"args": {"tokenId": 2}},
+                {"args": {"tokenId": 2}},
+            ]
+
+    class _NFTFunctions:
+        def ownerOf(self, token_id: int) -> Any:
+            return type("C", (), {"call": staticmethod(lambda: owners[token_id])})()
+
+        def valuation(self, token_id: int) -> Any:
+            return type("C", (), {"call": staticmethod(lambda: valuations[token_id])})()
+
+        def getApproved(self, token_id: int) -> Any:
+            return type("C", (), {"call": staticmethod(lambda: approvals[token_id])})()
+
+        def isApprovedForAll(self, _owner: str, _spender: str) -> Any:
+            return type("C", (), {"call": staticmethod(lambda: False)})()
+
+        def tokenURI(self, token_id: int) -> Any:
+            return type("C", (), {"call": staticmethod(lambda: uris[token_id])})()
+
+    class _NFTContract:
+        address = Web3.to_checksum_address("0x0000000000000000000000000000000000000009")
+        events = type("E", (), {"Transfer": staticmethod(lambda: _NFTTransferEvent())})()
+        functions = _NFTFunctions()
+
+    orig_contract = fake_w3.eth.contract
+    fake_w3.eth.contract = (  # type: ignore[method-assign]
+        lambda address, abi: _NFTContract()
+        if address.lower() == service.registry["contracts"]["CollateralNFT"]["address"].lower()
+        else orig_contract(address, abi)
+    )
+
+    owned = service.get_owned_collateral_nfts(owner)
+    assert [item["token_id"] for item in owned] == [2, 3]
+    assert owned[0]["valuation"]["wad"] == str(1_000 * constants.WAD)
+    assert owned[0]["is_approved"] is True
+    assert owned[0]["token_uri"] == "ipfs://bafy-nft-2"
+    assert owned[1]["valuation"]["wad"] == str(500 * constants.WAD)
+    assert owned[1]["is_approved"] is False
+    assert owned[1]["token_uri"] == "ipfs://bafy-nft-3"

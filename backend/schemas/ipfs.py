@@ -12,11 +12,13 @@ from backend.schemas.common import APIModel
 class CreateAgreementRequest(APIModel):
     principal_wad: str = Field(pattern=r"^[1-9][0-9]*$")
     asset_description: str = Field(min_length=1, max_length=500)
+    network: str | None = Field(default=None, min_length=1, max_length=32)
 
 
 class CreditReportRequest(APIModel):
     from_block: int | None = Field(default=None, ge=0)
     to_block: int | str = "latest"
+    network: str | None = Field(default=None, min_length=1, max_length=32)
 
     @field_validator("to_block")
     @classmethod
@@ -36,6 +38,7 @@ class AuditLogsRequest(APIModel):
     from_block: int | None = Field(default=None, ge=0)
     to_block: int | str = "latest"
     seed_simulated_months: int = Field(default=6, ge=0, le=120)
+    network: str | None = Field(default=None, min_length=1, max_length=32)
 
     @field_validator("to_block")
     @classmethod

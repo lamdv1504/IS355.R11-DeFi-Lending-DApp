@@ -5,15 +5,16 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.responses import JSONResponse, Response
 
 from backend.api.dependencies import (
     get_agreement_generator,
+    get_agreement_generator_for_service,
     get_credit_audit_service,
-    get_web3_service,
+    get_credit_audit_service_for_service,
     lock_for_index,
-    require_matching_chain,
+    resolve_authenticated_web3_service,
     resolve_block_range,
 )
 from backend.schemas.ipfs import (
@@ -24,7 +25,6 @@ from backend.schemas.ipfs import (
 from backend.security.auth import get_current_context, get_optional_context, require_roles
 from backend.services.agreement_generator import AgreementGeneratorService
 from backend.services.credit_and_audit_ipfs import CreditAndAuditIPFSService
-from backend.services.web3_service import Web3Service
 from src.ipfs.cid_utils import sha256_bytes
 from src.ipfs.rbac import (
     AccessContext,
@@ -81,13 +81,23 @@ def _document_metadata(
 @router.post("/create-agreement")
 def create_agreement(
     body: CreateAgreementRequest,
+    request: Request,
+    network: str | None = Query(
+        default=None,
+        description="Target network ('local' or 'sepolia'). Defaults to body.network, session chain, or ACTIVE_NETWORK.",
+    ),
     context: AccessContext = Depends(get_current_context),
-    service: AgreementGeneratorService = Depends(get_agreement_generator),
 ) -> dict[str, Any]:
-    require_matching_chain(context, service.web3_service)
+    web3_service = resolve_authenticated_web3_service(
+        request,
+        query_network=network,
+        body_network=body.network,
+        context=context,
+    )
     if not context.wallet_address:
         raise HTTPException(status_code=401, detail="A verified wallet session is required.")
     _require_owner_or_admin(context, context.wallet_address)
+    service = get_agreement_generator_for_service(request, web3_service)
     with lock_for_index(service.binding_store_path):
         return service.create_pre_borrow_agreement(
             context.wallet_address,
@@ -100,16 +110,25 @@ def create_agreement(
 def create_credit_report(
     address: str,
     body: CreditReportRequest,
+    request: Request,
+    network: str | None = Query(
+        default=None,
+        description="Target network ('local' or 'sepolia'). Defaults to body.network, session chain, or ACTIVE_NETWORK.",
+    ),
     context: AccessContext = Depends(get_current_context),
-    service: CreditAndAuditIPFSService = Depends(get_credit_audit_service),
-    web3_service: Web3Service = Depends(get_web3_service),
 ) -> dict[str, Any]:
+    web3_service = resolve_authenticated_web3_service(
+        request,
+        query_network=network,
+        body_network=body.network,
+        context=context,
+    )
     wallet = web3_service._checksum_address(address, "wallet")
-    require_matching_chain(context, web3_service)
     _require_owner_or_admin(context, wallet)
     from_block, to_block = resolve_block_range(
         web3_service, body.from_block, body.to_block
     )
+    service = get_credit_audit_service_for_service(request, web3_service)
     with lock_for_index(service.metadata_store_path):
         return service.generate_credit_report(
             wallet, from_block=from_block, to_block=to_block
@@ -119,14 +138,23 @@ def create_credit_report(
 @router.post("/audit-logs")
 def create_audit_logs(
     body: AuditLogsRequest,
+    request: Request,
+    network: str | None = Query(
+        default=None,
+        description="Target network ('local' or 'sepolia'). Defaults to body.network, session chain, or ACTIVE_NETWORK.",
+    ),
     context: AccessContext = Depends(require_roles(Role.ADMIN)),
-    service: CreditAndAuditIPFSService = Depends(get_credit_audit_service),
-    web3_service: Web3Service = Depends(get_web3_service),
 ) -> dict[str, Any]:
-    require_matching_chain(context, web3_service)
+    web3_service = resolve_authenticated_web3_service(
+        request,
+        query_network=network,
+        body_network=body.network,
+        context=context,
+    )
     from_block, to_block = resolve_block_range(
         web3_service, body.from_block, body.to_block
     )
+    service = get_credit_audit_service_for_service(request, web3_service)
     with lock_for_index(service.metadata_store_path):
         return service.generate_monthly_audit_logs(
             from_block=from_block,

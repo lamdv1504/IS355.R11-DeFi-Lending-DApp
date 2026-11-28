@@ -1444,3 +1444,225 @@ def test_account_snapshot_returns_unified_balances_loan_and_block_metadata(
     assert sep_snap.status_code == 200, sep_snap.text
     assert sep_snap.json()["network"] == "sepolia"
     assert sep_snap.json()["block_number"] == 12224888
+
+
+def test_demo_time_rejects_sepolia_admin_session_even_when_backend_active_network_is_local(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    admin = api_env["admin"]
+
+    sepolia_fake = _FakeWeb3Service()
+    sepolia_fake.network = SimpleNamespace(name="sepolia")
+    sepolia_fake.chain_id = 11155111
+    sepolia_fake.w3.eth.chain_id = 11155111
+
+    manager = WalletAuthManager(
+        "test-only-signing-secret-that-is-at-least-32-bytes",
+        domain="localhost",
+        allowed_chain_ids=(31337, 11155111),
+        admin_wallets=(admin.address,),
+    )
+    client.app.state.auth_manager = manager
+    client.app.state.web3_services = {"local": api_env["web3"], "sepolia": sepolia_fake}
+
+    local_admin_headers = _login(client, admin, chain_id=31337)
+    sepolia_admin_headers = _login(client, admin, chain_id=11155111)
+
+    # Local admin on local network succeeds.
+    ok_local = client.post("/api/demo/time", json={"seconds": 60}, headers=local_admin_headers)
+    assert ok_local.status_code == 200, ok_local.text
+
+    # Local admin explicitly requesting Sepolia is blocked.
+    assert (
+        client.post(
+            "/api/demo/time?network=sepolia",
+            json={"seconds": 60},
+            headers=local_admin_headers,
+        ).status_code
+        == 403
+    )
+
+    # Sepolia admin session is ALWAYS blocked from local time-travel, regardless of network param.
+    assert (
+        client.post("/api/demo/time", json={"seconds": 60}, headers=sepolia_admin_headers).status_code
+        == 403
+    )
+    assert (
+        client.post(
+            "/api/demo/time?network=local",
+            json={"seconds": 60},
+            headers=sepolia_admin_headers,
+        ).status_code
+        == 403
+    )
+    assert (
+        client.post(
+            "/api/demo/time",
+            json={"seconds": 60, "network": "sepolia", "chain_id": 11155111},
+            headers=sepolia_admin_headers,
+        ).status_code
+        == 403
+    )
+
+
+def test_ipfs_write_routes_support_dynamic_sepolia_network_without_restart(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+    admin = api_env["admin"]
+
+    sepolia_fake = _FakeWeb3Service()
+    sepolia_fake.network = SimpleNamespace(name="sepolia")
+    sepolia_fake.chain_id = 11155111
+    sepolia_fake.w3.eth.chain_id = 11155111
+    sepolia_fake.w3.eth.block_number = 12224699
+    sepolia_fake.events["InterestRateUpdated"][0]["blockNumber"] = 12224550
+
+    manager = WalletAuthManager(
+        "test-only-signing-secret-that-is-at-least-32-bytes",
+        domain="localhost",
+        allowed_chain_ids=(31337, 11155111),
+        admin_wallets=(admin.address,),
+        lender_wallets=(api_env["lender"].address,),
+    )
+    client.app.state.auth_manager = manager
+    client.app.state.web3_services = {"local": api_env["web3"], "sepolia": sepolia_fake}
+
+    local_headers = _login(client, owner, chain_id=31337)
+    sepolia_headers = _login(client, owner, chain_id=11155111)
+    sepolia_admin_headers = _login(client, admin, chain_id=11155111)
+
+    # 1) Pre-borrow agreement on Sepolia succeeds without restarting backend (default is local).
+    created = client.post(
+        "/api/ipfs/create-agreement",
+        json={
+            "principal_wad": str(100 * constants.WAD),
+            "asset_description": "Sepolia CollateralNFT #2",
+            "network": "sepolia",
+        },
+        headers=sepolia_headers,
+    )
+    assert created.status_code == 200, created.text
+    agreement_cid = created.json()["cid"]
+
+    # Retrieve works immediately from the shared agreement index + gateway.
+    pdf_resp = client.get(f"/api/ipfs/documents/{agreement_cid}/retrieve", headers=sepolia_headers)
+    assert pdf_resp.status_code == 200
+    assert pdf_resp.content.startswith(b"%PDF-")
+
+    # Cross-network mismatch (local session requesting sepolia) is still blocked with 403.
+    assert (
+        client.post(
+            "/api/ipfs/create-agreement?network=sepolia",
+            json={
+                "principal_wad": str(100 * constants.WAD),
+                "asset_description": "Cross-network attempt",
+            },
+            headers=local_headers,
+        ).status_code
+        == 403
+    )
+
+    # 2) Sepolia credit-report still requires explicit from_block, and succeeds when provided.
+    assert (
+        client.post(
+            f"/api/ipfs/credit-report/{owner.address}?network=sepolia",
+            json={},
+            headers=sepolia_headers,
+        ).status_code
+        == 422
+    )
+    credit = client.post(
+        f"/api/ipfs/credit-report/{owner.address}",
+        json={"from_block": 12224519, "network": "sepolia"},
+        headers=sepolia_headers,
+    )
+    assert credit.status_code == 200, credit.text
+
+    # 3) Sepolia admin audit-logs succeeds when from_block is provided.
+    audit = client.post(
+        "/api/ipfs/audit-logs?network=sepolia",
+        json={"from_block": 12224519, "seed_simulated_months": 2},
+        headers=sepolia_admin_headers,
+    )
+    assert audit.status_code == 200, audit.text
+
+
+def test_balances_list_owned_collateral_nfts_and_lending_positions_defaults_sepolia_deploy_block(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+    web3 = api_env["web3"]
+
+    # Mock wallet owning CollateralNFT #2.
+    class _NFTBalanceFunctions:
+        def balanceOf(self, _wallet: str) -> Any:
+            return SimpleNamespace(call=lambda: 1)
+
+    orig_get_contract = web3.get_contract
+    web3.get_contract = (  # type: ignore[method-assign]
+        lambda name: SimpleNamespace(functions=_NFTBalanceFunctions())
+        if name == "CollateralNFT"
+        else orig_get_contract(name)
+    )
+    web3.get_owned_collateral_nfts = (  # type: ignore[attr-defined]
+        lambda wallet, *, from_block=0: [
+            {
+                "token_id": 2,
+                "owner": Web3.to_checksum_address(wallet),
+                "valuation": {"wad": str(1_000 * constants.WAD), "display": "1000.000000"},
+                "is_approved": False,
+                "token_uri": "ipfs://bafy-sample-2",
+            }
+        ]
+    )
+
+    bal_resp = client.get(f"/api/accounts/{owner.address}/balances")
+    assert bal_resp.status_code == 200, bal_resp.text
+    bal = bal_resp.json()["balances"]
+    assert bal["collateral_nft_balance"] == 1
+    assert bal["collateral_nft_token_ids"] == [2]
+    assert len(bal["collateral_nfts"]) == 1
+    assert bal["collateral_nfts"][0]["valuation"]["wad"] == str(1_000 * constants.WAD)
+
+    snap_resp = client.get(f"/api/accounts/{owner.address}/snapshot")
+    assert snap_resp.status_code == 200, snap_resp.text
+    assert snap_resp.json()["balances"]["collateral_nft_token_ids"] == [2]
+
+    # Sepolia lending-positions automatically uses LendingPool deploy blockNumber without 422.
+    sepolia_fake = _FakeWeb3Service()
+    sepolia_fake.network = SimpleNamespace(name="sepolia")
+    sepolia_fake.chain_id = 11155111
+    sepolia_fake.w3.eth.block_number = 12224600
+    sepolia_fake.registry["contracts"]["LendingPool"]["blockNumber"] = 12224519
+    sepolia_fake.events["LenderDeposited"] = [
+        {"blockNumber": 12224588, "args": {"positionId": 1}},
+    ]
+    sepolia_fake.get_lending_position_owner = lambda _pid: Web3.to_checksum_address(owner.address)  # type: ignore[attr-defined]
+    sepolia_fake.get_lender_position = lambda pid: {  # type: ignore[attr-defined]
+        "position_id": pid,
+        "principal": {"wad": str(1_000 * constants.WAD)},
+        "active": True,
+    }
+    sepolia_fake.get_lender_earned_interest = lambda _pid: {"wad": "0"}  # type: ignore[attr-defined]
+    sepolia_fake.get_lender_claimable_balance = lambda _pid: {"wad": str(1_000 * constants.WAD)}  # type: ignore[attr-defined]
+    client.app.state.web3_services = {"local": web3, "sepolia": sepolia_fake}
+
+    sep_pos = client.get(f"/api/accounts/{owner.address}/lending-positions?network=sepolia")
+    assert sep_pos.status_code == 200, sep_pos.text
+    sep_body = sep_pos.json()
+    assert sep_body["network"] == "sepolia"
+    assert sep_body["chain_id"] == 11155111
+    assert sep_body["block_number"] == 12224600
+    assert len(sep_body["positions"]) == 1
+    assert sep_body["positions"][0]["position_id"] == 1
+
+    # When Sepolia deploy blockNumber is missing, omitting from_block still returns 422.
+    del sepolia_fake.registry["contracts"]["LendingPool"]["blockNumber"]
+    assert (
+        client.get(f"/api/accounts/{owner.address}/lending-positions?network=sepolia").status_code
+        == 422
+    )

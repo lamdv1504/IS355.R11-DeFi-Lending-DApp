@@ -500,6 +500,71 @@ class Web3Service:
             "is_approved": is_approved,
         }
 
+    def get_owned_collateral_nfts(
+        self, owner_address: str, *, from_block: int = 0
+    ) -> list[dict[str, Any]]:
+        """List CollateralNFT token IDs currently owned by a wallet with valuations and approvals."""
+        owner = self._checksum_address(owner_address, "owner")
+        nft = self.get_contract("CollateralNFT")
+        events = getattr(nft, "events", None)
+        transfer_event = getattr(events, "Transfer", None)
+        if not callable(transfer_event):
+            return []
+        logs = transfer_event().get_logs(
+            from_block=from_block,
+            to_block="latest",
+            argument_filters={"to": owner},
+        )
+        pool_address = (
+            self.registry.get("contracts", {}).get("LendingPool", {}).get("address")
+        )
+        seen: set[int] = set()
+        owned: list[dict[str, Any]] = []
+        for log in logs:
+            args = log.get("args", {})
+            raw_token_id = args.get("tokenId")
+            if raw_token_id is None:
+                continue
+            token_id = int(raw_token_id)
+            if token_id in seen:
+                continue
+            seen.add(token_id)
+            try:
+                current_owner = self.get_collateral_nft_owner(token_id)
+            except Exception:
+                continue
+            if current_owner.lower() != owner.lower():
+                continue
+            valuation = self.get_collateral_nft_valuation(token_id)
+            is_approved = False
+            if pool_address:
+                try:
+                    is_approved = bool(
+                        self.get_collateral_nft_approval_status(
+                            owner, pool_address, token_id
+                        )["is_approved"]
+                    )
+                except Exception:
+                    is_approved = False
+            token_uri: str | None = None
+            try:
+                raw_uri = nft.functions.tokenURI(token_id).call()
+                if isinstance(raw_uri, str):
+                    token_uri = raw_uri
+            except Exception:
+                token_uri = None
+            owned.append(
+                {
+                    "token_id": token_id,
+                    "owner": current_owner,
+                    "valuation": valuation,
+                    "is_approved": is_approved,
+                    "token_uri": token_uri,
+                }
+            )
+        owned.sort(key=lambda item: int(item["token_id"]))
+        return owned
+
     def get_latest_block_context(self) -> dict[str, int]:
         """Read latest block number and timestamp for snapshot freshness metadata."""
         block_number: int | None = None
