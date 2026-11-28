@@ -1,0 +1,6 @@
+# Preserve exact content-addressed bytes across Windows/macOS/Linux checkouts
+# so IPFS CIDv1 and SHA-256 digests verified by L04 stay invariant on every platform.
+*.json text eol=lf
+*.csv text eol=lf
+*.pdf binary
+*.png binary
