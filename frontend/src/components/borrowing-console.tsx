@@ -6,8 +6,8 @@ import { AppShell } from "@/components/app-shell";
 import { BorrowInfoDialog, BorrowReviewDialog, TransactionPreview } from "@/components/borrow-transaction-preview";
 import { HealthFactorGauge } from "@/components/health-factor-gauge";
 import { useBorrowingDemo } from "@/hooks/use-borrowing-demo";
-import { actionLabel, approvalAmount, BORROW_WALLETS, borrowingCapacity, capacityLabel, collateralValue, currentBorrowApr, formatHealthFactor, healthFactor, ltvBps, prepareBorrowTransaction, referenceApy, riskStatus, totalDebt, type BorrowAction, type BorrowActor, type CollateralKind, type TransactionAction } from "@/lib/borrowing-demo";
-import { amountLabel, exactAmount, parseAmount, shortAddress, WAD } from "@/lib/lending-demo";
+import { actionLabel, approvalAmount, BORROW_WALLETS, borrowingCapacity, capacityLabel, collateralValue, currentBorrowApr, DEFAULT_COLLATERAL_NFT_ID, formatHealthFactor, healthFactor, ltvBps, prepareBorrowTransaction, referenceApy, riskStatus, totalDebt, type BorrowAction, type BorrowActor, type TransactionAction } from "@/lib/borrowing-demo";
+import { amountLabel, exactAmount, parseAmount, shortAddress, WAD } from "@/lib/wad";
 
 const pct = (n: number) => new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 2 }).format(n);
 const statusText = { safe: "Khoản vay đang an toàn", warning: "Khoản vay sắp chạm ngưỡng thanh lý", danger: "Đủ điều kiện thanh lý" };
@@ -20,12 +20,11 @@ export default function BorrowingConsole() {
   const [borrowAmount, setBorrowAmount] = useState("100");
   const [repayAmount, setRepayAmount] = useState("100");
   const [fullRepay, setFullRepay] = useState(false);
-  const [asset, setAsset] = useState<CollateralKind>("nft");
-  const [collateralAmount, setCollateralAmount] = useState("1000");
   const [gwei, setGwei] = useState("2");
   const [review, setReview] = useState<TransactionAction | null>(null);
   const [info, setInfo] = useState<"help" | "reset" | null>(null);
   const loan = snapshot.loan;
+  const nftTokenId = snapshot.nftTokenId ?? DEFAULT_COLLATERAL_NFT_ID;
   const debt = totalDebt(snapshot);
   const value = collateralValue(snapshot);
   const hf = healthFactor(value, debt);
@@ -71,9 +70,8 @@ export default function BorrowingConsole() {
       setReview(draft);
     } catch (e) { setNotice(e instanceof Error ? e.message : "Chưa chuẩn bị được giao dịch."); }
   }
-  const collateralPayment = (() => { try { return asset === "token" ? parseAmount(collateralAmount) : 0n; } catch { return 0n; } })();
-  const collateralApproved = asset === "nft" ? snapshot.nftApproved : collateralPayment > 0n && collateralPayment <= BigInt(snapshot.wallets.borrower.allowanceWad);
-  const collateralOwned = asset !== "nft" || snapshot.nftOwner === "borrower";
+  const collateralApproved = snapshot.nftApproved;
+  const collateralOwned = snapshot.nftOwner === "borrower";
   const activeWallet = snapshot.wallets[actor];
 
   return <>
@@ -97,15 +95,14 @@ export default function BorrowingConsole() {
             <section className="panel collateral-panel" id="collateral" aria-labelledby="collateral-title">
               <div className="panel-head"><h2 id="collateral-title">Tài sản thế chấp</h2><span className="icon-tile"><FileKey2 size={20} /></span></div>
               {!ready ? <p className="borrow-loading" aria-busy="true">Đang tải tài sản…</p> : loan.active ? <>
-                <div className="collateral-asset"><span className="collateral-art">{loan.kind === "nft" ? <FileKey2 size={40} /> : <Layers size={40} />}</span><div><p className="asset-type">{loan.kind === "nft" ? "COLLATERAL NFT" : "ERC-20 COLLATERAL"}</p><h3>{loan.kind === "nft" ? "CollateralNFT #7" : amountLabel(loan.collateralUnitsWad) + " MyUSDT"}</h3><span className="locked-tag"><LockKeyhole size={13} />Đang khóa trong Pool</span></div></div>
+                <div className="collateral-asset"><span className="collateral-art">{loan.kind === "nft" ? <FileKey2 size={40} /> : <Layers size={40} />}</span><div><p className="asset-type">{loan.kind === "nft" ? "COLLATERAL NFT" : "ERC-20 COLLATERAL"}</p><h3>{loan.kind === "nft" ? "CollateralNFT #" + nftTokenId : amountLabel(loan.collateralUnitsWad) + " MyUSDT"}</h3><span className="locked-tag"><LockKeyhole size={13} />Đang khóa trong Pool</span></div></div>
                 <dl className="collateral-facts"><div><dt>Giá trị hiện tại</dt><dd>{label(value, 4)} MyUSDT</dd></div><div><dt>Trần tổng nợ (70%)</dt><dd>{label(value * 7000n / 10000n, 4)} MyUSDT</dd></div><div><dt>Biên nhận thế chấp</dt><dd>Receipt #{loan.receiptId}</dd></div><div><dt>Chủ khoản vay</dt><dd title={BORROW_WALLETS[0].address}>{shortAddress(BORROW_WALLETS[0].address)}</dd></div></dl>
                 <p className="collateral-hint">Biên nhận và DebtToken không chuyển nhượng. Rút thế chấp khi tổng nợ bằng 0; trả hết nợ sẽ tự mở khóa.</p>
                 {debt === 0n && <button className="button secondary full" disabled={!borrowerSelected} onClick={() => setReview({ kind: "withdraw", actor })}><ArrowDownToLine size={17} />Xem trước rút thế chấp</button>}
               </> : <>
-                <p className="collateral-hint">{loan.receiptStatus === "liquidated" ? "Vị thế trước đã thanh lý. NFT #7 hiện thuộc ví thanh lý." : loan.receiptStatus === "settled" ? "Đã tất toán và mở khóa tài sản. Bạn có thể tạo vị thế mới." : "Chọn tài sản và cấp quyền trước khi khóa vào Pool."}</p>
-                <div className="asset-switch" role="group" aria-label="Loại tài sản thế chấp"><button aria-pressed={asset === "nft"} onClick={() => setAsset("nft")}>Collateral NFT</button><button aria-pressed={asset === "token"} onClick={() => setAsset("token")}>Token MyUSDT</button></div>
-                {asset === "token" ? <div className="field"><label htmlFor="collateral-amount">Số MyUSDT thế chấp</label><input id="collateral-amount" value={collateralAmount} inputMode="decimal" onChange={(e) => setCollateralAmount(e.target.value)} disabled={!borrowerSelected} /></div> : <p className="nft-choice"><FileKey2 size={20} />NFT #7 · giá gốc 1.000 MyUSDT<span>{collateralOwned ? "Thuộc ví người vay" : "Không thuộc ví người vay"}</span></p>}
-                <div className="collateral-buttons"><button className="button secondary full" disabled={!borrowerSelected || !collateralOwned || collateralApproved || (asset === "token" && collateralPayment === 0n)} onClick={() => setReview(asset === "nft" ? { kind: "approve-nft", actor } : { kind: "approve", actor, amount: exactAmount(collateralPayment) })}>{collateralApproved ? "Đã cấp quyền" : "1. Xem trước cấp quyền"}</button><button className="button primary full" disabled={!borrowerSelected || !collateralOwned || !collateralApproved} onClick={() => setReview({ kind: "deposit", actor, asset, amount: collateralAmount })}>2. Xem trước thế chấp<ArrowRight size={17} /></button></div>
+                <p className="collateral-hint">{loan.receiptStatus === "liquidated" ? "Vị thế trước đã thanh lý. CollateralNFT #" + nftTokenId + " hiện thuộc ví thanh lý." : loan.receiptStatus === "settled" ? "Đã tất toán và mở khóa tài sản. Bạn có thể tạo vị thế mới bằng CollateralNFT." : "Phương án A (MVP): Thế chấp bằng CollateralNFT và cấp quyền trước khi khóa vào Pool."}</p>
+                <p className="nft-choice"><FileKey2 size={20} />CollateralNFT #{nftTokenId} · giá gốc 1.000 MyUSDT<span>{collateralOwned ? "Thuộc ví người vay" : "Không thuộc ví người vay"}</span></p>
+                <div className="collateral-buttons"><button className="button secondary full" disabled={!borrowerSelected || !collateralOwned || collateralApproved} onClick={() => setReview({ kind: "approve-nft", actor })}>{collateralApproved ? "Đã cấp quyền" : "1. Xem trước cấp quyền"}</button><button className="button primary full" disabled={!borrowerSelected || !collateralOwned || !collateralApproved} onClick={() => setReview({ kind: "deposit", actor, asset: "nft", amount: "" })}>2. Xem trước thế chấp<ArrowRight size={17} /></button></div>
               </>}
             </section>
             <section className="panel health-panel" aria-labelledby="health-title">

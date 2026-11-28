@@ -16,6 +16,7 @@ from backend.schemas.pool import (
     AccountBalancesResponse,
     AccountLoanResponse,
     AccountPositionsResponse,
+    AccountSnapshotResponse,
     PoolResponse,
     RateAnalyticsResponse,
 )
@@ -106,44 +107,7 @@ def read_lending_positions(
     return {"wallet_address": wallet, "positions": positions}
 
 
-@router.get("/accounts/{address}/loan", response_model=AccountLoanResponse)
-def read_loan(
-    address: str,
-    request: Request,
-    network: str | None = Query(default=None),
-) -> dict[str, Any]:
-    service = get_web3_service_for_network(request, network)
-    wallet = service._checksum_address(address, "account")
-    liquidation_preview: dict[str, Any] | None = None
-    preview_fn = getattr(service, "get_liquidation_preview", None)
-    if callable(preview_fn):
-        liquidation_preview = preview_fn(wallet)
-    return {
-        "wallet_address": wallet,
-        "loan_position": service.get_loan_position(wallet),
-        "risk": service.get_borrower_risk(wallet),
-        "borrowing_capacity": {
-            "max_borrowable": service.get_max_borrowable(wallet),
-            "remaining": service.get_remaining_borrow_capacity(wallet),
-            "available_to_borrow": service.get_available_to_borrow(wallet),
-            "current_ltv": service.get_current_ltv_bps(wallet),
-        },
-        "interest": {
-            "accrued": service.calculate_accrued_interest(wallet),
-            "rates": service.get_interest_rate_snapshot(),
-        },
-        "liquidation_preview": liquidation_preview,
-    }
-
-
-@router.get("/accounts/{address}/balances", response_model=AccountBalancesResponse)
-def read_balances(
-    address: str,
-    request: Request,
-    network: str | None = Query(default=None),
-) -> dict[str, Any]:
-    service = get_web3_service_for_network(request, network)
-    wallet = service._checksum_address(address, "account")
+def _read_wallet_balances(service: Web3Service, wallet: str) -> dict[str, Any]:
     pool_address = service.registry.get("contracts", {}).get("LendingPool", {}).get("address")
     balances: dict[str, Any] = {
         "myusdt": service.get_myusdt_balance(wallet),
@@ -160,7 +124,88 @@ def read_balances(
         balances["myusdt_allowance_to_pool"] = service.get_myusdt_allowance(
             wallet, pool_address
         )
-    return {"wallet_address": wallet, "balances": balances}
+    return balances
+
+
+@router.get("/accounts/{address}/loan", response_model=AccountLoanResponse)
+def read_loan(
+    address: str,
+    request: Request,
+    network: str | None = Query(default=None),
+) -> dict[str, Any]:
+    service = get_web3_service_for_network(request, network)
+    wallet = service._checksum_address(address, "account")
+    interest_rates = service.get_interest_rate_snapshot()
+    block_number, as_of_timestamp = _block_snapshot(service, interest_rates)
+    liquidation_preview: dict[str, Any] | None = None
+    preview_fn = getattr(service, "get_liquidation_preview", None)
+    if callable(preview_fn):
+        liquidation_preview = preview_fn(wallet)
+    return {
+        "network": service.network.name,
+        "chain_id": service.chain_id,
+        "block_number": block_number,
+        "as_of_timestamp": as_of_timestamp,
+        "wallet_address": wallet,
+        "loan_position": service.get_loan_position(wallet),
+        "risk": service.get_borrower_risk(wallet),
+        "borrowing_capacity": {
+            "max_borrowable": service.get_max_borrowable(wallet),
+            "remaining": service.get_remaining_borrow_capacity(wallet),
+            "available_to_borrow": service.get_available_to_borrow(wallet),
+            "current_ltv": service.get_current_ltv_bps(wallet),
+        },
+        "interest": {
+            "accrued": service.calculate_accrued_interest(wallet),
+            "rates": interest_rates,
+        },
+        "liquidation_preview": liquidation_preview,
+    }
+
+
+@router.get("/accounts/{address}/balances", response_model=AccountBalancesResponse)
+def read_balances(
+    address: str,
+    request: Request,
+    network: str | None = Query(default=None),
+) -> dict[str, Any]:
+    service = get_web3_service_for_network(request, network)
+    wallet = service._checksum_address(address, "account")
+    block_number, as_of_timestamp = _block_snapshot(service, {})
+    return {
+        "network": service.network.name,
+        "chain_id": service.chain_id,
+        "block_number": block_number,
+        "as_of_timestamp": as_of_timestamp,
+        "wallet_address": wallet,
+        "balances": _read_wallet_balances(service, wallet),
+    }
+
+
+@router.get("/accounts/{address}/snapshot", response_model=AccountSnapshotResponse)
+def read_account_snapshot(
+    address: str,
+    request: Request,
+    network: str | None = Query(default=None),
+) -> dict[str, Any]:
+    service = get_web3_service_for_network(request, network)
+    wallet = service._checksum_address(address, "account")
+    interest_rates = service.get_interest_rate_snapshot()
+    block_number, as_of_timestamp = _block_snapshot(service, interest_rates)
+    return {
+        "network": service.network.name,
+        "chain_id": service.chain_id,
+        "block_number": block_number,
+        "as_of_timestamp": as_of_timestamp,
+        "wallet_address": wallet,
+        "balances": _read_wallet_balances(service, wallet),
+        "loan_position": service.get_loan_position(wallet),
+        "risk": service.get_borrower_risk(wallet),
+        "interest": {
+            "accrued": service.calculate_accrued_interest(wallet),
+            "rates": interest_rates,
+        },
+    }
 
 
 @router.get("/analytics/rates", response_model=RateAnalyticsResponse)

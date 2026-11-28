@@ -1,6 +1,7 @@
-import { formatUnits, getAddress, isAddress, parseUnits, ZeroAddress } from "ethers";
+import { getAddress, isAddress, ZeroAddress } from "ethers";
+import { amountLabel, exactAmount, parseAmount, rates, sameAddress, shortAddress, WAD } from "./wad.ts";
 
-export const WAD = 10n ** 18n;
+export { amountLabel, exactAmount, parseAmount, rates, sameAddress, shortAddress, WAD };
 const YEAR_MS = 365n * 24n * 60n * 60n * 1000n;
 const INTEREST_DENOMINATOR = 10000n * YEAR_MS;
 export const STORAGE_KEY = "defi-lending-l02-v1";
@@ -43,17 +44,6 @@ export type DemoAction =
   | { kind: "transfer"; actor: string; recipient: string; positionId: string }
   | { kind: "faucet"; actor: string };
 
-export function rates(supplied: string, borrowed: string) {
-  const supply = BigInt(supplied);
-  const demand = BigInt(borrowed);
-  const raw = supply === 0n ? 0n : demand * 10000n / supply;
-  const utilizationBps = Number(raw > 10000n ? 10000n : raw);
-  const borrowAprBps = 500 + Math.floor(utilizationBps * 1000 / 10000);
-  const supplyAprBps = Math.floor(borrowAprBps * utilizationBps / 10000);
-  const supplyApy = (Math.pow(1 + supplyAprBps / 10000 / 365, 365) - 1) * 100;
-  return { utilizationBps, borrowAprBps, supplyAprBps, supplyApy };
-}
-
 export function createDemo(now = Date.now()): DemoState {
   return {
     version: 1, checkpointAt: now, nextId: "2",
@@ -65,23 +55,6 @@ export function createDemo(now = Date.now()): DemoState {
     activity: [],
   };
 }
-
-export function parseAmount(value: string): bigint {
-  const normalized = value.trim().replace(",", ".");
-  if (!/^\d+(\.\d{1,18})?$/.test(normalized)) {
-    throw new Error("Nhập số dương, tối đa 18 chữ số thập phân. Không dùng dấu phân cách hàng nghìn.");
-  }
-  const amount = parseUnits(normalized, 18);
-  if (amount <= 0n) throw new Error("Số tiền phải lớn hơn 0.");
-  return amount;
-}
-
-export function amountLabel(raw: string | bigint, decimals = 4): string {
-  return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: decimals }).format(Number(formatUnits(raw, 18)));
-}
-export function exactAmount(raw: string | bigint) { return formatUnits(raw, 18); }
-export function shortAddress(address: string) { return address.slice(0, 6) + "…" + address.slice(-4); }
-export function sameAddress(a: string, b: string) { return a.toLowerCase() === b.toLowerCase(); }
 
 export function checkpoint(state: DemoState, now: number): DemoState {
   const at = Math.max(state.checkpointAt, now);

@@ -1411,3 +1411,36 @@ def test_prepare_and_confirm_support_dynamic_network_switching_without_restart(
     assert confirmed.status_code == 200, confirmed.text
     assert confirmed.json()["status"] == 1
     assert confirmed.json()["block_number"] == 12224705
+
+
+def test_account_snapshot_returns_unified_balances_loan_and_block_metadata(
+    api_env: dict[str, Any],
+) -> None:
+    client = api_env["client"]
+    owner = api_env["owner"]
+
+    local_snap = client.get(f"/api/accounts/{owner.address}/snapshot")
+    assert local_snap.status_code == 200, local_snap.text
+    body = local_snap.json()
+    assert body["network"] == "local"
+    assert body["chain_id"] == 31337
+    assert body["block_number"] == 10
+    assert body["as_of_timestamp"] > 0
+    assert body["balances"]["myusdt"]["wad"] == "0"
+    assert body["risk"]["collateral_value"]["wad"] == str(1_000 * constants.WAD)
+    assert body["interest"]["accrued"]["wad"] == "0"
+
+    bal = client.get(f"/api/accounts/{owner.address}/balances").json()
+    loan = client.get(f"/api/accounts/{owner.address}/loan").json()
+    assert bal["block_number"] == loan["block_number"] == 10
+
+    sepolia_fake = _FakeWeb3Service()
+    sepolia_fake.network = SimpleNamespace(name="sepolia")
+    sepolia_fake.chain_id = 11155111
+    sepolia_fake.w3.eth.block_number = 12224888
+    client.app.state.web3_services = {"local": api_env["web3"], "sepolia": sepolia_fake}
+
+    sep_snap = client.get(f"/api/accounts/{owner.address}/snapshot?network=sepolia")
+    assert sep_snap.status_code == 200, sep_snap.text
+    assert sep_snap.json()["network"] == "sepolia"
+    assert sep_snap.json()["block_number"] == 12224888

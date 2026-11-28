@@ -18,10 +18,10 @@ Mã nguồn test: [`tests/test_h03_ipfs.py`](../../tests/test_h03_ipfs.py) | Scr
 
 ## 2. Danh mục Hồ sơ Mẫu, Mã CIDv1 & Đối chiếu SHA-256
 
-> **Ghi chú minh bạch về môi trường chạy kiểm thử**:
-> Trong môi trường phát triển cục bộ hiện tại chưa có daemon **IPFS Kubo** đang chạy và chưa nạp `PINATA_JWT` vào `.env`, nên script sử dụng tầng dự phòng content-addressed cục bộ (`local_store` – thuật toán CIDv1 chuẩn `raw-leaves`, đã kiểm chứng khớp bit-for-bit với vector chuẩn của IPFS: `b""` → `bafkreihdwdcefgh4dqkjv67uzcmw7ojee6xedzdetojuzjevtenxquvyku`, `b"hello world"` → `bafkreifzjut3te2nhyekklss27nh3k72ysco7y32koao5eei66wof36n5e`, `b"hello world\n"` CIDv0 → `QmT78zSuBmuS4z925WZfrqQ1qHaJ56DQaTfyMUF7F8ff5o`).
-> Giao thức HTTP thật của **Kubo RPC (`/api/v0/add`, `/api/v0/cat`, `/ipfs/{cid}`)** và **Pinata Cloud (`/pinning/pinFileToIPFS`, `/data/testAuthentication`, Gateway)** đã được kiểm thử đầy đủ qua HTTP transport adapter trong `tests/test_h03_ipfs.py`.
-> Khi khởi chạy Kubo local (`scripts/start_ipfs_node.bat`) hoặc cấu hình `PINATA_JWT` trong `.env`, chạy `python scripts/verify_h03_ipfs.py --mode live` để ghim và đối chiếu trực tiếp qua Gateway thật.
+> **Ghi chú minh bạch về môi trường chạy kiểm thử & đối chiếu ghim sống Kubo (Q03/Q04)**:
+> - Tại thời điểm bàn giao **H03**, 4 hồ sơ mẫu tĩnh bên dưới được sinh bằng tầng content-addressed cục bộ (`local_store` – thuật toán CIDv1 chuẩn `raw-leaves`, đã kiểm chứng khớp bit-for-bit với vector chuẩn của IPFS: `b""` → `bafkreihdwdcefgh4dqkjv67uzcmw7ojee6xedzdetojuzjevtenxquvyku`, `b"hello world"` → `bafkreifzjut3te2nhyekklss27nh3k72ysco7y32koao5eei66wof36n5e`, `b"hello world\n"` CIDv0 → `QmT78zSuBmuS4z925WZfrqQ1qHaJ56DQaTfyMUF7F8ff5o`).
+> - Giao thức HTTP thật của **Kubo RPC (`/api/v0/add`, `/api/v0/cat`, `/ipfs/{cid}`)** và **Pinata Cloud (`/pinning/pinFileToIPFS`, `/data/testAuthentication`, Gateway)** đã được kiểm thử đầy đủ qua HTTP transport adapter trong `tests/test_h03_ipfs.py`.
+> - **Cập nhật đối chiếu ghim sống Kubo thật (đã hoàn tất ở Q03/Q04)**: Quân đã kiểm chứng end-to-end tầng `src.ipfs` của H03 chạy trực tiếp trên **IPFS Kubo `v0.43.2`** (`PeerID = 12D3KooWFjaQAjmQAVzaBx2cNB6Gv65GwZTnuT6VkJ6siE5C1xEP`, `provider = "kubo"`, **`enable_local_fallback = False`**), ghim đệ quy thành công `4/4` hồ sơ thật kèm 2 ảnh mở trực tiếp trên Kubo Gateway tại [`reports/Quan/q03_q04_ipfs_e2e_validation.md`](../Quan/q03_q04_ipfs_e2e_validation.md). Khi cần ghim lại 4 file mẫu tĩnh của H03 lên daemon cục bộ, chỉ cần chạy `python scripts/verify_h03_ipfs.py --mode live`.
 
 | Loại hồ sơ | Định dạng | Quyền / Mã hóa | File mẫu | Mã CIDv1 (Payload lưu IPFS) | SHA-256 Plaintext | Trạng thái dữ liệu |
 |---|---|---|---|---|---|---|
@@ -51,8 +51,8 @@ Mã nguồn test: [`tests/test_h03_ipfs.py`](../../tests/test_h03_ipfs.py) | Scr
 
 ---
 
-## 4. Phần Chờ Tích hợp & Bước Tiếp theo
+## 4. Trạng thái Tích hợp & Bước Tiếp theo
 
-- **Ghim sống lên IPFS Kubo / Pinata Cloud**: Sau khi cài Kubo CLI (hoặc chạy Docker `ipfs/kubo:latest`) hoặc điền `PINATA_JWT` vào `.env` cục bộ, chạy `python scripts/verify_h03_ipfs.py --mode live` để cập nhật bằng chứng ghim sống qua Gateway thật.
-- **Quân (`Q03`, `Q04`, `Q05`)**: Nhúng `src.ipfs` và `src.documents` vào FastAPI endpoints (`/api/ipfs/create-agreement`, `/api/ipfs/credit-report/{address}`, `/api/ipfs/audit-logs`, `/api/ipfs/retrieve/{cid}`) kết hợp xác thực chữ ký MetaMask nonce.
-- **Lâm (`L04`)**: Kết nối màn hình IPFS Document Hub tới các API trên, hiển thị trạng thái `401`/`403` và kiểm tra mở/tải hồ sơ theo đúng vai trò.
+- **Ghim sống lên IPFS Kubo thật**: **Đã được kiểm chứng E2E bởi Quân (`Q03`/`Q04`)** trên Kubo `v0.43.2` với `enable_local_fallback = False`, `4/4` recursive pin và 2 ảnh Gateway tại [`reports/Quan/q03_q04_ipfs_e2e_validation.md`](../Quan/q03_q04_ipfs_e2e_validation.md) (đồng bộ tham chiếu trong [`ipfs_storage/samples/sample_cids_manifest.json`](../../ipfs_storage/samples/sample_cids_manifest.json)).
+- **Quân (`Q03`, `Q04`, `Q05`)**: **Đã hoàn tất tích hợp** `src.ipfs` và `src.documents` vào các endpoint FastAPI (`/api/ipfs/create-agreement`, `/api/ipfs/credit-report/{address}`, `/api/ipfs/audit-logs`, `/api/ipfs/documents/{cid}/retrieve`) kèm xác thực chữ ký EIP-191 nonce.
+- **Lâm (`L04` → `L05`)**: `L04` đã nối adapter HTTP tới các endpoint RBAC trên (20/20 kịch bản PASS); bước tiếp theo tại `L05`/`Q07`/`L06` là nối phiên ví MetaMask trực tiếp và chụp ảnh trình duyệt `200`/`403` + test Kubo offline.

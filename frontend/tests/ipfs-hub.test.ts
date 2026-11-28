@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { creditReportView, apiBase, apiRequest, assertHash, auditEntries, decodeDocument, errorMessage, HubError, listDocuments, normalizeCid, parseMetadata, ratesChartData, retrieveDocument, retrieveSample, safeFilename, sha256, walletChartData, type HubConnection } from "../src/lib/ipfs-hub.ts";
+import { creditReportView, apiBase, apiRequest, assertHash, auditEntries, decodeDocument, errorMessage, fetchRateAnalytics, fetchWalletSnapshot, HubError, listDocuments, normalizeCid, parseMetadata, ratesChartData, retrieveDocument, retrieveSample, safeFilename, sha256, walletChartData, type HubConnection } from "../src/lib/ipfs-hub.ts";
 
 const samples = JSON.parse(readFileSync(new URL("../src/data/l04-samples.json", import.meta.url), "utf8"));
 const documents = samples.documents.map(parseMetadata);
@@ -122,4 +122,47 @@ test("credit report reads the nested Q04 score, summary and repayment history", 
   assert.equal(view.loans[0].status, "REPAID_ON_TIME");
   assert.throws(() => creditReportView({ ...content, credit_score: 760 }));
   assert.throws(() => creditReportView({ ...content, credit_score: { score: 999 } }));
+});
+
+test("fetchRateAnalytics loads monthly series and snapshot metadata from /api/analytics/rates", async () => {
+  const sampleRows = auditEntries(samples.audit);
+  const snapshot = await fetchRateAnalytics(connection, 6, undefined, async (url) => {
+    assert.equal(url, connection.baseUrl + "/api/analytics/rates?seed_simulated_months=6");
+    return Response.json({
+      network: "local",
+      chain_id: 31337,
+      block_number: 42,
+      as_of_timestamp: 1700000100,
+      series: sampleRows,
+    });
+  });
+  assert.equal(snapshot.network, "local");
+  assert.equal(snapshot.blockNumber, 42);
+  assert.equal(snapshot.series.length, sampleRows.length);
+});
+
+test("fetchWalletSnapshot reads unified /snapshot in one request with block metadata", async () => {
+  const wallet = "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC";
+  let calls = 0;
+  const result = await fetchWalletSnapshot(connection, wallet, undefined, async (url) => {
+    calls++;
+    assert.equal(url, connection.baseUrl + "/api/accounts/" + wallet + "/snapshot");
+    return Response.json({
+      network: "local",
+      chain_id: 31337,
+      block_number: 88,
+      as_of_timestamp: 1700000200,
+      wallet_address: wallet,
+      balances: {
+        myusdt: { wad: "1500000000000000000000" },
+        debt_token: { wad: "500000000000000000000" },
+      },
+      risk: { collateral_value: { wad: "1000000000000000000000" } },
+      interest: { accrued: { wad: "12500000000000000000" } },
+    });
+  });
+  assert.equal(calls, 1);
+  assert.equal(result.blockNumber, 88);
+  assert.equal(result.rows.length, 4);
+  assert.equal(result.rows[2].amount, 500);
 });

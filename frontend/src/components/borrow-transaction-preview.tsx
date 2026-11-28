@@ -2,8 +2,8 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { ArrowRight, Check, CircleAlert, Fuel, ShieldCheck, X } from "lucide-react";
-import { actionLabel, approvalAmount, BORROW_WALLETS, collateralValue, currentBorrowApr, formatHealthFactor, gasIllustration, healthFactor, ltvBps, prepareBorrowTransaction, referenceApy, totalDebt, YEAR_SECONDS, type BorrowState, type TransactionAction } from "@/lib/borrowing-demo";
-import { amountLabel, exactAmount, parseAmount, shortAddress, WAD } from "@/lib/lending-demo";
+import { actionLabel, approvalAmount, BORROW_WALLETS, collateralValue, currentBorrowApr, DEFAULT_COLLATERAL_NFT_ID, formatHealthFactor, gasIllustration, healthFactor, ltvBps, prepareBorrowTransaction, referenceApy, totalDebt, YEAR_SECONDS, type BorrowState, type TransactionAction } from "@/lib/borrowing-demo";
+import { amountLabel, exactAmount, parseAmount, shortAddress, WAD } from "@/lib/wad";
 
 const pct = (n: number) => new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 2 }).format(n);
 interface PreviewProps {
@@ -78,7 +78,7 @@ export function BorrowReviewDialog({ state, action, gwei, onClose, onConfirm }: 
     <h2 id="review-title">{actionLabel[action.kind]}</h2><p className="dialog-description">Xác nhận thao tác trên dữ liệu mô phỏng.</p>
     {action.kind === "approve" && <p className="approval-summary">Hạn mức cấp quyền: <strong>{amountLabel(parseAmount(action.amount), 6)} MyUSDT</strong></p>}
     <TransactionFacts state={state} action={action} gwei={gwei} />
-    {action.kind === "liquidate" && <p className="liquidation-disclosure"><CircleAlert size={18} />Ví thanh lý trả toàn bộ nợ. {state.loan.kind === "nft" ? "Toàn bộ NFT #7 chuyển sang ví thanh lý." : "Token bị thu giữ tối đa theo nợ cộng thưởng 5%; phần còn lại trả cho người vay."}</p>}
+    {action.kind === "liquidate" && <p className="liquidation-disclosure"><CircleAlert size={18} />Ví thanh lý trả toàn bộ nợ. {state.loan.kind === "nft" ? "Toàn bộ CollateralNFT #" + (state.nftTokenId ?? DEFAULT_COLLATERAL_NFT_ID) + " chuyển sang ví thanh lý." : "Token bị thu giữ tối đa theo nợ cộng thưởng 5%; phần còn lại trả cho người vay."}</p>}
     {error && <p role="alert" className="form-error">{error}</p>}
     <p className="simulation-note"><Check size={16} />Chỉ mô phỏng, không gửi giao dịch blockchain.</p>
     <div className="dialog-actions"><button className="button secondary" onClick={onClose}>Quay lại</button><button className="button primary" disabled={!valid} onClick={confirm}>Xác nhận mô phỏng</button></div>
@@ -91,7 +91,7 @@ export function BorrowInfoDialog({ kind, onClose, onReset }: { kind: "help" | "r
     <div className="dialog-top"><span className="dialog-symbol"><ShieldCheck /></span><button className="icon-button" aria-label="Đóng hộp thoại" onClick={onClose}><X size={20} /></button></div>
     <h2 id="borrow-info-title">{kind === "help" ? "Cách hoạt động" : "Đặt lại mô phỏng?"}</h2>
     <div className="help-copy">{kind === "help" ? <>
-      <p>Thế chấp Token hoặc NFT, sau đó vay MyUSDT trong giới hạn 70% giá trị tài sản. Tổng nợ gồm gốc và lãi phát sinh.</p>
+      <p>Thế chấp CollateralNFT (Phương án A), sau đó vay MyUSDT trong giới hạn 70% giá trị tài sản. Tổng nợ gồm gốc và lãi phát sinh.</p>
       <h3>Đọc Health Factor</h3><p>HF từ 1,5: an toàn. Từ 1 đến dưới 1,5: cần theo dõi. Dưới 1: đủ điều kiện thanh lý. Không có nợ: HF vô hạn.</p>
       <h3>Thanh lý cần xác nhận</h3><p>Giảm giá không tự thanh lý khoản vay. Chọn ví thanh lý, cấp quyền chi MyUSDT rồi kiểm tra và xác nhận riêng.</p>
       <p>Tất cả số liệu, gas, cấp quyền và thao tác ở đây đều mô phỏng trên trình duyệt. Không ký ví thật hoặc tạo CID/txHash. Phiên mô phỏng này tách riêng màn hình cho vay.</p>

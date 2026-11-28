@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { WAD } from "../src/lib/lending-demo.ts";
-import { applyBorrowAction, borrowCheckpoint, borrowingCapacity, capacityLabel, collateralValue, createBorrowDemo, currentBorrowApr, formatHealthFactor, gasIllustration, healthFactor, prepareBorrowTransaction, referenceApy, restoreBorrowDemo, riskStatus, totalDebt, YEAR_SECONDS, type BorrowState } from "../src/lib/borrowing-demo.ts";
+import { applyBorrowAction, borrowCheckpoint, borrowingCapacity, capacityLabel, collateralValue, createBorrowDemo, currentBorrowApr, DEFAULT_COLLATERAL_NFT_ID, formatHealthFactor, gasIllustration, healthFactor, prepareBorrowTransaction, referenceApy, restoreBorrowDemo, riskStatus, totalDebt, YEAR_SECONDS, type BorrowState } from "../src/lib/borrowing-demo.ts";
 
 const now = 1700000000000;
 const day = 86400000;
@@ -231,4 +231,18 @@ test("visible borrowing capacity is floored so it never suggests an inadmissible
   assert.equal(capacityLabel(200n * WAD - 1n, 4), "199,9999");
   assert.equal(capacityLabel(200n * WAD, 4), "200");
   assert.equal(capacityLabel(1n, 8), "0");
+});
+
+test("CollateralNFT defaults to seeded #2 and respects dynamic nftTokenId without hardcoding #7", () => {
+  const initial = createBorrowDemo(now);
+  assert.equal(DEFAULT_COLLATERAL_NFT_ID, "2");
+  assert.equal(initial.nftTokenId, "2");
+
+  const custom = { ...createBorrowDemo(now, true), nftTokenId: "42" };
+  assert.deepEqual(restoreBorrowDemo(JSON.stringify(custom), now), custom);
+  assert.throws(
+    () => applyBorrowAction(custom, { kind: "deposit", actor: "borrower", asset: "nft", amount: "" }, now),
+    /CollateralNFT #42/
+  );
+  assert.throws(() => restoreBorrowDemo(JSON.stringify({ ...custom, nftTokenId: "-1" }), now));
 });

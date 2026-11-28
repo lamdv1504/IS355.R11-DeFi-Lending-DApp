@@ -23,6 +23,10 @@ class AccountPositionsResponse(APIModel):
 
 
 class AccountLoanResponse(APIModel):
+    network: str | None = None
+    chain_id: int | None = None
+    block_number: int | None = None
+    as_of_timestamp: int | None = None
     wallet_address: str
     loan_position: dict[str, Any]
     risk: dict[str, Any]
@@ -32,8 +36,24 @@ class AccountLoanResponse(APIModel):
 
 
 class AccountBalancesResponse(APIModel):
+    network: str | None = None
+    chain_id: int | None = None
+    block_number: int | None = None
+    as_of_timestamp: int | None = None
     wallet_address: str
     balances: dict[str, Any]
+
+
+class AccountSnapshotResponse(APIModel):
+    network: str
+    chain_id: int
+    block_number: int
+    as_of_timestamp: int
+    wallet_address: str
+    balances: dict[str, Any]
+    loan_position: dict[str, Any]
+    risk: dict[str, Any]
+    interest: dict[str, Any]
 
 
 class RateAnalyticsResponse(APIModel):
