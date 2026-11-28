@@ -131,6 +131,10 @@ Run the Q04 tests and core document/Web3 tests with:
 pytest tests/test_q04_credit_and_audit_ipfs.py tests/test_q02_web3_service.py tests/test_q03_agreement_generator.py tests/test_h03_ipfs.py tests/test_hi01_constants.py tests/test_hi05_oracle_and_liquidation.py
 ```
 
-Unit/integration tests use a temporary local IPFS store and fake event reads;
-live Hardhat, Kubo, and wallet-session integration should be checked separately
-with `DOCUMENT_AES_KEY_HEX` configured via environment or a secret manager.
+Unit/integration tests use a temporary local IPFS store and fake event reads.
+Live end-to-end verification against a real Hardhat node (`31337`) and a live
+**IPFS Kubo `v0.43.2`** daemon (`provider="kubo"`, `enable_local_fallback=False`)
+has been completed, verifying real Kubo Gateway `HTTP 200` retrieval, SHA-256
+integrity, AES-256-GCM ciphertext protection, `ipfs pin ls`, and RBAC `401`/`403`/`200`;
+see full CIDs, transaction hashes, and Gateway screenshots in
+[reports/Quan/q03_q04_ipfs_e2e_validation.md](../../reports/Quan/q03_q04_ipfs_e2e_validation.md).
