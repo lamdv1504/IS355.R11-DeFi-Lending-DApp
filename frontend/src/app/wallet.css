@@ -1,0 +1,87 @@
+/* L05 keeps the existing navy / Be Vietnam Pro system. */
+.app-shell .topbar { height: auto; min-height: 82px; padding-block: 14px; flex-wrap: wrap; }
+.app-shell .topbar-right { flex: 1; justify-content: flex-end; flex-wrap: wrap; gap: 10px; }
+.wallet-toolbar { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.wallet-mode, .wallet-network { min-height: 44px; border: 1px solid var(--line); padding: 9px 12px; border-radius: 24px; background: white; color: var(--ink); font-size: 13px; }
+.wallet-network-field { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.wallet-network-field > label { font-size: 12px; color: var(--ink); }
+.live-console .field-hint, .live-console .live-empty, .wallet-review .field-hint { color: var(--ink); }
+.wallet-mode { text-decoration: underline; text-underline-offset: 3px; }
+.wallet-account, .wallet-auth { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; padding: 10px; min-height: 44px; }
+.wallet-auth { color: #166444; }
+.wallet-toolbar .button { padding: 10px 16px; min-height: 44px; font-size: 13px; }
+.wallet-settings .button { margin-top: 20px; }
+.wallet-review { width: min(580px,calc(100% - 24px)); }
+.wallet-review > .button { margin-top: 12px; }
+.wallet-quote { margin: 20px 0; font-size: 14px; }
+.wallet-quote > div { display: grid; grid-template-columns: minmax(100px,.9fr) minmax(0,1.1fr); padding: 12px 0; gap: 12px; border-bottom: 1px solid var(--line); }
+.wallet-quote dt { color: var(--muted); }
+.wallet-quote dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.wallet-quote code { font-size: 12px; }
+.wallet-feedback { position: fixed; right: 20px; bottom: 20px; width: min(490px,calc(100% - 40px)); z-index: 90; display: grid; gap: 10px; max-height: 60dvh; overflow-y: auto; }
+.wallet-toast { display: flex; align-items: flex-start; gap: 10px; background: white; border: 1px solid #b4c9eb; padding: 12px 14px; font-size: 14px; color: var(--ink); box-shadow: 0 4px 20px #122b5015; }
+.wallet-toast.error { background: #fff4f1; border-color: #e8bfb8; color: #922b22; }
+.wallet-toast > p, .wallet-toast > div { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.wallet-toast > .icon-button { width: 44px; height: 44px; margin: -6px -6px -6px 0; }
+.wallet-hash { font-size: 12px; overflow-wrap: anywhere; margin-top: 6px; }
+.wallet-hash a { display: inline-flex; align-items: center; gap: 5px; color: var(--accent-strong); text-decoration: underline; min-height: 44px; }
+.wallet-spinner { width: 18px; height: 18px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: wallet-spin 1s linear infinite; flex-shrink: 0; margin-top: 3px; }
+@keyframes wallet-spin { to { transform: rotate(360deg); } }
+.live-mode-notice { background: var(--soft); border: 1px solid #c5d5ee; padding: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 16px; font-size: 14px; }
+.live-mode-notice p { color: var(--ink); }
+.live-read-status { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 12px 0 20px; font-size: 13px; color: var(--muted); min-width: 0; }
+.live-read-status p { display: flex; gap: 7px; align-items: center; overflow-wrap: anywhere; }
+.live-read-status.error { color: #922b22; }
+.live-form-panel, .live-health, .live-liquidation, .live-demo, .live-activity { padding: 24px; min-width: 0; margin-bottom: 24px; }
+.live-form-panel .button.full { margin-top: 22px; }
+.live-form-panel .field-hint .text-button { margin-left: 4px; }
+.live-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0 8px; }
+.live-tabs button { min-height: 44px; padding: 9px 16px; border: 1px solid var(--line); border-radius: 24px; background: white; font-size: 14px; }
+.live-tabs button[aria-pressed=true] { background: var(--ink); color: white; border-color: var(--ink); }
+.live-checkbox { display: flex; align-items: center; gap: 10px; min-height: 44px; margin-top: 16px; font-size: 14px; }
+.live-checkbox input { width: 20px; height: 20px; accent-color: var(--accent); }
+.live-cid { overflow-wrap: anywhere; }
+.live-cid code { font-size: 12px; }
+.live-console .kpi-value { font-size: clamp(22px,2.2vw,32px); overflow-wrap: anywhere; }
+.live-console .kpi-featured .kpi-value { color: white; }
+.live-console .positions-panel { margin-top: 24px; }
+.live-console .positions-panel > .live-read-status { padding-inline: 24px; }
+.live-empty { padding: 28px 24px; font-size: 14px; color: var(--muted); line-height: 1.7; }
+.live-demo-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.live-tx-list { list-style: none; margin: 16px 0 0; padding: 0; }
+.live-tx-list li { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; padding: 16px 0; border-top: 1px solid var(--line); font-size: 14px; }
+.live-tx-list li > div { flex: 1; min-width: 0; }
+.live-tx-list strong, .live-tx-list span { display: block; }
+.live-tx-list span { margin-top: 4px; color: var(--muted); }
+.live-tx-list code { display: block; margin-top: 6px; font-size: 12px; overflow-wrap: anywhere; }
+.live-liquidation > form { display: grid; gap: 12px; }
+.live-liquidation .field { margin-top: 16px; }
+.live-liquidation .button { justify-self: start; }
+@media (max-width:1050px) {
+ .live-shell .topbar-left { width: 100%; }
+ .live-shell .topbar-right { justify-content: flex-start; }
+ .wallet-toolbar { justify-content: flex-start; }
+}
+@media (max-width:700px) {
+ .live-shell .topbar { padding: 12px 20px; gap: 8px; }
+ .live-shell .topbar-right { width: 100%; flex-basis: 100%; }
+ .wallet-toolbar { width: 100%; gap: 6px; }
+ .wallet-mode, .wallet-network { font-size: 12px; padding-inline: 10px; }
+ .wallet-connect { flex: 1; }
+ .wallet-feedback { right: 12px; bottom: 12px; width: calc(100% - 24px); }
+ .wallet-toast { font-size: 13px; padding: 12px; }
+ .live-form-panel, .live-health, .live-liquidation, .live-demo, .live-activity { padding: 20px; }
+ .live-demo-buttons .button { flex: 1; min-width: 135px; padding-inline: 10px; }
+ .live-console .kpi-value { font-size: 22px; }
+ .live-tx-list li { flex-direction: column; align-items: stretch; gap: 8px; }
+ .live-liquidation .button { width: 100%; }
+ .live-form-panel .panel-head { flex-wrap: wrap; }
+}
+@media (max-width:370px) {
+ .live-shell .topbar { padding-inline: 16px; }
+ .live-form-panel, .live-health, .live-liquidation, .live-demo, .live-activity { padding: 16px; }
+ .live-console .kpi-value { font-size: 20px; }
+ .live-demo-buttons .button { width: 100%; }
+ .wallet-quote > div { grid-template-columns: minmax(0,1fr); gap: 4px; }
+}
+@media (prefers-reduced-motion:reduce) { .wallet-spinner { animation: none; border-color: var(--accent); } }

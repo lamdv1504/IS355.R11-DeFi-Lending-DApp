@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useWallet, WalletToolbar } from "@/components/wallet-provider";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Activity, CircleHelp, ExternalLink, FileKey2, Landmark, LayoutDashboard, Leaf, Menu, ShieldCheck, Wallet, X } from "lucide-react";
-import { shortAddress } from "@/lib/lending-demo";
+import { shortAddress } from "@/lib/wad";
 
 export interface DemoWalletChoice { value: string; name: string; address: string }
 interface Props {
@@ -17,6 +18,7 @@ interface Props {
   children: ReactNode;
 }
 export function AppShell({ section, account, choices, ready, onAccountChange, onHelp, children, statusLabel }: Props) {
+  const { state: walletState } = useWallet();
   const [menuOpen, setMenuOpen] = useState(false);
   const navigation = useRef<HTMLElement>(null);
   useEffect(() => {
@@ -41,7 +43,7 @@ export function AppShell({ section, account, choices, ready, onAccountChange, on
   const hub = section === "documents" || section === "analytics";
   const sectionName = { lending: "Cho vay", borrowing: "Đi vay", documents: "Hồ sơ IPFS", analytics: "Phân tích" }[section];
   const close = () => setMenuOpen(false);
-  return <div className={"app-shell" + (borrowing ? " borrowing-shell" : "") + (hub ? " hub-shell" : "")}>
+  return <div className={"app-shell" + (borrowing ? " borrowing-shell" : "") + (hub ? " hub-shell" : "") + (walletState.mode === "live" ? " live-shell" : "")}>
     <a className="skip-link" href="#main-content">Đến nội dung chính</a>
     {menuOpen && <button className="sidebar-backdrop" aria-label="Đóng điều hướng" onClick={close} />}
     <aside ref={navigation} style={{ overflowY: "auto" }} className={"sidebar " + (menuOpen ? "is-open" : "")} aria-label="Điều hướng ứng dụng">
@@ -59,9 +61,9 @@ export function AppShell({ section, account, choices, ready, onAccountChange, on
       <div className="sidebar-bottom"><div className="sidebar-note"><ShieldCheck size={22} /><p>{hub ? <>CID định danh file.<br />Phiên ví cấp quyền xem.</> : lending ? <>Quyền lợi nằm<br />trong NFT của bạn.</> : <>Chủ động theo dõi<br />sức khỏe khoản vay.</>}</p><span>{hub ? "Hồ sơ riêng tư chỉ trả bản rõ sau khi backend kiểm tra quyền." : lending ? "Chuyển NFT để chuyển quyền sở hữu vị thế cho vay." : "Giữ LTV trong hạn mức và theo dõi cảnh báo Health Factor."}</span></div><button className="help-button" disabled={!ready} onClick={() => { close(); onHelp(); }}><CircleHelp size={19} />Cách hoạt động<ExternalLink size={15} /></button><div className="sidebar-foot">IS355 · DeFi Lending DApp</div></div>
     </aside>
     <div className="workspace" inert={menuOpen || undefined}>
-      <header className="topbar"><div className="topbar-left"><button className="icon-button mobile-menu" aria-label={menuOpen ? "Đóng điều hướng" : "Mở điều hướng"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={22} /> : <Menu size={22} />}</button><span className="breadcrumb">Ứng dụng <span>/</span><strong>{sectionName}</strong></span></div><div className="topbar-right">{choices.length > 0 && <span className="network-tag"><span />{statusLabel || "Local · mô phỏng"}</span>}{choices.length > 0 ? <div className="wallet-control"><Wallet size={18} /><label htmlFor="active-wallet">Ví demo</label><select id="active-wallet" value={account} onChange={(e) => onAccountChange(e.target.value)} disabled={!ready}>{choices.map((a) => <option key={a.value} value={a.value}>{a.name} · {shortAddress(a.address)}</option>)}</select></div> : <span className="hub-session-label"><ShieldCheck size={18} />{statusLabel || "Chỉ đọc"}</span>}</div></header>
+      <header className="topbar"><div className="topbar-left"><button className="icon-button mobile-menu" aria-label={menuOpen ? "Đóng điều hướng" : "Mở điều hướng"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={22} /> : <Menu size={22} />}</button><span className="breadcrumb">Ứng dụng <span>/</span><strong>{sectionName}</strong></span></div><div className="topbar-right">{walletState.mode === "sample" && <>{choices.length > 0 && <span className="network-tag"><span />{statusLabel || "Local · mô phỏng"}</span>}{choices.length > 0 ? <div className="wallet-control"><Wallet size={18} /><label htmlFor="active-wallet">Ví demo</label><select id="active-wallet" value={account} onChange={(e) => onAccountChange(e.target.value)} disabled={!ready}>{choices.map((a) => <option key={a.value} value={a.value}>{a.name} · {shortAddress(a.address)}</option>)}</select></div> : <span className="hub-session-label"><ShieldCheck size={18} />{statusLabel || "Chỉ đọc"}</span>}</>}<WalletToolbar /></div></header>
       {children}
-      <noscript><p className="noscript-message">Bật JavaScript để sử dụng dashboard DeFi Lending mô phỏng.</p></noscript>
+      <noscript><p className="noscript-message">Bật JavaScript để sử dụng dashboard DeFi Lending và kết nối MetaMask.</p></noscript>
     </div>
   </div>;
 }

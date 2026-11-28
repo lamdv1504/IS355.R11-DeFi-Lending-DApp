@@ -2,7 +2,7 @@
 
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { useState } from "react";
-import { amountLabel } from "@/lib/lending-demo";
+import { amountLabel } from "@/lib/wad";
 
 export function InterestChart({ principal, aprBps }: { principal: string; aprBps: number }) {
   const [days, setDays] = useState(30);
