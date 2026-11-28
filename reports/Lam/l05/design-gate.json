@@ -1,0 +1,2183 @@
+{
+ "start": "2026-11-28T14:12:43.426Z",
+ "round": 3,
+ "idle": 0,
+ "errors": 0,
+ "status": "open",
+ "history": [
+  {
+   "at": "2026-11-28T16:49:48.832Z",
+   "mode": "manual",
+   "status": "fail",
+   "fails": 58,
+   "round": 1,
+   "reused": false,
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-28T17:07:07.602Z",
+   "mode": "manual",
+   "status": "fail",
+   "fails": 53,
+   "round": 2,
+   "reused": false,
+   "stopHookActive": false
+  },
+  {
+   "at": "2026-11-28T17:09:58.941Z",
+   "mode": "manual",
+   "status": "open",
+   "fails": 49,
+   "round": 3,
+   "reused": true,
+   "stopHookActive": false
+  }
+ ],
+ "max": 3,
+ "marker": {
+  "page": "out/index.html",
+  "url": null,
+  "root": "out",
+  "kind": "software",
+  "category": "cho vay MyUSDT",
+  "primary": "Kết nối MetaMask",
+  "rounds": 3,
+  "start": "2026-11-28T14:12:43.426Z",
+  "by": "gate.mjs --start"
+ },
+ "manual": true,
+ "roundKey": "218ca0fb50bdf3d3:aa49a21d",
+ "roundFree": false,
+ "idleFree": false,
+ "blockKey": null,
+ "fp": "218ca0fb50bdf3d3",
+ "page": "out/index.html",
+ "found": {
+  "fails": [
+   {
+    "check": "hero-fill",
+    "where": "main#main-content > div.live-mode-notice \"KẾT NỐI THẬT Hardhat local · chain 31337\"",
+    "msg": "the next section shows on the first screen: it starts at 265px on a 900px screen (the hero ends at 237px)",
+    "fix": "let the hero fill the first screen alone (min-height: 100svh, less above it): nothing of the next section on load",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "hero-fill"
+    ],
+    "wheres": [
+     "main#main-content > div.live-mode-notice \"KẾT NỐI THẬT Hardhat local · chain 31337\""
+    ]
+   },
+   {
+    "check": "flush",
+    "where": "main#main-content > section.page-heading > div > p \"Vốn, lãi và NFT vị thế từ mạng đang kết \"",
+    "msg": "its last line sits 3px above the rule on top of div.live-mode-notice",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "flush"
+    ],
+    "wheres": [
+     "main#main-content > section.page-heading > div > p \"Vốn, lãi và NFT vị thế từ mạng đang kết \""
+    ]
+   },
+   {
+    "check": "flush",
+    "where": "main#main-content > section.kpi-grid > article.kpi-card.kpi-featured \"Supply APY tham khảo — APR — / năm\"",
+    "msg": "its first line sits 0px under the top edge of section.kpi-grid, where the ground changes",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "flush"
+    ],
+    "wheres": [
+     "main#main-content > section.kpi-grid > article.kpi-card.kpi-featured \"Supply APY tham khảo — APR — / năm\""
+    ]
+   },
+   {
+    "check": "flush",
+    "where": "form#lending-operation > p.field-hint:nth-of-type(2) \"Cấp quyền và thao tác chính là hai giao \"",
+    "msg": "its last line sits -393px above the rule on top of section.panel.liquidity-panel",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "flush"
+    ],
+    "wheres": [
+     "form#lending-operation > p.field-hint:nth-of-type(2) \"Cấp quyền và thao tác chính là hai giao \""
+    ]
+   },
+   {
+    "check": "button-styles",
+    "where": "(one screen)",
+    "msg": "3 button styles on one screen: pill, outline #e0e5ed (\"Dữ liệu mẫu\"); pill, fill #245bd6 (\"Kết nối MetaMask\"); label and disc, fill #122b50 (\"DeFi Lending\"); the odd one out: \"DeFi Lending\"",
+    "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "button-styles"
+    ],
+    "wheres": [
+     "(one screen)"
+    ]
+   },
+   {
+    "check": "button-styles",
+    "where": "(the page)",
+    "msg": "4 button styles on the page: label and disc, fill #122b50 x1 (\"DeFi Lending\"); pill, outline #e0e5ed x2 (\"Dữ liệu mẫu\"); pill, fill #245bd6 x2 (\"Kết nối MetaMask\"); pill, fill #f6f7f9, outline #e0e5ed x5 (\"Nhận 1.000 MyUSDT\")",
+    "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "button-styles"
+    ],
+    "wheres": [
+     "(the page)"
+    ]
+   },
+   {
+    "check": "cta",
+    "where": "section#activity \"Giao dịch trong phiên\"",
+    "msg": "the last section before the footer ends with no button",
+    "fix": "add the action: a button in the hero, one on every priced item, one in the closing section",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "cta"
+    ],
+    "wheres": [
+     "section#activity \"Giao dịch trong phiên\""
+    ]
+   },
+   {
+    "check": "copy-headings",
+    "where": "h2#live-liquidity-title \"Thanh khoản và lãi suất\"",
+    "msg": "\"Thanh khoản và lãi suất\" names no product, part, place or section (2 headings like it; at most one brand line per page) (and 1 more like it: \"NFT vị thế của bạn\")",
+    "fix": "name the thing in every heading: the product, a part, the place or a section noun",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "copy-headings"
+    ],
+    "wheres": [
+     "h2#live-liquidity-title \"Thanh khoản và lãi suất\""
+    ]
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#main-content > div.overview-grid > section.panel.liquidity-panel / section#positions",
+    "msg": "153px between these sections, +134% against the median 66px of gaps at a change of ground",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-gaps"
+    ],
+    "wheres": [
+     "main#main-content > div.overview-grid > section.panel.liquidity-panel / section#positions"
+    ]
+   },
+   {
+    "check": "section-gaps",
+    "where": "section#activity / main#main-content > footer.app-footer",
+    "msg": "106px between these sections, +100% against the median 53px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-gaps"
+    ],
+    "wheres": [
+     "section#activity / main#main-content > footer.app-footer"
+    ]
+   },
+   {
+    "check": "section-tile",
+    "where": "section#positions \"NFT vị thế của bạn\"",
+    "msg": "the section is 258px tall (0.29 screens at 1440x900), shorter than the screen: its tile, held at the page's end (scroll 964px) shows 258px of it and 199px of the next section, its heading \"Thao tác demo trên mạng đã chọ\" on screen",
+    "fix": "set every section after the hero to one screen or two (height: calc(var(--h,1) * 100vh)) and fit its content above --padb",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-tile"
+    ],
+    "wheres": [
+     "section#positions \"NFT vị thế của bạn\""
+    ]
+   },
+   {
+    "check": "section-tile",
+    "where": "section#activity \"Giao dịch trong phiên\"",
+    "msg": "the section is 155px tall (0.17 screens at 1440x900), shorter than the screen: its tile, held at the page's end (scroll 964px) shows 155px of it and 199px of the section above, its heading \"Thao tác demo trên mạng đã chọ\" on screen",
+    "fix": "set every section after the hero to one screen or two (height: calc(var(--h,1) * 100vh)) and fit its content above --padb",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-tile"
+    ],
+    "wheres": [
+     "section#activity \"Giao dịch trong phiên\""
+    ]
+   },
+   {
+    "check": "empty-area",
+    "where": "section#positions \"NFT vị thế của bạn\"",
+    "msg": "68% of the section is empty: 16px under its last (p.live-empty), 66% beside content that covers under half the container, in its 258px of rows (WARN over 35%, FAIL over 50%)",
+    "fix": "fill the section: a picture or a second column beside the words, or more of its own content; the section stays one or two screens tall (T-height)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "empty-area"
+    ],
+    "wheres": [
+     "section#positions \"NFT vị thế của bạn\""
+    ]
+   },
+   {
+    "check": "moment-none",
+    "where": "(the page)",
+    "msg": "a software page (--type) deals no moment: every kind carries one, two on a long page (moments.md)",
+    "fix": "deal one (moments.mjs pick --page software) and mount it in its own section",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "moment-none"
+    ],
+    "wheres": [
+     "(the page)"
+    ]
+   },
+   {
+    "check": "hero-screen",
+    "where": "main#main-content > section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.Vốn, lãi\"",
+    "msg": "the hero ends at 237px on a 900px screen, 663px above the fold: it ends at the fold, 1px either way (SR-1)",
+    "fix": "make the hero exactly one screen (height: 100svh, its content fitted inside), never taller or shorter",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "hero-screen"
+    ],
+    "wheres": [
+     "main#main-content > section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.Vốn, lãi\""
+    ]
+   },
+   {
+    "check": "hero-screen",
+    "where": "main#main-content > div.live-mode-notice \"KẾT NỐI THẬTHardhat local · chain 31337 \"",
+    "msg": "635px of the next section shows on the first screen (from 265px on a 900px screen): nothing below the hero shows at load (SR-1)",
+    "fix": "end the hero at the fold so nothing of the next section shows at load (hero height: 100svh)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "hero-screen"
+    ],
+    "wheres": [
+     "main#main-content > div.live-mode-notice \"KẾT NỐI THẬTHardhat local · chain 31337 \""
+    ]
+   },
+   {
+    "check": "section-height",
+    "where": "main#main-content > div.live-read-status.error \"Không kết nối được API. Kiểm tra địa chỉ\"",
+    "msg": "the section is 44px tall (0 screens), 856px short of one screen (900px): every section after the hero is one screen or two, 2px either way (SR-2)",
+    "fix": "set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-height"
+    ],
+    "wheres": [
+     "main#main-content > div.live-read-status.error \"Không kết nối được API. Kiểm tra địa chỉ\"",
+     "main#main-content > footer.app-footer \"IS355 · Cho vay MyUSDTlocal · Ký tại ví \"",
+     "main#main-content > div.live-mode-notice \"KẾT NỐI THẬTHardhat local · chain 31337 \"",
+     "main#main-content > section.kpi-grid \"Supply APY tham khảo—APR — / nămTổng vốn\"",
+     "main#main-content > section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo trên mạn\""
+    ]
+   },
+   {
+    "check": "section-air",
+    "where": "main#main-content > div.live-mode-notice / main#main-content > div.live-read-status.error",
+    "msg": "36px of air between the content of these two sections: 128-480px (64-600px WARN) (every gap out of the band at 1440px, top to bottom: 36px after \"KẾT NỐI THẬTHardhat \", 46px after \"Không kết nối được A\", 78px after \"Supply APY tham khảo\", 102px after \"Giao dịch cho vayKhả\", 83px after \"NFT vị thế của bạnQu\", 78px after \"CÔNG CỤ THỬ NGHIỆMTh\") (SR-3)",
+    "fix": "keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-air"
+    ],
+    "wheres": [
+     "main#main-content > div.live-mode-notice / main#main-content > div.live-read-status.error"
+    ]
+   },
+   {
+    "check": "section-air",
+    "where": "main#main-content > div.live-read-status.error / main#main-content > section.kpi-grid",
+    "msg": "46px of air between the content of these two sections: 128-480px (64-600px WARN) (SR-3)",
+    "fix": "keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-air"
+    ],
+    "wheres": [
+     "main#main-content > div.live-read-status.error / main#main-content > section.kpi-grid"
+    ]
+   },
+   {
+    "check": "one-section",
+    "where": "h2#live-demo-title \"Thao tác demo trên mạng đã chọn\"",
+    "msg": "the screen at scroll 900px (stride 1) shows 199px of section 7 and the heading of section 7 whole and the content of 4 sections, over 24px each beside section 6: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)",
+    "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-section"
+    ],
+    "wheres": [
+     "h2#live-demo-title \"Thao tác demo trên mạng đã chọn\""
+    ]
+   },
+   {
+    "check": "one-section",
+    "where": "main#main-content > section.page-heading > div > h1 \"Tổng quan cho vay.\"",
+    "msg": "the screen at scroll 0px (stride 0) shows 182px of section 4 and the heading of section 1 whole and the content of 5 sections, over 24px each beside section 5: a screen shows one section (another may peek 8px, 24px WARN) (and 2 more like it: scroll 120px, scroll 265px) (SR-4)",
+    "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-section"
+    ],
+    "wheres": [
+     "main#main-content > section.page-heading > div > h1 \"Tổng quan cho vay.\"",
+     "main#main-content > div.live-mode-notice \"KẾT NỐI THẬTHardhat local · chain 31337 \"",
+     "main#main-content > div.live-read-status.error \"Không kết nối được API. Kiểm tra địa chỉ\"",
+     "main#main-content > div.overview-grid \"Giao dịch cho vayKhả dụng — MyUSDTGửiRút\""
+    ]
+   },
+   {
+    "check": "one-heading",
+    "where": "h2#live-liquidity-title \"Thanh khoản và lãi suất\"",
+    "msg": "the section holds 2 h2 headings: one per section, first in its .wrap (SR-5)",
+    "fix": "give each section one h2, first in its .wrap, and the hero only its h1",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-heading"
+    ],
+    "wheres": [
+     "h2#live-liquidity-title \"Thanh khoản và lãi suất\""
+    ]
+   },
+   {
+    "check": "one-heading",
+    "where": "h2#live-positions-title \"NFT vị thế của bạn\"",
+    "msg": "headings of two sections show whole on one screen at 14 of 20 scroll positions (70%; at scroll 300, 350, 400, 450px), here with \"Giao dịch cho vay\": at most 3% on a desktop (SR-5)",
+    "fix": "make the sections one screen tall so their headings sit a screen apart and two never share one",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "one-heading"
+    ],
+    "wheres": [
+     "h2#live-positions-title \"NFT vị thế của bạn\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "div.app-shell.live-shell > div.workspace > header.topbar \"Ứng dụng /Cho vayDữ liệu mẫuMạngLocal · \"",
+    "msg": "the nav's content runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)",
+    "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "div.app-shell.live-shell > div.workspace > header.topbar \"Ứng dụng /Cho vayDữ liệu mẫuMạngLocal · \""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "main#main-content > section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.Vốn, lãi\"",
+    "msg": "the content of section 1 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)",
+    "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "main#main-content > section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.Vốn, lãi\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "main#main-content > div.live-read-status.error \"Không kết nối được API. Kiểm tra địa chỉ\"",
+    "msg": "the content of section 3 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (and 7 more like it: \"Supply APY tham khảo—APR\", \"NFT vị thế của bạnQuyền \", \"CÔNG CỤ THỬ NGHIỆMThao t\") (SR-6)",
+    "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "main#main-content > div.live-read-status.error \"Không kết nối được API. Kiểm tra địa chỉ\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "div.app-shell.live-shell \"Đến nội dung chínhDeFi LendingKHÔNG GIAN\"",
+    "msg": "a <div> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)",
+    "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "div.app-shell.live-shell \"Đến nội dung chínhDeFi LendingKHÔNG GIAN\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "h2#live-liquidity-title \"Thanh khoản và lãi suất\"",
+    "msg": "the h2 starts 762px right of the container's left: every h1 and h2 starts on it, 2px either way (SR-6)",
+    "fix": "start the text on the container's left, or on the one split line every split shares",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "h2#live-liquidity-title \"Thanh khoản và lãi suất\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "h2#live-positions-title \"NFT vị thế của bạn\"",
+    "msg": "10 text blocks start on a left line at x 313, 25px from the container's left: text starts on the container's left, or on one split line (x 761, 856, 951) (also \"Quyền hưởng vốn và lãi theo chủ \", \"Kết nối ví để đọc dữ liệu tài kh\", \"Kết nối ví để xem các NFT thuộc \") (and 3 more like it: \"Giao dịch cho vay\", \"NFT vị thế của bạn\", x 299) (SR-6)",
+    "fix": "start the text on the container's left, or on the one split line every split shares",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "h2#live-positions-title \"NFT vị thế của bạn\""
+    ]
+   },
+   {
+    "check": "container-edges",
+    "where": "main#main-content > div.overview-grid > section.panel.live-form-panel \"Giao dịch cho vayKhả dụng — MyUSDTGửiRút\"",
+    "msg": "a box over half the container wide runs 288-1001px, not on the container's lines at 288-1400px (SR-6)",
+    "fix": "run the picture or box from the container's left line to its right line, or put it in a row or a split",
+    "widths": [
+     1440
+    ],
+    "from": "consistency",
+    "ids": [
+     "container-edges"
+    ],
+    "wheres": [
+     "main#main-content > div.overview-grid > section.panel.live-form-panel \"Giao dịch cho vayKhả dụng — MyUSDTGửiRút\""
+    ]
+   },
+   {
+    "check": "flush",
+    "where": "main#main-content > section.page-heading > button.button.secondary \"Gửi tiền\"",
+    "msg": "its button sits 0px above the rule on top of div.live-mode-notice",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "flush"
+    ],
+    "wheres": [
+     "main#main-content > section.page-heading > button.button.secondary \"Gửi tiền\""
+    ]
+   },
+   {
+    "check": "flush",
+    "where": "main#main-content > section.kpi-grid > article.kpi-card:nth-of-type(4) \"Lãi đã tích lũy — MyUSDT · đọc từ contra\"",
+    "msg": "its last line sits 0px above the lower edge of section.kpi-grid, where the ground changes to section.panel.live-form-panel",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "flush"
+    ],
+    "wheres": [
+     "main#main-content > section.kpi-grid > article.kpi-card:nth-of-type(4) \"Lãi đã tích lũy — MyUSDT · đọc từ contra\""
+    ]
+   },
+   {
+    "check": "no-visual",
+    "where": "main#main-content > section.kpi-grid \"Supply APY tham khảo — APR — / năm Tổng \"",
+    "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+    "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "no-visual"
+    ],
+    "wheres": [
+     "main#main-content > section.kpi-grid \"Supply APY tham khảo — APR — / năm Tổng \""
+    ]
+   },
+   {
+    "check": "no-visual",
+    "where": "main#main-content > div.overview-grid > section.panel.live-form-panel \"Giao dịch cho vay\"",
+    "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+    "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "no-visual"
+    ],
+    "wheres": [
+     "main#main-content > div.overview-grid > section.panel.live-form-panel \"Giao dịch cho vay\""
+    ]
+   },
+   {
+    "check": "no-visual",
+    "where": "main#main-content > div.overview-grid > section.panel.liquidity-panel \"Thanh khoản và lãi suất\"",
+    "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+    "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "no-visual"
+    ],
+    "wheres": [
+     "main#main-content > div.overview-grid > section.panel.liquidity-panel \"Thanh khoản và lãi suất\""
+    ]
+   },
+   {
+    "check": "no-visual",
+    "where": "section#positions \"NFT vị thế của bạn\"",
+    "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+    "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "no-visual"
+    ],
+    "wheres": [
+     "section#positions \"NFT vị thế của bạn\""
+    ]
+   },
+   {
+    "check": "no-visual",
+    "where": "main#main-content > section.panel.live-demo \"Thao tác demo trên mạng đã chọn\"",
+    "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+    "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "no-visual"
+    ],
+    "wheres": [
+     "main#main-content > section.panel.live-demo \"Thao tác demo trên mạng đã chọn\""
+    ]
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#main-content > div.live-read-status.error / main#main-content > section.kpi-grid",
+    "msg": "24px between these sections, -65% against the median 69px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     390
+    ],
+    "from": "consistency",
+    "ids": [
+     "section-gaps"
+    ],
+    "wheres": [
+     "main#main-content > div.live-read-status.error / main#main-content > section.kpi-grid"
+    ]
+   },
+   {
+    "check": "edge-left",
+    "where": "div.live-mode-notice p \"Hardhat local · chain 31337 · Gi\"",
+    "msg": "starts at x 436.1; the lines are 288 and the column starts",
+    "fix": "start it on the .wrap left line",
+    "widths": [
+     1440
+    ],
+    "from": "layout",
+    "ids": [
+     "edge-left"
+    ],
+    "wheres": [
+     "div.live-mode-notice p \"Hardhat local · chain 31337 · Gi\""
+    ]
+   },
+   {
+    "check": "edge-left",
+    "where": "div.live-mode-notice p \"Kết nối ví để xem vị thế và ký x\"",
+    "msg": "starts at x 305; the lines are 288 and the column starts",
+    "fix": "start it on the .wrap left line",
+    "widths": [
+     1440
+    ],
+    "from": "layout",
+    "ids": [
+     "edge-left"
+    ],
+    "wheres": [
+     "div.live-mode-notice p \"Kết nối ví để xem vị thế và ký x\""
+    ]
+   },
+   {
+    "check": "edge-left",
+    "where": "div.overview-grid section.panel.liquidity-panel \"Thanh khoản và lãi suấtKHẢ DỤNG \"",
+    "msg": "starts at x 1024.8; the lines are 288 and the column starts",
+    "fix": "start it on the .wrap left line",
+    "widths": [
+     1440
+    ],
+    "from": "layout",
+    "ids": [
+     "edge-left"
+    ],
+    "wheres": [
+     "div.overview-grid section.panel.liquidity-panel \"Thanh khoản và lãi suấtKHẢ DỤNG \""
+    ]
+   },
+   {
+    "check": "screen-short",
+    "where": "section.page-heading section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.\"",
+    "msg": "117px tall; one screen under the nav is 900px",
+    "fix": "make the section one full screen (--h: 1, layout-v4.md section 2)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "screen-short"
+    ],
+    "wheres": [
+     "section.page-heading section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.\""
+    ]
+   },
+   {
+    "check": "neighbour",
+    "where": "section.page-heading section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.\"",
+    "msg": "framed, 38px of section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\" shows",
+    "fix": "keep the next section's heading and picture out of this screen",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "neighbour"
+    ],
+    "wheres": [
+     "section.page-heading section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.\""
+    ]
+   },
+   {
+    "check": "screen-short",
+    "where": "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\"",
+    "msg": "182px tall; one screen under the nav is 900px",
+    "fix": "make the section one full screen (--h: 1, layout-v4.md section 2)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "screen-short"
+    ],
+    "wheres": [
+     "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\""
+    ]
+   },
+   {
+    "check": "screen-height",
+    "where": "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\"",
+    "msg": "182px, 0.20 screens; a section is exactly one or two (--h)",
+    "fix": "make the section exactly one or two screens (--h: 1 or 2)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "screen-height"
+    ],
+    "wheres": [
+     "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\""
+    ]
+   },
+   {
+    "check": "neighbour",
+    "where": "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\"",
+    "msg": "framed, 49px of #positions section.panel.positions-panel \"NFT vị thế của bạnQuyền hưởng vố\" shows",
+    "fix": "keep the next section's heading and picture out of this screen",
+    "widths": [
+     1440
+    ],
+    "from": "layout",
+    "ids": [
+     "neighbour"
+    ],
+    "wheres": [
+     "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\""
+    ]
+   },
+   {
+    "check": "screen-short",
+    "where": "#positions section.panel.positions-panel \"NFT vị thế của bạnQuyền hưởng vố\"",
+    "msg": "258px tall; one screen under the nav is 900px",
+    "fix": "make the section one full screen (--h: 1, layout-v4.md section 2)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "screen-short",
+     "screen-height"
+    ],
+    "wheres": [
+     "#positions section.panel.positions-panel \"NFT vị thế của bạnQuyền hưởng vố\""
+    ]
+   },
+   {
+    "check": "neighbour",
+    "where": "#positions section.panel.positions-panel \"NFT vị thế của bạnQuyền hưởng vố\"",
+    "msg": "framed, 48px of section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \" shows",
+    "fix": "keep the next section's heading and picture out of this screen",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "neighbour"
+    ],
+    "wheres": [
+     "#positions section.panel.positions-panel \"NFT vị thế của bạnQuyền hưởng vố\""
+    ]
+   },
+   {
+    "check": "screen-short",
+    "where": "section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \"",
+    "msg": "199px tall; one screen under the nav is 900px",
+    "fix": "make the section one full screen (--h: 1, layout-v4.md section 2)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "screen-short"
+    ],
+    "wheres": [
+     "section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \""
+    ]
+   },
+   {
+    "check": "screen-height",
+    "where": "section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \"",
+    "msg": "199px, 0.22 screens; a section is exactly one or two (--h)",
+    "fix": "make the section exactly one or two screens (--h: 1 or 2)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "screen-height"
+    ],
+    "wheres": [
+     "section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \""
+    ]
+   },
+   {
+    "check": "neighbour",
+    "where": "section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \"",
+    "msg": "framed, 80px of #activity section.panel.live-activity \"Giao dịch trong phiênChưa có gia\" shows",
+    "fix": "keep the next section's heading and picture out of this screen",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "neighbour"
+    ],
+    "wheres": [
+     "section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \""
+    ]
+   },
+   {
+    "check": "screen-short",
+    "where": "#activity section.panel.live-activity \"Giao dịch trong phiênChưa có gia\"",
+    "msg": "155px tall; one screen under the nav is 900px",
+    "fix": "make the section one full screen (--h: 1, layout-v4.md section 2)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "screen-short",
+     "screen-height"
+    ],
+    "wheres": [
+     "#activity section.panel.live-activity \"Giao dịch trong phiênChưa có gia\""
+    ]
+   },
+   {
+    "check": "hero-fold",
+    "where": "section.page-heading section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.\"",
+    "msg": "starts at y 120, not under the nav",
+    "fix": "the hero fills the first screen alone, its button inside it",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "hero-fold"
+    ],
+    "wheres": [
+     "section.page-heading section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.\""
+    ]
+   },
+   {
+    "check": "hero-fold",
+    "where": "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\"",
+    "msg": "shows on the first screen from y 466",
+    "fix": "the hero fills the first screen alone, its button inside it",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "layout",
+    "ids": [
+     "hero-fold"
+    ],
+    "wheres": [
+     "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\""
+    ]
+   }
+  ],
+  "warns": [
+   {
+    "check": "assets",
+    "where": "(the page)",
+    "msg": "the data file http://127.0.0.1:8000/api/pool?network=local did not load (ERR_CONNECTION_REFUSED): the connection dropped, a network blip and not the page; run the check again",
+    "fix": "fix the path, or remove the reference",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "main#main-content > div.live-mode-notice > p:nth-of-type(1) \"Hardhat local · chain 31337 · Giao dịch \"",
+    "msg": "its first line sits 22px under the top edge of div.live-mode-notice, where the ground changes",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "main#main-content > div.live-mode-notice > p:nth-of-type(2) \"Kết nối ví để xem vị thế và ký xác thực \"",
+    "msg": "its last line sits 20px above the lower edge of div.live-mode-notice, where the ground changes to div.live-read-status.error",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "h2#lending-form-title \"Giao dịch cho vay\"",
+    "msg": "its first line sits 26px under the top edge of section.panel.live-form-panel, where the ground changes",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "h2#live-positions-title \"NFT vị thế của bạn\"",
+    "msg": "its first line sits 26px under the top edge of section#positions, where the ground changes",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "main#main-content > section.panel.live-demo > div:nth-of-type(1) > p.eyebrow \"CÔNG CỤ THỬ NGHIỆM\"",
+    "msg": "its first line sits 26px under the top edge of section.panel.live-demo, where the ground changes",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "main#main-content > section.panel.live-demo > p.field-hint \"Faucet và đổi giá là giao dịch cần ký. T\"",
+    "msg": "its last line sits 28px above the lower edge of section.panel.live-demo, where the ground changes to section#activity",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "flush",
+    "where": "h2#activity-title \"Giao dịch trong phiên\"",
+    "msg": "its first line sits 26px under the top edge of section#activity, where the ground changes",
+    "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "copy-buttons",
+    "where": "header.topbar > div.topbar-right > div.wallet-toolbar > button.wallet-mode \"Dữ liệu mẫu\"",
+    "msg": "\"Dữ liệu mẫu\" does not start with a verb (book, buy, try, start, get, see...) (and 7 more like it: \"Kết nối MetaMask\", \"Gửi tiền\", \"Xem trước giao dịch\", \"Tua 30 ngày\", ...)",
+    "fix": "label buttons with a verb and what the visitor gets (\"Book a room\", \"Start free trial\")",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "copy-actions",
+    "where": "(the page)",
+    "msg": "the main action \"Kết nối MetaMask\" does not read word for word the same in the closing section",
+    "fix": "few actions, one wording: at most 2 in the hero, the main action word for word in nav, hero and close",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "heading-scale",
+    "where": "main#main-content > div.overview-grid > section.panel.liquidity-panel > div.liquidity-value \"—MyUSDT\"",
+    "msg": "1 line of plain text set larger than the section headings (36px against h2 18px)",
+    "fix": "size headings by level: the h1 largest, one size per level, each level below the one above",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "off-grid",
+    "where": "h2#live-liquidity-title \"Thanh khoản và lãi suất\"",
+    "msg": "the section's heading starts at 1050px, 762px off the page margin (288px), and no other section starts there",
+    "fix": "move it onto the page margin, or the column edge its section uses",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "body-size",
+    "where": "main#main-content > div.live-read-status.error > p \"Không kết nối được API. Kiểm tra địa chỉ\"",
+    "msg": "7 of 7 paragraphs of running text are set under 16px (13, 14px)",
+    "fix": "set running text at 16px or more",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#main-content > div.live-read-status.error / main#main-content > section.kpi-grid",
+    "msg": "33px between these sections, -38% against the median 53px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#main-content > div.overview-grid > section.panel.live-form-panel / main#main-content > div.overview-grid > section.panel.liquidity-panel",
+    "msg": "the sections overlap by 367px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440,
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "section#positions / main#main-content > section.panel.live-demo",
+    "msg": "83px between these sections, +57% against the median 53px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#main-content > section.panel.live-demo / section#activity",
+    "msg": "78px between these sections, +47% against the median 53px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "nav-labels",
+    "where": "div.app-shell.live-shell > aside.sidebar > nav.main-nav > a:nth-of-type(6) \"Hoạt động\"",
+    "msg": "\"Hoạt động\" opens a section headed \"Giao dịch trong phiên\"",
+    "fix": "name each nav link after the heading of the section it opens",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "label-centre",
+    "where": "div.app-shell.live-shell > aside.sidebar > a.brand \"DeFi Lending\"",
+    "msg": "its label sits 39px off-centre (0px of room at the left, 39px at the right)",
+    "fix": "centre the label in its button, or fill the empty side with an icon",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "stranded-action",
+    "where": "main#main-content > section.page-heading > button.button.secondary \"Gửi tiền\"",
+    "msg": "stands 605px across from the nearest text of its block (\"Tổng quan cho vay.\")",
+    "fix": "put the button under or beside the text it belongs to",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "one-screen",
+    "where": "main#main-content > div.overview-grid > section.panel.live-form-panel \"Giao dịch cho vay\"",
+    "msg": "2 sections are shorter than the screen, so the next one's heading or picture shows with them: \"Giao dịch cho vay\" is 420px of the 900px under the nav, and \"Thanh khoản và lãi suất\" shows below it (\"Thanh khoản và lãi s\")",
+    "fix": "give each section the screen (min-height: 100svh less the nav, its content centred), or join two short ones into one",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "skip-link",
+    "where": "div.app-shell.live-shell:nth-of-type(2) > a.skip-link \"Đến nội dung chính\"",
+    "msg": "the first Tab stop is \"Đến nội dung chính\", not a skip link: a keyboard user tabs through the whole nav on every visit",
+    "fix": "add the starter's skip link as the header's first child: <a class=\"skip-link\" href=\"#top\">Skip to content</a>",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "share-meta",
+    "where": "head",
+    "msg": "the head lacks og:title, og:description, og:image, twitter:card, theme-color: a shared link shows no picture or title of its own",
+    "fix": "copy the head block of starter.html: og tags, twitter:card, the icon and theme-color (references/system.md, Head)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "form-fields",
+    "where": "form#lending-operation",
+    "msg": "the submit button is disabled before anything is typed: it says nothing about what is missing",
+    "fix": "give each field its type, autocomplete and inputmode, never block paste or disable the button before a submit, and add the status line (references/system.md, Forms)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-air",
+    "where": "main#main-content > section.kpi-grid / main#main-content > div.overview-grid",
+    "msg": "78px of air between the content of these two sections: 128-480px (64-600px WARN) (SR-3)",
+    "fix": "keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-air",
+    "where": "section#activity \"Giao dịch trong phiênChưa có giao dịch n\"",
+    "msg": "the content fills 46.5% of the section's height (72 of 155px): 55% or more (40% WARN) (SR-3)",
+    "fix": "fill the section to 55%: more content, a picture or a background layer, or merge it into the section above as its last block",
+    "widths": [
+     1440
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "nav",
+    "where": "header.topbar > div.topbar-right > div.wallet-toolbar > button.icon-button",
+    "msg": "the nav is lopsided: its last item ends 13px inside the content's edge (370px), while its first starts on the other edge",
+    "fix": "start the nav's first item and end its last on the content's two edges",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "button-styles",
+    "where": "main#main-content > section.page-heading > button.button.secondary \"Gửi tiền\"",
+    "msg": "on the phone 2 buttons run the full width of their column, but  \"Gửi tiền\" is 131px of 350px: one action in two sizes",
+    "fix": "give every button the same width rule on the phone: all full width, or all at their own width",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#main-content > section.page-heading / main#main-content > div.live-mode-notice",
+    "msg": "45px between these sections, -35% against the median 69px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#main-content > div.live-mode-notice / main#main-content > div.live-read-status.error",
+    "msg": "40px between these sections, -42% against the median 69px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "section-gaps",
+    "where": "main#main-content > section.kpi-grid / main#main-content > div.overview-grid > section.panel.live-form-panel",
+    "msg": "43px between these sections, -38% against the median 69px",
+    "fix": "use one gap between sections (all within 25% of each other)",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   },
+   {
+    "check": "orphan",
+    "where": "section#positions > div.panel-head.positions-head > div > p \"Quyền hưởng vốn và lãi theo chủ sở hữu h\"",
+    "msg": "its last line holds only \"tại.\" (and 1 more like it: \"Kết nối ví để xem các NF\")",
+    "fix": "rebalance the text (text-wrap: pretty, or a shorter line) so the last line holds more than one short word",
+    "widths": [
+     390
+    ],
+    "from": "consistency"
+   }
+  ],
+  "crashed": [],
+  "seconds": {
+   "consistency": 98,
+   "layout": 15
+  }
+ },
+ "open": [
+  {
+   "check": "flush",
+   "where": "main#main-content > section.page-heading > div > p \"Vốn, lãi và NFT vị thế từ mạng đang kết \"",
+   "msg": "its last line sits 3px above the rule on top of div.live-mode-notice",
+   "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "flush"
+   ],
+   "wheres": [
+    "main#main-content > section.page-heading > div > p \"Vốn, lãi và NFT vị thế từ mạng đang kết \""
+   ]
+  },
+  {
+   "check": "flush",
+   "where": "main#main-content > section.kpi-grid > article.kpi-card.kpi-featured \"Supply APY tham khảo — APR — / năm\"",
+   "msg": "its first line sits 0px under the top edge of section.kpi-grid, where the ground changes",
+   "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "flush"
+   ],
+   "wheres": [
+    "main#main-content > section.kpi-grid > article.kpi-card.kpi-featured \"Supply APY tham khảo — APR — / năm\""
+   ]
+  },
+  {
+   "check": "flush",
+   "where": "form#lending-operation > p.field-hint:nth-of-type(2) \"Cấp quyền và thao tác chính là hai giao \"",
+   "msg": "its last line sits -393px above the rule on top of section.panel.liquidity-panel",
+   "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "flush"
+   ],
+   "wheres": [
+    "form#lending-operation > p.field-hint:nth-of-type(2) \"Cấp quyền và thao tác chính là hai giao \""
+   ]
+  },
+  {
+   "check": "button-styles",
+   "where": "(the page)",
+   "msg": "4 button styles on the page: label and disc, fill #122b50 x1 (\"DeFi Lending\"); pill, outline #e0e5ed x2 (\"Dữ liệu mẫu\"); pill, fill #245bd6 x2 (\"Kết nối MetaMask\"); pill, fill #f6f7f9, outline #e0e5ed x5 (\"Nhận 1.000 MyUSDT\")",
+   "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "button-styles"
+   ],
+   "wheres": [
+    "(the page)"
+   ]
+  },
+  {
+   "check": "copy-headings",
+   "where": "h2#live-liquidity-title \"Thanh khoản và lãi suất\"",
+   "msg": "\"Thanh khoản và lãi suất\" names no product, part, place or section (2 headings like it; at most one brand line per page) (and 1 more like it: \"NFT vị thế của bạn\")",
+   "fix": "name the thing in every heading: the product, a part, the place or a section noun",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "copy-headings"
+   ],
+   "wheres": [
+    "h2#live-liquidity-title \"Thanh khoản và lãi suất\""
+   ]
+  },
+  {
+   "check": "section-gaps",
+   "where": "main#main-content > div.overview-grid > section.panel.liquidity-panel / section#positions",
+   "msg": "153px between these sections, +134% against the median 66px of gaps at a change of ground",
+   "fix": "use one gap between sections (all within 25% of each other)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-gaps"
+   ],
+   "wheres": [
+    "main#main-content > div.overview-grid > section.panel.liquidity-panel / section#positions"
+   ]
+  },
+  {
+   "check": "section-gaps",
+   "where": "section#activity / main#main-content > footer.app-footer",
+   "msg": "106px between these sections, +100% against the median 53px",
+   "fix": "use one gap between sections (all within 25% of each other)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-gaps"
+   ],
+   "wheres": [
+    "section#activity / main#main-content > footer.app-footer"
+   ]
+  },
+  {
+   "check": "section-tile",
+   "where": "section#positions \"NFT vị thế của bạn\"",
+   "msg": "the section is 258px tall (0.29 screens at 1440x900), shorter than the screen: its tile, held at the page's end (scroll 964px) shows 258px of it and 199px of the next section, its heading \"Thao tác demo trên mạng đã chọ\" on screen",
+   "fix": "set every section after the hero to one screen or two (height: calc(var(--h,1) * 100vh)) and fit its content above --padb",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-tile"
+   ],
+   "wheres": [
+    "section#positions \"NFT vị thế của bạn\""
+   ]
+  },
+  {
+   "check": "section-tile",
+   "where": "section#activity \"Giao dịch trong phiên\"",
+   "msg": "the section is 155px tall (0.17 screens at 1440x900), shorter than the screen: its tile, held at the page's end (scroll 964px) shows 155px of it and 199px of the section above, its heading \"Thao tác demo trên mạng đã chọ\" on screen",
+   "fix": "set every section after the hero to one screen or two (height: calc(var(--h,1) * 100vh)) and fit its content above --padb",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-tile"
+   ],
+   "wheres": [
+    "section#activity \"Giao dịch trong phiên\""
+   ]
+  },
+  {
+   "check": "empty-area",
+   "where": "section#positions \"NFT vị thế của bạn\"",
+   "msg": "68% of the section is empty: 16px under its last (p.live-empty), 66% beside content that covers under half the container, in its 258px of rows (WARN over 35%, FAIL over 50%)",
+   "fix": "fill the section: a picture or a second column beside the words, or more of its own content; the section stays one or two screens tall (T-height)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "empty-area"
+   ],
+   "wheres": [
+    "section#positions \"NFT vị thế của bạn\""
+   ]
+  },
+  {
+   "check": "hero-screen",
+   "where": "main#main-content > div.live-mode-notice \"KẾT NỐI THẬTHardhat local · chain 31337 \"",
+   "msg": "635px of the next section shows on the first screen (from 265px on a 900px screen): nothing below the hero shows at load (SR-1)",
+   "fix": "end the hero at the fold so nothing of the next section shows at load (hero height: 100svh)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "hero-screen"
+   ],
+   "wheres": [
+    "main#main-content > div.live-mode-notice \"KẾT NỐI THẬTHardhat local · chain 31337 \""
+   ]
+  },
+  {
+   "check": "section-height",
+   "where": "main#main-content > div.live-read-status.error \"Không kết nối được API. Kiểm tra địa chỉ\"",
+   "msg": "the section is 44px tall (0 screens), 856px short of one screen (900px): every section after the hero is one screen or two, 2px either way (SR-2)",
+   "fix": "set the section to one screen or two (height: calc(var(--h,1) * 100vh), --h 1 or 2) and cut or split its content to fit",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-height"
+   ],
+   "wheres": [
+    "main#main-content > div.live-read-status.error \"Không kết nối được API. Kiểm tra địa chỉ\"",
+    "main#main-content > footer.app-footer \"IS355 · Cho vay MyUSDTlocal · Ký tại ví \"",
+    "main#main-content > div.live-mode-notice \"KẾT NỐI THẬTHardhat local · chain 31337 \"",
+    "main#main-content > section.kpi-grid \"Supply APY tham khảo—APR — / nămTổng vốn\"",
+    "main#main-content > section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo trên mạn\""
+   ]
+  },
+  {
+   "check": "section-air",
+   "where": "main#main-content > div.live-mode-notice / main#main-content > div.live-read-status.error",
+   "msg": "36px of air between the content of these two sections: 128-480px (64-600px WARN) (every gap out of the band at 1440px, top to bottom: 36px after \"KẾT NỐI THẬTHardhat \", 46px after \"Không kết nối được A\", 78px after \"Supply APY tham khảo\", 102px after \"Giao dịch cho vayKhả\", 83px after \"NFT vị thế của bạnQu\", 78px after \"CÔNG CỤ THỬ NGHIỆMTh\") (SR-3)",
+   "fix": "keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-air"
+   ],
+   "wheres": [
+    "main#main-content > div.live-mode-notice / main#main-content > div.live-read-status.error"
+   ]
+  },
+  {
+   "check": "section-air",
+   "where": "main#main-content > div.live-read-status.error / main#main-content > section.kpi-grid",
+   "msg": "46px of air between the content of these two sections: 128-480px (64-600px WARN) (SR-3)",
+   "fix": "keep 128-480px of air between the content of neighbouring sections (112-420px on a phone): the sections' padding (--padt, --padb)",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-air"
+   ],
+   "wheres": [
+    "main#main-content > div.live-read-status.error / main#main-content > section.kpi-grid"
+   ]
+  },
+  {
+   "check": "one-section",
+   "where": "h2#live-demo-title \"Thao tác demo trên mạng đã chọn\"",
+   "msg": "the screen at scroll 900px (stride 1) shows 199px of section 7 and the heading of section 7 whole and the content of 4 sections, over 24px each beside section 6: a screen shows one section (another may peek 8px, 24px WARN) (SR-4)",
+   "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-section"
+   ],
+   "wheres": [
+    "h2#live-demo-title \"Thao tác demo trên mạng đã chọn\""
+   ]
+  },
+  {
+   "check": "one-section",
+   "where": "main#main-content > section.page-heading > div > h1 \"Tổng quan cho vay.\"",
+   "msg": "the screen at scroll 0px (stride 0) shows 182px of section 4 and the heading of section 1 whole and the content of 5 sections, over 24px each beside section 5: a screen shows one section (another may peek 8px, 24px WARN) (and 2 more like it: scroll 120px, scroll 265px) (SR-4)",
+   "fix": "make each section exactly one screen or two, so a screen shows one section and no neighbour peeks",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-section"
+   ],
+   "wheres": [
+    "main#main-content > section.page-heading > div > h1 \"Tổng quan cho vay.\"",
+    "main#main-content > div.live-mode-notice \"KẾT NỐI THẬTHardhat local · chain 31337 \"",
+    "main#main-content > div.live-read-status.error \"Không kết nối được API. Kiểm tra địa chỉ\"",
+    "main#main-content > div.overview-grid \"Giao dịch cho vayKhả dụng — MyUSDTGửiRút\""
+   ]
+  },
+  {
+   "check": "one-heading",
+   "where": "h2#live-liquidity-title \"Thanh khoản và lãi suất\"",
+   "msg": "the section holds 2 h2 headings: one per section, first in its .wrap (SR-5)",
+   "fix": "give each section one h2, first in its .wrap, and the hero only its h1",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-heading"
+   ],
+   "wheres": [
+    "h2#live-liquidity-title \"Thanh khoản và lãi suất\""
+   ]
+  },
+  {
+   "check": "one-heading",
+   "where": "h2#live-positions-title \"NFT vị thế của bạn\"",
+   "msg": "headings of two sections show whole on one screen at 14 of 20 scroll positions (70%; at scroll 300, 350, 400, 450px), here with \"Giao dịch cho vay\": at most 3% on a desktop (SR-5)",
+   "fix": "make the sections one screen tall so their headings sit a screen apart and two never share one",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "one-heading"
+   ],
+   "wheres": [
+    "h2#live-positions-title \"NFT vị thế của bạn\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "div.app-shell.live-shell > div.workspace > header.topbar \"Ứng dụng /Cho vayDữ liệu mẫuMạngLocal · \"",
+   "msg": "the nav's content runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)",
+   "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "div.app-shell.live-shell > div.workspace > header.topbar \"Ứng dụng /Cho vayDữ liệu mẫuMạngLocal · \""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "main#main-content > section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.Vốn, lãi\"",
+   "msg": "the content of section 1 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (SR-6)",
+   "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "main#main-content > section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.Vốn, lãi\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "main#main-content > div.live-read-status.error \"Không kết nối được API. Kiểm tra địa chỉ\"",
+   "msg": "the content of section 3 runs 288px from the left and 40px from the right (read from its outermost blocks: no .wrap): 288 and 40px are not one margin; the margin is 64-120px at 1440px (one container, equal margins, 2px either way) (and 7 more like it: \"Supply APY tham khảo—APR\", \"NFT vị thế của bạnQuyền \", \"CÔNG CỤ THỬ NGHIỆMThao t\") (SR-6)",
+   "fix": "use one container on every section and the nav (.wrap): one margin left and right, 64-120px on a desktop, 16-24px on a phone",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "main#main-content > div.live-read-status.error \"Không kết nối được API. Kiểm tra địa chỉ\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "div.app-shell.live-shell \"Đến nội dung chínhDeFi LendingKHÔNG GIAN\"",
+   "msg": "a <div> at the top of the page, outside header.nav, main, footer.closing and nav.actionbar (SR-6)",
+   "fix": "build the page as header.nav, a main of sections (each one in-flow .wrap plus background layers) and footer.closing",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "div.app-shell.live-shell \"Đến nội dung chínhDeFi LendingKHÔNG GIAN\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "h2#live-liquidity-title \"Thanh khoản và lãi suất\"",
+   "msg": "the h2 starts 762px right of the container's left: every h1 and h2 starts on it, 2px either way (SR-6)",
+   "fix": "start the text on the container's left, or on the one split line every split shares",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "h2#live-liquidity-title \"Thanh khoản và lãi suất\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "h2#live-positions-title \"NFT vị thế của bạn\"",
+   "msg": "10 text blocks start on a left line at x 313, 25px from the container's left: text starts on the container's left, or on one split line (x 761, 856, 951) (also \"Quyền hưởng vốn và lãi theo chủ \", \"Kết nối ví để đọc dữ liệu tài kh\", \"Kết nối ví để xem các NFT thuộc \") (and 3 more like it: \"Giao dịch cho vay\", \"NFT vị thế của bạn\", x 299) (SR-6)",
+   "fix": "start the text on the container's left, or on the one split line every split shares",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "h2#live-positions-title \"NFT vị thế của bạn\""
+   ]
+  },
+  {
+   "check": "container-edges",
+   "where": "main#main-content > div.overview-grid > section.panel.live-form-panel \"Giao dịch cho vayKhả dụng — MyUSDTGửiRút\"",
+   "msg": "a box over half the container wide runs 288-1001px, not on the container's lines at 288-1400px (SR-6)",
+   "fix": "run the picture or box from the container's left line to its right line, or put it in a row or a split",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "container-edges"
+   ],
+   "wheres": [
+    "main#main-content > div.overview-grid > section.panel.live-form-panel \"Giao dịch cho vayKhả dụng — MyUSDTGửiRút\""
+   ]
+  },
+  {
+   "check": "flush",
+   "where": "main#main-content > section.page-heading > button.button.secondary \"Gửi tiền\"",
+   "msg": "its button sits 0px above the rule on top of div.live-mode-notice",
+   "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "flush"
+   ],
+   "wheres": [
+    "main#main-content > section.page-heading > button.button.secondary \"Gửi tiền\""
+   ]
+  },
+  {
+   "check": "flush",
+   "where": "main#main-content > section.kpi-grid > article.kpi-card:nth-of-type(4) \"Lãi đã tích lũy — MyUSDT · đọc từ contra\"",
+   "msg": "its last line sits 0px above the lower edge of section.kpi-grid, where the ground changes to section.panel.live-form-panel",
+   "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "flush"
+   ],
+   "wheres": [
+    "main#main-content > section.kpi-grid > article.kpi-card:nth-of-type(4) \"Lãi đã tích lũy — MyUSDT · đọc từ contra\""
+   ]
+  },
+  {
+   "check": "no-visual",
+   "where": "main#main-content > section.kpi-grid \"Supply APY tham khảo — APR — / năm Tổng \"",
+   "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+   "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "no-visual"
+   ],
+   "wheres": [
+    "main#main-content > section.kpi-grid \"Supply APY tham khảo — APR — / năm Tổng \""
+   ]
+  },
+  {
+   "check": "no-visual",
+   "where": "main#main-content > div.overview-grid > section.panel.live-form-panel \"Giao dịch cho vay\"",
+   "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+   "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "no-visual"
+   ],
+   "wheres": [
+    "main#main-content > div.overview-grid > section.panel.live-form-panel \"Giao dịch cho vay\""
+   ]
+  },
+  {
+   "check": "no-visual",
+   "where": "main#main-content > div.overview-grid > section.panel.liquidity-panel \"Thanh khoản và lãi suất\"",
+   "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+   "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "no-visual"
+   ],
+   "wheres": [
+    "main#main-content > div.overview-grid > section.panel.liquidity-panel \"Thanh khoản và lãi suất\""
+   ]
+  },
+  {
+   "check": "no-visual",
+   "where": "section#positions \"NFT vị thế của bạn\"",
+   "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+   "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "no-visual"
+   ],
+   "wheres": [
+    "section#positions \"NFT vị thế của bạn\""
+   ]
+  },
+  {
+   "check": "no-visual",
+   "where": "main#main-content > section.panel.live-demo \"Thao tác demo trên mạng đã chọn\"",
+   "msg": "no picture, effect or mock in this section; a feature section needs a visual",
+   "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "no-visual"
+   ],
+   "wheres": [
+    "main#main-content > section.panel.live-demo \"Thao tác demo trên mạng đã chọn\""
+   ]
+  },
+  {
+   "check": "section-gaps",
+   "where": "main#main-content > div.live-read-status.error / main#main-content > section.kpi-grid",
+   "msg": "24px between these sections, -65% against the median 69px",
+   "fix": "use one gap between sections (all within 25% of each other)",
+   "widths": [
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "section-gaps"
+   ],
+   "wheres": [
+    "main#main-content > div.live-read-status.error / main#main-content > section.kpi-grid"
+   ]
+  },
+  {
+   "check": "edge-left",
+   "where": "div.live-mode-notice p \"Hardhat local · chain 31337 · Gi\"",
+   "msg": "starts at x 436.1; the lines are 288 and the column starts",
+   "fix": "start it on the .wrap left line",
+   "widths": [
+    1440
+   ],
+   "from": "layout",
+   "ids": [
+    "edge-left"
+   ],
+   "wheres": [
+    "div.live-mode-notice p \"Hardhat local · chain 31337 · Gi\""
+   ]
+  },
+  {
+   "check": "edge-left",
+   "where": "div.live-mode-notice p \"Kết nối ví để xem vị thế và ký x\"",
+   "msg": "starts at x 305; the lines are 288 and the column starts",
+   "fix": "start it on the .wrap left line",
+   "widths": [
+    1440
+   ],
+   "from": "layout",
+   "ids": [
+    "edge-left"
+   ],
+   "wheres": [
+    "div.live-mode-notice p \"Kết nối ví để xem vị thế và ký x\""
+   ]
+  },
+  {
+   "check": "edge-left",
+   "where": "div.overview-grid section.panel.liquidity-panel \"Thanh khoản và lãi suấtKHẢ DỤNG \"",
+   "msg": "starts at x 1024.8; the lines are 288 and the column starts",
+   "fix": "start it on the .wrap left line",
+   "widths": [
+    1440
+   ],
+   "from": "layout",
+   "ids": [
+    "edge-left"
+   ],
+   "wheres": [
+    "div.overview-grid section.panel.liquidity-panel \"Thanh khoản và lãi suấtKHẢ DỤNG \""
+   ]
+  },
+  {
+   "check": "screen-short",
+   "where": "section.page-heading section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.\"",
+   "msg": "117px tall; one screen under the nav is 900px",
+   "fix": "make the section one full screen (--h: 1, layout-v4.md section 2)",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "screen-short"
+   ],
+   "wheres": [
+    "section.page-heading section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.\""
+   ]
+  },
+  {
+   "check": "neighbour",
+   "where": "section.page-heading section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.\"",
+   "msg": "framed, 38px of section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\" shows",
+   "fix": "keep the next section's heading and picture out of this screen",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "neighbour"
+   ],
+   "wheres": [
+    "section.page-heading section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.\""
+   ]
+  },
+  {
+   "check": "screen-short",
+   "where": "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\"",
+   "msg": "182px tall; one screen under the nav is 900px",
+   "fix": "make the section one full screen (--h: 1, layout-v4.md section 2)",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "screen-short"
+   ],
+   "wheres": [
+    "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\""
+   ]
+  },
+  {
+   "check": "screen-height",
+   "where": "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\"",
+   "msg": "182px, 0.20 screens; a section is exactly one or two (--h)",
+   "fix": "make the section exactly one or two screens (--h: 1 or 2)",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "screen-height"
+   ],
+   "wheres": [
+    "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\""
+   ]
+  },
+  {
+   "check": "neighbour",
+   "where": "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\"",
+   "msg": "framed, 49px of #positions section.panel.positions-panel \"NFT vị thế của bạnQuyền hưởng vố\" shows",
+   "fix": "keep the next section's heading and picture out of this screen",
+   "widths": [
+    1440
+   ],
+   "from": "layout",
+   "ids": [
+    "neighbour"
+   ],
+   "wheres": [
+    "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\""
+   ]
+  },
+  {
+   "check": "screen-short",
+   "where": "#positions section.panel.positions-panel \"NFT vị thế của bạnQuyền hưởng vố\"",
+   "msg": "258px tall; one screen under the nav is 900px",
+   "fix": "make the section one full screen (--h: 1, layout-v4.md section 2)",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "screen-short",
+    "screen-height"
+   ],
+   "wheres": [
+    "#positions section.panel.positions-panel \"NFT vị thế của bạnQuyền hưởng vố\""
+   ]
+  },
+  {
+   "check": "neighbour",
+   "where": "#positions section.panel.positions-panel \"NFT vị thế của bạnQuyền hưởng vố\"",
+   "msg": "framed, 48px of section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \" shows",
+   "fix": "keep the next section's heading and picture out of this screen",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "neighbour"
+   ],
+   "wheres": [
+    "#positions section.panel.positions-panel \"NFT vị thế của bạnQuyền hưởng vố\""
+   ]
+  },
+  {
+   "check": "screen-short",
+   "where": "section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \"",
+   "msg": "199px tall; one screen under the nav is 900px",
+   "fix": "make the section one full screen (--h: 1, layout-v4.md section 2)",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "screen-short"
+   ],
+   "wheres": [
+    "section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \""
+   ]
+  },
+  {
+   "check": "screen-height",
+   "where": "section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \"",
+   "msg": "199px, 0.22 screens; a section is exactly one or two (--h)",
+   "fix": "make the section exactly one or two screens (--h: 1 or 2)",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "screen-height"
+   ],
+   "wheres": [
+    "section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \""
+   ]
+  },
+  {
+   "check": "neighbour",
+   "where": "section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \"",
+   "msg": "framed, 80px of #activity section.panel.live-activity \"Giao dịch trong phiênChưa có gia\" shows",
+   "fix": "keep the next section's heading and picture out of this screen",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "neighbour"
+   ],
+   "wheres": [
+    "section.panel.live-demo section.panel.live-demo \"CÔNG CỤ THỬ NGHIỆMThao tác demo \""
+   ]
+  },
+  {
+   "check": "screen-short",
+   "where": "#activity section.panel.live-activity \"Giao dịch trong phiênChưa có gia\"",
+   "msg": "155px tall; one screen under the nav is 900px",
+   "fix": "make the section one full screen (--h: 1, layout-v4.md section 2)",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "screen-short",
+    "screen-height"
+   ],
+   "wheres": [
+    "#activity section.panel.live-activity \"Giao dịch trong phiênChưa có gia\""
+   ]
+  },
+  {
+   "check": "hero-fold",
+   "where": "section.page-heading section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.\"",
+   "msg": "starts at y 120, not under the nav",
+   "fix": "the hero fills the first screen alone, its button inside it",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "hero-fold"
+   ],
+   "wheres": [
+    "section.page-heading section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.\""
+   ]
+  },
+  {
+   "check": "hero-fold",
+   "where": "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\"",
+   "msg": "shows on the first screen from y 466",
+   "fix": "the hero fills the first screen alone, its button inside it",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "layout",
+   "ids": [
+    "hero-fold"
+   ],
+   "wheres": [
+    "section.kpi-grid section.kpi-grid \"Supply APY tham khảo—APR — / năm\""
+   ]
+  }
+ ],
+ "waived": [
+  {
+   "check": "hero-fill",
+   "where": "main#main-content > div.live-mode-notice \"KẾT NỐI THẬT Hardhat local · chain 31337\"",
+   "msg": "the next section shows on the first screen: it starts at 265px on a 900px screen (the hero ends at 237px)",
+   "fix": "let the hero fill the first screen alone (min-height: 100svh, less above it): nothing of the next section on load",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "hero-fill"
+   ],
+   "wheres": [
+    "main#main-content > div.live-mode-notice \"KẾT NỐI THẬT Hardhat local · chain 31337\""
+   ],
+   "reason": "This is the wallet/network status of an operational dashboard. Balances and transaction controls intentionally share the first screen with its compact heading, following the user's existing application."
+  },
+  {
+   "check": "button-styles",
+   "where": "(one screen)",
+   "msg": "3 button styles on one screen: pill, outline #e0e5ed (\"Dữ liệu mẫu\"); pill, fill #245bd6 (\"Kết nối MetaMask\"); label and disc, fill #122b50 (\"DeFi Lending\"); the odd one out: \"DeFi Lending\"",
+   "fix": "one primary and one secondary button: one shape, one height per size, one label size",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "button-styles"
+   ],
+   "wheres": [
+    "(one screen)"
+   ],
+   "reason": "The extra style identified here is the existing DeFi Lending brand link, not an action button. The real actions retain the approved primary and secondary pill styles."
+  },
+  {
+   "check": "cta",
+   "where": "section#activity \"Giao dịch trong phiên\"",
+   "msg": "the last section before the footer ends with no button",
+   "fix": "add the action: a button in the hero, one on every priced item, one in the closing section",
+   "widths": [
+    1440,
+    390
+   ],
+   "from": "consistency",
+   "ids": [
+    "cta"
+   ],
+   "wheres": [
+    "section#activity \"Giao dịch trong phiên\""
+   ],
+   "reason": "This section is the real in-memory transaction journal. An empty guest journal has no transaction to confirm or retry; conditional retry actions appear only for actual pending transactions."
+  },
+  {
+   "check": "moment-none",
+   "where": "(the page)",
+   "msg": "a software page (--type) deals no moment: every kind carries one, two on a long page (moments.md)",
+   "fix": "deal one (moments.mjs pick --page software) and mount it in its own section",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "moment-none"
+   ],
+   "wheres": [
+    "(the page)"
+   ],
+   "reason": "L05 extends the user's existing operational lending dashboard and approved navy design. A decorative marketing scroll scene would displace wallet, balance and transaction controls."
+  },
+  {
+   "check": "hero-screen",
+   "where": "main#main-content > section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.Vốn, lãi\"",
+   "msg": "the hero ends at 237px on a 900px screen, 663px above the fold: it ends at the fold, 1px either way (SR-1)",
+   "fix": "make the hero exactly one screen (height: 100svh, its content fitted inside), never taller or shorter",
+   "widths": [
+    1440
+   ],
+   "from": "consistency",
+   "ids": [
+    "hero-screen"
+   ],
+   "wheres": [
+    "main#main-content > section.page-heading \"CHO VAY MYUSDTTổng quan cho vay.Vốn, lãi\""
+   ],
+   "reason": "The application heading is intentionally compact so users can reach wallet and lending data immediately. The user requested integration into the existing dashboard, not a full-screen promotional hero."
+  }
+ ],
+ "warnCount": 32,
+ "at": "2026-11-28T17:09:58.955Z",
+ "openTold": true
+}

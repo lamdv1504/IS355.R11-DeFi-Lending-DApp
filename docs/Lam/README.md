@@ -6,3 +6,4 @@
 - [L02: Dashboard cho vay MyUSDT](l02_lending_dashboard.md).
 - [L03: Borrowing Console](l03_borrowing_console.md).
 - [L04: IPFS Hub và Analytics](l04_ipfs_hub_analytics.md).
+- [L05: MetaMask, Web3 và phiên ví dùng chung](l05_metamask_web3.md).
