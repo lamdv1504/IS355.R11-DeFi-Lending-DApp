@@ -1,0 +1,27 @@
+[
+  {
+    "check": "moment-none",
+    "target": "(the page)",
+    "reason": "L05 extends the user's existing operational lending dashboard and approved navy design. A decorative marketing scroll scene would displace wallet, balance and transaction controls."
+  },
+  {
+    "check": "button-styles",
+    "target": "(one screen)",
+    "reason": "The extra style identified here is the existing DeFi Lending brand link, not an action button. The real actions retain the approved primary and secondary pill styles."
+  },
+  {
+    "check": "hero-fill",
+    "target": "main#main-content > div.live-mode-notice",
+    "reason": "This is the wallet/network status of an operational dashboard. Balances and transaction controls intentionally share the first screen with its compact heading, following the user's existing application."
+  },
+  {
+    "check": "hero-screen",
+    "target": "main#main-content > section.page-heading",
+    "reason": "The application heading is intentionally compact so users can reach wallet and lending data immediately. The user requested integration into the existing dashboard, not a full-screen promotional hero."
+  },
+  {
+    "check": "cta",
+    "target": "section#activity",
+    "reason": "This section is the real in-memory transaction journal. An empty guest journal has no transaction to confirm or retry; conditional retry actions appear only for actual pending transactions."
+  }
+]

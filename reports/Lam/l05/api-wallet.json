@@ -1,0 +1,15 @@
+{
+  "scope": "Real Q05 HTTP/auth/PDF/confirm; ephemeral test signer and RPC/receipt doubles; no extension or chain broadcast",
+  "checks": [
+    "real Q05 nonce/signature/verify establishes wallet-bound session",
+    "prepare discovers missing allowance without broadcasting",
+    "approve exact Pool/amount is signed and checked by Q05 confirm",
+    "fresh deposit quote passes canonical calldata/gas validation and confirms",
+    "real Q03 creates encrypted PDF/CID before borrow is signed",
+    "Q05 verifies LoanBorrowed event and persists Q03 CID/tx binding",
+    "same signed session retrieves/decrypts owner PDF and browser verifies SHA-256",
+    "private PDF stays protected from unauthenticated retrieval",
+    "post-confirm refresh reads selected local network metadata"
+  ],
+  "broadcasts": 3
+}

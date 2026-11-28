@@ -5,7 +5,7 @@ export interface DocumentMetadata {
   encrypted: boolean; owner_wallet?: string | null; filename: string;
   content_type: string; plaintext_sha256: string; ciphertext_sha256?: string | null;
 }
-export interface HubConnection { mode: "sample" | "api"; baseUrl: string; token: string }
+export interface HubConnection { mode: "sample" | "api"; baseUrl: string; token: string; network?: "local" | "sepolia"; fromBlock?: number; onUnauthorized?: () => void }
 export interface AuditEntry {
   period: string; data_kind: "SIMULATED" | "ON_CHAIN";
   borrow_apy_percent: number; supply_apy_percent: number;
@@ -112,12 +112,19 @@ export async function apiRequest(connection: HubConnection, path: string, init: 
   if (connection.token.trim()) headers.set("Authorization", "Bearer " + connection.token.trim());
   // No wallet/role from a selector is sent as proof of authorization.
   let response: Response;
-  try { response = await fetcher(apiBase(connection.baseUrl) + path, { ...init, headers, cache: "no-store", credentials: "omit", redirect: "error" }); }
+  const url = new URL(path, apiBase(connection.baseUrl));
+  if (connection.network) {
+    if (url.searchParams.has("network") && url.searchParams.get("network") !== connection.network) throw new HubError(409, "Mạng API không khớp phiên đã chọn.");
+    url.searchParams.set("network", connection.network);
+    if (connection.fromBlock !== undefined && /^\/api\/(analytics\/rates|accounts\/.+\/(snapshot|balances|lending-positions))$/.test(url.pathname) && !url.searchParams.has("from_block")) url.searchParams.set("from_block", String(connection.fromBlock));
+  }
+  try { response = await fetcher(url.href, { ...init, headers, cache: "no-store", credentials: "omit", redirect: "error" }); }
   catch (error) {
     if (error instanceof Error && error.name === "AbortError") throw error;
     throw new Error("Không kết nối được API. Kiểm tra địa chỉ, CORS và trạng thái backend.");
   }
   if (!response.ok) {
+    if (response.status === 401) connection.onUnauthorized?.();
     let detail = "";
     try { const data = await response.json(); detail = typeof data.detail === "string" ? data.detail : ""; } catch {}
     throw new HubError(response.status, detail || "API trả lỗi " + response.status + ".");
@@ -196,6 +203,11 @@ export function walletChartData(values: { myusdt: string; collateral: string; de
     return { key, name: labels[key], wad: values[key], amount: Number(BigInt(values[key]) / 10n ** 12n) / 1e6 };
   });
 }
+function checkNetwork(connection: HubConnection, body: {network?: unknown; chain_id?: unknown; wallet_address?: unknown}, wallet?: string) {
+  if (!connection.network) return; // Compatibility with older adapters without a selected chain.
+  const chain = connection.network === "local" ? 31337 : 11155111;
+  if (body.network !== connection.network || body.chain_id !== chain || (wallet && String(body.wallet_address || "").toLowerCase() !== wallet.toLowerCase())) throw new Error("Dữ liệu API không khớp mạng hoặc ví đang xem.");
+}
 export async function fetchRateAnalytics(
   connection: HubConnection,
   seedSimulatedMonths = 6,
@@ -210,6 +222,7 @@ export async function fetchRateAnalytics(
     fetcher
   );
   const body = (await response.json()) as Record<string, unknown>;
+  checkNetwork(connection, body);
   const series = auditEntries({ entries: body.series });
   return {
     network: typeof body.network === "string" ? body.network : "local",
@@ -246,6 +259,7 @@ export async function fetchWalletSnapshot(
       risk?: { collateral_value?: { wad?: string } };
       interest?: { accrued?: { wad?: string } };
     };
+    checkNetwork(connection, body, trimmed);
     return {
       walletAddress: body.wallet_address || trimmed,
       network: typeof body.network === "string" ? body.network : null,
@@ -267,6 +281,7 @@ export async function fetchWalletSnapshot(
     ]);
     const balanceBody = await balanceResponse.json();
     const loanBody = await loanResponse.json();
+    checkNetwork(connection, balanceBody, trimmed); checkNetwork(connection, loanBody, trimmed);
     return {
       walletAddress: loanBody.wallet_address || trimmed,
       network: typeof loanBody.network === "string" ? loanBody.network : null,

@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useWallet } from "@/components/wallet-provider";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { ArrowDownToLine, ArrowUpRight, Check, Copy, FileJson, FileKey2, FileText, LockKeyhole, Plus, RefreshCw, Search, ShieldCheck, X } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
-import { DEFAULT_CONNECTION, HubConnectionPanel } from "@/components/hub-connection";
+import { HubConnectionPanel } from "@/components/hub-connection";
 import { apiRequest, assertHash, auditEntries, creditReportView, DOCUMENT_LABELS, downloadDocument, errorMessage, HubError, listDocuments, normalizeCid, parseMetadata, retrieveDocument, retrieveSample, type DocumentMetadata, type DocumentType, type HubConnection, type RetrievedDocument } from "@/lib/ipfs-hub";
 import { parseAmount, shortAddress } from "@/lib/wad";
 import samples from "@/data/l04-samples.json";
@@ -14,9 +15,11 @@ const sampleRows = auditEntries(samples.audit);
 type Filter = "ALL" | DocumentType;
 const FILTERS: [Filter, string][] = [["ALL", "Tất cả"], ["LOAN_AGREEMENT", "Thỏa thuận vay"], ["CREDIT_REPORT", "Tín dụng"], ["AUDIT_LOGS", "Nhật ký"]];
 
-export default function DocumentHub() {
-  const [connection, setConnection] = useState<HubConnection>(DEFAULT_CONNECTION);
-  const [documents, setDocuments] = useState<DocumentMetadata[]>(sampleDocuments);
+export default function DocumentHub() { const wallet = useWallet(); return <DocumentHubContent key={wallet.scopeKey} />; }
+function DocumentHubContent() {
+  const wallet = useWallet();
+  const connection = wallet.connection;
+  const [documents, setDocuments] = useState<DocumentMetadata[]>(() => connection.mode === "sample" ? sampleDocuments : []);
   const [filter, setFilter] = useState<Filter>("ALL");
   const [cid, setCid] = useState("");
   const [selected, setSelected] = useState<RetrievedDocument | null>(null);
@@ -29,8 +32,8 @@ export default function DocumentHub() {
   const [createType, setCreateType] = useState<DocumentType>("LOAN_AGREEMENT");
   const [principal, setPrincipal] = useState("500");
   const [description, setDescription] = useState("");
-  const [wallet, setWallet] = useState("");
-  const [fromBlock, setFromBlock] = useState("0");
+  const [reportWallet, setReportWallet] = useState(wallet.state.account);
+  const [fromBlock, setFromBlock] = useState(String(wallet.client.getStartBlock()));
   const request = useRef<AbortController | null>(null);
   const listRequest = useRef<AbortController | null>(null);
   const details = useRef<HTMLElement | null>(null);
@@ -46,6 +49,14 @@ export default function DocumentHub() {
       try {
         const items = connection.mode === "sample" ? sampleDocuments : await listDocuments(connection, controller.signal);
         if (!controller.signal.aborted) setDocuments(items);
+        const requestedCid = new URLSearchParams(window.location.search).get("cid");
+        if (connection.mode === "api" && requestedCid && !controller.signal.aborted) {
+          const normalized = normalizeCid(requestedCid); setCid(normalized); setBusy(true);
+          try {
+            const doc = await retrieveDocument(connection, normalized, items.find((item) => item.cid === normalized), controller.signal);
+            if (!controller.signal.aborted) setSelected(doc);
+          } finally { if (!controller.signal.aborted) setBusy(false); }
+        }
       } catch (e) { if (!controller.signal.aborted) { setDocuments([]); setError(errorMessage(e)); } }
       finally { if (!controller.signal.aborted) setListing(false); }
     }, 0);
@@ -53,7 +64,7 @@ export default function DocumentHub() {
   }, [connection]);
   const changeConnection = (value: HubConnection) => {
     request.current?.abort(); listRequest.current?.abort();
-    setSelected(null); setDocuments([]); setError(""); setNotice(""); setCid(""); setBusy(false); setCreateOpen(false); setConnection(value);
+    setSelected(null); setDocuments([]); setError(""); setNotice(""); setCid(""); setBusy(false); setCreateOpen(false); wallet.client.configure(value.baseUrl); wallet.client.setMode(value.mode === "sample" ? "sample" : "live");
   };
   const refresh = async () => {
     listRequest.current?.abort();
@@ -116,8 +127,8 @@ export default function DocumentHub() {
         if (amount <= 0n || !description.trim()) throw new Error("Nhập số tiền vay dương và mô tả tài sản thế chấp.");
         path = "/api/ipfs/create-agreement"; body = { principal_wad: amount.toString(), asset_description: description.trim() };
       } else if (createType === "CREDIT_REPORT") {
-        if (!/^0x[0-9a-fA-F]{40}$/.test(wallet.trim())) throw new Error("Địa chỉ ví phải có 0x và 40 ký tự hex.");
-        path = "/api/ipfs/credit-report/" + wallet.trim(); body = { from_block: block, to_block: "latest" };
+        if (!/^0x[0-9a-fA-F]{40}$/.test(reportWallet.trim())) throw new Error("Địa chỉ ví phải có 0x và 40 ký tự hex.");
+        path = "/api/ipfs/credit-report/" + reportWallet.trim(); body = { from_block: block, to_block: "latest" };
       }
       const result = await (await apiRequest(connection, path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body), signal: controller.signal })).json();
       const createdCid = normalizeCid(createType === "AUDIT_LOGS" ? result.json?.cid : result.cid);
@@ -134,13 +145,13 @@ export default function DocumentHub() {
   const json = selected?.json;
   const credit = json?.document_type === "CREDIT_REPORT" ? creditReportView(json) : null;
   const rows = json?.document_type === "AUDIT_LOGS" ? (() => { try { return auditEntries(json); } catch { return []; } })() : connection.mode === "sample" ? sampleRows : [];
-  return <AppShell section="documents" account="" choices={[]} ready onAccountChange={() => {}} onHelp={() => setHelp(true)} statusLabel={connection.mode === "sample" ? "Mẫu · SIMULATED" : connection.token ? "Có token phiên" : "Khách · chưa xác thực"}>
+  return <AppShell section="documents" account="" choices={[]} ready onAccountChange={() => {}} onHelp={() => setHelp(true)} statusLabel={connection.mode === "sample" ? "Mẫu · SIMULATED" : connection.token ? "Đã xác thực ví" : "Khách · chưa xác thực"}>
     <main id="main-content" className="hub-main">
       <div className="page-heading hub-heading" data-enter><div><div className="heading-label"><span />HỒ SƠ & CHỨNG CỨ</div><h1>Hồ sơ IPFS<span className="heading-dot">.</span></h1><p>Ba loại hồ sơ. Một mã CID để tra cứu và đối chiếu.</p></div><button className="button secondary" onClick={() => setCreateOpen(!createOpen)} aria-expanded={createOpen} disabled={busy}><Plus size={18} />Tạo & lưu IPFS</button></div>
       <HubConnectionPanel value={connection} onChange={changeConnection} />
       {createOpen && <section className="panel hub-create" aria-labelledby="create-heading"><h2 id="create-heading">Tạo hồ sơ và lưu IPFS</h2><p className="hub-note">Backend sinh file theo dữ liệu blockchain; PDF và Credit Report được mã hóa trước khi lưu. Nhật ký chỉ Admin được xuất bản.</p>
         <form onSubmit={createDocument}><div className="connection-fields"><div className="field"><label htmlFor="create-kind">Loại hồ sơ</label><select id="create-kind" value={createType} onChange={(e) => setCreateType(e.target.value as DocumentType)}>{Object.entries(DOCUMENT_LABELS).map(([key, label]) => <option key={key} value={key}>{label}</option>)}</select></div>
-        {createType === "LOAN_AGREEMENT" ? <><div className="field"><label htmlFor="principal">Khoản vay dự kiến (MyUSDT)</label><input id="principal" inputMode="decimal" required value={principal} onChange={(e) => setPrincipal(e.target.value)} /></div><div className="field"><label htmlFor="asset-description">Mô tả tài sản thế chấp</label><input id="asset-description" maxLength={500} required value={description} onChange={(e) => setDescription(e.target.value)} /></div></> : <>{createType === "CREDIT_REPORT" && <div className="field"><label htmlFor="report-wallet">Ví chủ báo cáo</label><input id="report-wallet" required value={wallet} onChange={(e) => setWallet(e.target.value)} /></div>}<div className="field"><label htmlFor="from-block">Block bắt đầu quét sự kiện</label><input id="from-block" inputMode="numeric" required value={fromBlock} onChange={(e) => setFromBlock(e.target.value)} /></div></>}</div>
+        {createType === "LOAN_AGREEMENT" ? <><div className="field"><label htmlFor="principal">Khoản vay dự kiến (MyUSDT)</label><input id="principal" inputMode="decimal" required value={principal} onChange={(e) => setPrincipal(e.target.value)} /></div><div className="field"><label htmlFor="asset-description">Mô tả tài sản thế chấp</label><input id="asset-description" maxLength={500} required value={description} onChange={(e) => setDescription(e.target.value)} /></div></> : <>{createType === "CREDIT_REPORT" && <div className="field"><label htmlFor="report-wallet">Ví chủ báo cáo</label><input id="report-wallet" required value={reportWallet} onChange={(e) => setReportWallet(e.target.value)} /></div>}<div className="field"><label htmlFor="from-block">Block bắt đầu quét sự kiện</label><input id="from-block" inputMode="numeric" required value={fromBlock} onChange={(e) => setFromBlock(e.target.value)} /></div></>}</div>
         <div className="hub-inline-actions"><button className="button primary" disabled={busy || connection.mode === "sample"}>{busy ? "Đang gửi…" : "Tạo và lưu hồ sơ"}</button><button type="button" className="button secondary" onClick={() => setCreateOpen(false)}>Đóng biểu mẫu</button></div>{connection.mode === "sample" && <p className="hub-note">Đổi nguồn sang Backend để tạo file và nhận CID thật từ dịch vụ IPFS.</p>}</form></section>}
       <form className="panel cid-search" onSubmit={(e) => { e.preventDefault(); void retrieve(cid); }} aria-label="Tra cứu hồ sơ qua CID">
         <label htmlFor="cid-input">Tra cứu CID</label><div className="cid-search-line"><Search size={20} /><input id="cid-input" value={cid} onChange={(e) => { request.current?.abort(); setBusy(false); setCid(e.target.value); setSelected(null); setError(""); }} autoComplete="off" spellCheck={false} placeholder="Dán CID hoặc ipfs://CID" required aria-invalid={!!error} aria-describedby={error ? "hub-error" : "cid-help"} /><button className="button primary" disabled={busy}>{busy ? "Đang truy xuất…" : "Tra cứu hồ sơ"}<ArrowUpRight size={17} /></button></div><p id="cid-help" className="hub-note">Nhật ký công khai có thể đọc tự do. Hồ sơ riêng tư cần phiên ví có quyền tại backend.</p>

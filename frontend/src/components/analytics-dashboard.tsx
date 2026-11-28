@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { useWallet } from "@/components/wallet-provider";
 import { useEffect, useRef, useState } from "react";
 import { ArrowUpRight, RefreshCw, ShieldCheck, X } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { AppShell } from "@/components/app-shell";
-import { DEFAULT_CONNECTION, HubConnectionPanel } from "@/components/hub-connection";
+import { HubConnectionPanel } from "@/components/hub-connection";
 import { auditEntries, errorMessage, fetchRateAnalytics, fetchWalletSnapshot, listDocuments, ratesChartData, retrieveDocument, walletChartData, type AuditEntry, type DocumentMetadata, type HubConnection } from "@/lib/ipfs-hub";
 import { BORROW_STORAGE_KEY, BORROW_WALLETS, borrowCheckpoint, collateralValue, createBorrowDemo, restoreBorrowDemo, type BorrowActor } from "@/lib/borrowing-demo";
 import { amountLabel } from "@/lib/wad";
@@ -28,17 +29,19 @@ function demoWallet(actor: BorrowActor, now = 0, stored = true): WalletRows {
     debt: actor === "borrower" ? state.loan.principalWad : "0",
     interest: actor === "borrower" ? state.loan.interestWad : "0" });
 }
-export default function AnalyticsDashboard() {
-  const [connection, setConnection] = useState<HubConnection>(DEFAULT_CONNECTION);
+export default function AnalyticsDashboard() { const wallet = useWallet(); return <AnalyticsDashboardContent key={wallet.scopeKey} />; }
+function AnalyticsDashboardContent() {
+  const wallet = useWallet();
+  const connection = wallet.connection;
   const [actor, setActor] = useState<BorrowActor>("borrower");
-  const [rows, setRows] = useState<AuditEntry[]>(SAMPLE_ROWS);
+  const [rows, setRows] = useState<AuditEntry[]>(() => connection.mode === "sample" ? SAMPLE_ROWS : []);
   const [months, setMonths] = useState(6);
-  const [walletRows, setWalletRows] = useState<WalletRows>(() => demoWallet("borrower", 0, false));
-  const [walletAddress, setWalletAddress] = useState<string>(BORROW_WALLETS[0].address);
+  const [walletRows, setWalletRows] = useState<WalletRows>(() => connection.mode === "sample" ? demoWallet("borrower", 0, false) : []);
+  const [walletAddress, setWalletAddress] = useState<string>(connection.mode === "sample" ? BORROW_WALLETS[0].address : wallet.state.account);
   const [loadedWallet, setLoadedWallet] = useState("");
   const [walletBlock, setWalletBlock] = useState<number | null>(null);
   const [auditDocuments, setAuditDocuments] = useState<DocumentMetadata[]>([]);
-  const [auditCid, setAuditCid] = useState(SAMPLE_AUDIT.cid);
+  const [auditCid, setAuditCid] = useState(connection.mode === "sample" ? SAMPLE_AUDIT.cid : LIVE_RATES_OPTION);
   const [ratesMeta, setRatesMeta] = useState<{ network: string; blockNumber: number } | null>(null);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -83,9 +86,9 @@ export default function AnalyticsDashboard() {
     finally { if (!controller.signal.aborted) setBusy(false); }
   };
   const changeConnection = (next: HubConnection) => {
-    request.current?.abort(); setBusy(false); setError(""); setWalletRows([]); setLoadedWallet(""); setWalletBlock(null); setAuditDocuments([]); setRatesMeta(null); setConnection(next);
+    request.current?.abort(); setBusy(false); setError(""); setWalletRows([]); setLoadedWallet(""); setWalletBlock(null); setAuditDocuments([]); setRatesMeta(null); wallet.client.configure(next.baseUrl); wallet.client.setMode(next.mode === "sample" ? "sample" : "live");
     if (next.mode === "sample") { setRows(SAMPLE_ROWS); setAuditCid(SAMPLE_AUDIT.cid); }
-    else void loadRatesSource(next, "live");
+
   };
   const loadWallet = async () => {
     request.current?.abort();
@@ -101,6 +104,27 @@ export default function AnalyticsDashboard() {
     } catch (e) { if (!controller.signal.aborted) setError(errorMessage(e)); }
     finally { if (!controller.signal.aborted) setBusy(false); }
   };
+  useEffect(() => {
+    if (connection.mode !== "api") return;
+    const controller = new AbortController(); request.current = controller;
+    const task = setTimeout(async () => {
+      setBusy(true);
+      const results = await Promise.allSettled([
+        fetchRateAnalytics(connection, 12, controller.signal),
+        listDocuments(connection, controller.signal),
+        wallet.state.account ? fetchWalletSnapshot(connection, wallet.state.account, controller.signal) : Promise.resolve(null),
+      ]);
+      if (controller.signal.aborted) return;
+      const [rates, docs, balances] = results;
+      if (rates.status === "fulfilled") { setRows(rates.value.series); setRatesMeta({ network: rates.value.network, blockNumber: rates.value.blockNumber }); setAuditCid(LIVE_RATES_OPTION); }
+      else setError(errorMessage(rates.reason));
+      if (docs.status === "fulfilled") setAuditDocuments(docs.value.filter((d) => d.document_type === "AUDIT_LOGS" && d.content_type === "application/json"));
+      if (balances.status === "fulfilled" && balances.value) { setWalletRows(balances.value.rows); setLoadedWallet(balances.value.walletAddress); setWalletBlock(balances.value.blockNumber); }
+      else if (balances.status === "rejected") setError(errorMessage(balances.reason));
+      setBusy(false);
+    }, 0);
+    return () => { clearTimeout(task); controller.abort(); };
+  }, [connection, wallet.state.account]);
   const displayed = rows.slice(-months);
   const chartRows = ratesChartData(displayed);
   return <AppShell section="analytics" account={actor} choices={connection.mode === "sample" ? BORROW_WALLETS.map((w) => ({ value: w.id, name: w.name, address: w.address })) : []} ready onAccountChange={(id) => setActor(id as BorrowActor)} onHelp={() => setHelp(true)} statusLabel={connection.mode === "sample" ? "Phân tích · SIMULATED" : "Số liệu từ backend"}>
